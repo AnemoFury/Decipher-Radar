@@ -168,7 +168,7 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 glass-nav">
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="landing.html" class="flex items-center gap-2">
                 <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,18 +176,39 @@
                     <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
                     <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
                 </svg>
-                <span class="text-xl font-bold tracking-wider text-white">DECIPHER</span>
+                <span class="text-xl font-bold tracking-wider text-white uppercase">DECIPHER</span>
             </a>
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-                <a href="landing.html#platform" class="hover:text-white transition">Platform</a>
-                <a href="landing.html#solutions" class="hover:text-white transition">Solutions</a>
-                <a href="landing.html#developers" class="hover:text-white transition">Developers</a>
+
+            <div class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-400 group/nav">
+                <div class="relative group py-8 cursor-pointer">
+                    <span class="hover:text-white transition flex items-center gap-1">Why Decipher <i
+                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                </div>
+                <div class="relative group py-8 cursor-pointer">
+                    <span class="hover:text-white transition flex items-center gap-1">Solutions <i
+                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                </div>
+                <div class="relative group py-8 cursor-pointer">
+                    <a href="landing.html#platform" class="hover:text-white transition flex items-center gap-1">Platform
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></a>
+                </div>
+                <div class="relative group py-8 cursor-pointer">
+                    <span class="hover:text-white transition flex items-center gap-1">Resources <i
+                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                </div>
+                <div class="relative group py-8 cursor-pointer">
+                    <span class="hover:text-white transition flex items-center gap-1">Company <i
+                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                </div>
                 <a href="pricing.html" class="text-white">Pricing</a>
             </div>
-            <a href="auth.html"
-                class="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm font-bold text-white transition">
-                Sign In
-            </a>
+
+            <div class="flex items-center gap-4">
+                <a href="auth.html"
+                    class="flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white transition group">
+                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -214,15 +235,15 @@
                         reporting</p>
                     <div class="flex items-center justify-center gap-1 mb-2">
                         <span class="text-4xl font-extrabold text-white">$</span>
-                        <span id="price-starter" class="text-6xl font-extrabold text-white">50</span>
+                        <span id="price-starter" class="text-6xl font-extrabold text-white">0</span>
                         <span class="text-zinc-500 font-medium pt-4">/mo</span>
                     </div>
-                    <p class="text-xs text-zinc-600 font-bold uppercase tracking-wider">billed monthly</p>
+                    <p class="text-xs text-emerald-500 font-bold uppercase tracking-wider">Free Forever</p>
                 </div>
 
                 <a href="auth.html"
                     class="w-full py-4 btn-black-gradient rounded-2xl text-white font-bold text-sm text-center mb-10 shadow-lg">
-                    Start for Free
+                    Get Started Free
                 </a>
 
                 <div class="space-y-6 flex-1">
@@ -383,13 +404,13 @@
             if (type === 'yearly') {
                 monthlyBtn.classList.remove('active');
                 yearlyBtn.classList.add('active');
-                starter.innerText = '25';
+                starter.innerText = '0';
                 pro.innerText = '50';
                 teams.innerText = '125';
             } else {
                 yearlyBtn.classList.remove('active');
                 monthlyBtn.classList.add('active');
-                starter.innerText = '50';
+                starter.innerText = '0';
                 pro.innerText = '100';
                 teams.innerText = '250';
             }

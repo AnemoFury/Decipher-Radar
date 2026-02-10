@@ -83,8 +83,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
         body {
@@ -150,22 +148,51 @@
 
     <!-- Left Side: Content & Form -->
     <div class="w-full md:w-1/2 h-full flex flex-col p-8 md:p-12 z-10 relative overflow-y-auto">
-        <div class="flex items-center justify-between w-full mb-8 flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <!-- Geometric 'd' Logo (Green) -->
-                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20V80H80V20H60Z" fill="white" />
-                    <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
-                    <path d="M20 50L40 60V80L60 80V80L60 45" fill="#34d399" fill-opacity="0" />
-                    <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
-                </svg>
-                <span class="text-xl font-bold tracking-wider text-white">DECIPHER</span>
+        <!-- Navbar -->
+        <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <a href="landing.html" class="flex items-center gap-2">
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60 20V80H80V20H60Z" fill="white" />
+                        <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
+                        <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
+                    </svg>
+                    <span class="text-xl font-bold tracking-wider text-white uppercase">DECIPHER</span>
+                </a>
+
+                <div class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-400 group/nav">
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Why Decipher <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Solutions <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <a href="landing.html#platform"
+                            class="hover:text-white transition flex items-center gap-1">Platform <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></a>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Resources <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Company <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <a href="pricing.html" class="hover:text-white transition">Pricing</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="auth.html"
+                        class="flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white transition group">
+                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                    </a>
+                </div>
             </div>
-            <a href="landing.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition group">
-                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
-                <span class="font-bold text-xs tracking-wide uppercase">Back to Site</span>
-            </a>
-        </div>
+        </nav>
 
         <div class="flex-1 flex flex-col justify-center max-w-lg w-full mx-auto">
 

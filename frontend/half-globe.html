@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DECIPHER | Globe Perspectives</title>
+    <title>DECIPER | Globe Perspectives</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -14,9 +15,11 @@
             overflow: hidden;
             margin: 0;
         }
+
         canvas {
             display: block;
         }
+
         .ui-overlay {
             position: absolute;
             inset: 0;
@@ -27,17 +30,20 @@
             justify-content: space-between;
             padding: 2rem;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             pointer-events: auto;
         }
+
         .controls {
             display: flex;
             gap: 1rem;
             pointer-events: auto;
         }
+
         .btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -48,10 +54,12 @@
             font-size: 0.875rem;
             color: #4ade80;
         }
+
         .btn:hover {
             background: rgba(74, 222, 128, 0.1);
             border-color: #4ade80;
         }
+
         .btn.active {
             background: #22c55e;
             color: #000;
@@ -59,6 +67,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="globe-container"></div>
 
@@ -70,7 +79,7 @@
                     <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
                     <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
                 </svg>
-                <span class="text-xl font-bold tracking-wider text-white">DECIPHER</span>
+                <span class="text-xl font-bold tracking-wider text-white">DECIPER</span>
             </div>
             <a href="landing.html" class="btn">Back to Landing</a>
         </div>
@@ -176,7 +185,7 @@
             globeGroup.add(glow);
 
             camera.position.z = 6;
-            
+
             animate();
         };
 
@@ -185,7 +194,7 @@
             document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            switch(view) {
+            switch (view) {
                 case 'right':
                     targetPos = { x: 3, y: 0, z: 0 };
                     break;
@@ -221,4 +230,5 @@
         init();
     </script>
 </body>
+
 </html>

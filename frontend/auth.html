@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | DECIPHER</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M65 20V80H45V55L25 40V20H65Z' fill='white'/%3E%3Cpath d='M25 40L45 55V80L25 65V40Z' fill='%2310b981'/%3E%3C/svg%3E">
+
+    <!-- Styles -->
+    <style>
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #10b981;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#0B0C10',
+                            card: '#111217',
+                            border: '#1F2026',
+                            hover: '#1A1B21'
+                        },
+                        accent: {
+                            green: '#10b981',
+                            emerald: '#059669',
+                            dark: '#064e3b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            background-color: #0B0C10;
+            color: #E5E7EB;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(17, 18, 23, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #globe-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 768px) {
+            #globe-container {
+                width: 100%;
+                opacity: 0.3;
+            }
+        }
+
+        /* Custom Scrollbar for Auth Page */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+    </style>
+</head>
+
+<body class="h-screen w-full flex relative selection:bg-green-500 selection:text-black">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="flex flex-col items-center gap-4">
+            <div class="loader"></div>
+            <span class="text-xs font-mono text-green-500 tracking-[0.2em] uppercase">Security Check</span>
+        </div>
+    </div>
+
+    <!-- Left Side: Content & Form -->
+    <div class="w-full md:w-1/2 h-full flex flex-col p-8 md:p-12 z-10 relative overflow-y-auto">
+        <div class="flex items-center justify-between w-full mb-8 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <!-- Geometric 'd' Logo (Green) -->
+                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M60 20V80H80V20H60Z" fill="white" />
+                    <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
+                    <path d="M20 50L40 60V80L60 80V80L60 45" fill="#34d399" fill-opacity="0" />
+                    <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
+                </svg>
+                <span class="text-xl font-bold tracking-wider text-white">DECIPHER</span>
+            </div>
+            <a href="landing.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="font-bold text-xs tracking-wide uppercase">Back to Site</span>
+            </a>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-center max-w-lg w-full mx-auto">
+
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                Detect Fraud Globally. <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">Secure
+                    Locally.</span>
+            </h1>
+            <p class="text-gray-400 mb-12 text-lg">
+                Experience financial security like never before. Monitor and protect every transaction in real-time with
+                our advanced AI nucleus.
+            </p>
+
+            <div class="w-full bg-zinc-900/50 border border-green-500/10 p-8 rounded-2xl backdrop-blur-sm">
+                <h2 class="text-2xl font-bold text-white mb-6 font-sans">Log in to your account</h2>
+
+                <form onsubmit="handleLogin(event)" class="space-y-5">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email</label>
+                        <input type="email" value="admin@decipher.com"
+                            class="w-full bg-black/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition"
+                            placeholder="name@company.com">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Password</label>
+                        <input type="password" value="password123"
+                            class="w-full bg-black/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition"
+                            placeholder="••••••••">
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm pt-2">
+                        <label class="flex items-center text-gray-400 hover:text-gray-300 cursor-pointer select-none">
+                            <input type="checkbox"
+                                class="mr-2.5 rounded bg-zinc-800 border-zinc-600 text-green-500 focus:ring-0 focus:ring-offset-0">
+                            Remember me
+                        </label>
+                        <a href="#"
+                            class="text-green-400 hover:text-green-300 hover:underline text-xs font-bold transition">Forgot
+                            password?</a>
+                    </div>
+
+                    <button id="submitBtn" type="submit"
+                        class="w-full bg-green-600 hover:bg-green-500 text-black font-bold py-3.5 rounded-lg transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center justify-center gap-2 mt-4">
+                        <span>Log In</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-gray-500">
+                    Don't have an account? <a href="landing.html"
+                        class="text-white font-bold hover:text-green-400 transition">Start Free Trial</a>
+                </p>
+            </div>
+
+            <div class="text-xs text-zinc-600 text-center mt-8">
+                &copy; 2026 Decipher Security Inc.
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Neural Network Visualization -->
+    <div
+        class="hidden md:block w-1/2 bg-zinc-950 relative overflow-hidden rounded-l-[3rem] border-l border-white/5 shadow-2xl">
+        <canvas id="auth-canvas" class="absolute inset-0 w-full h-full"></canvas>
+
+        <!-- Overlay UI -->
+        <div
+            class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent z-10 pointer-events-none">
+        </div>
+
+        <div class="absolute bottom-16 left-16 right-16 z-20 pointer-events-none text-left">
+            <!-- Logo -->
+            <div class="mb-8">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/10 text-xs font-mono text-white mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                    SECURE LOGIN
+                </div>
+                <div class="flex items-center gap-3">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60 20V80H80V20H60Z" fill="white" />
+                        <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
+                        <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
+                    </svg>
+                    <span class="text-3xl font-bold tracking-tight text-white">DECIPHER</span>
+                </div>
+            </div>
+            <h3 class="text-4xl font-bold text-white mb-4 leading-tight">Global Threat <br> Intelligence</h3>
+            <p class="text-zinc-400 max-w-md text-base leading-relaxed">
+                Our neural engine processes 25 million signals per second to detect anomalies before they become
+                breaches.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Handle Login Form Submit
+        const handleLogin = (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const originalContent = btn.innerHTML;
+
+            // Loading State
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> AUTHENTICATING...`;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            lucide.createIcons();
+
+            setTimeout(() => {
+                const mockUser = {
+                    name: "Admin User",
+                    email: "admin@decipher.com",
+                    avatar: "https://ui-avatars.com/api/?name=Admin+User&background=22c55e&color=000000&rounded=true&bold=true",
+                    role: "Administrator",
+                    lastLogin: new Date().toLocaleString()
+                };
+                localStorage.setItem('decipher_user', JSON.stringify(mockUser));
+                window.location.href = 'index.html';
+            }, 1500);
+        };
+
+        // Neural Network Animation (Vanilla JS)
+        (function () {
+            const canvas = document.getElementById('auth-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+
+            function resize() {
+                width = canvas.width = canvas.parentElement.offsetWidth;
+                height = canvas.height = canvas.parentElement.offsetHeight;
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2 + 1;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    // GREEN PARTICLES
+                    ctx.fillStyle = 'rgba(74, 222, 128, 0.5)'; // Green-400
+                    ctx.fill();
+                }
+            }
+
+            // Initialize
+            for (let i = 0; i < 80; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw connections
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 120) {
+                            // GREEN LINES
+                            const opacity = 0.15 - distance / 1000;
+                            ctx.strokeStyle = `rgba(74, 222, 128, ${opacity})`;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw particles
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Hide loading screen
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const loader = document.getElementById('loading-screen');
+                    if (loader) loader.classList.add('hidden');
+                }, 1000);
+            });
+
+            // Backup safeguard
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                if (loader && !loader.classList.contains('hidden')) {
+                    loader.classList.add('hidden');
+                }
+            }, 3000);
+        })();
+    </script>
+</body>
+
+</html>

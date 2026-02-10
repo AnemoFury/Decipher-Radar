@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECIPHER | Globe Perspectives</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            margin: 0;
+        }
+        canvas {
+            display: block;
+        }
+        .ui-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            pointer-events: auto;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+            color: #4ade80;
+        }
+        .btn:hover {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: #4ade80;
+        }
+        .btn.active {
+            background: #22c55e;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="globe-container"></div>
+
+    <div class="ui-overlay">
+        <div class="header">
+            <div class="flex items-center gap-2">
+                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M60 20V80H80V20H60Z" fill="white" />
+                    <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
+                    <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
+                </svg>
+                <span class="text-xl font-bold tracking-wider text-white">DECIPHER</span>
+            </div>
+            <a href="landing.html" class="btn">Back to Landing</a>
+        </div>
+
+        <div class="flex flex-col gap-4 items-end">
+            <div class="text-right">
+                <h1 class="text-3xl font-bold text-green-400 mb-2">Globe Perspectives</h1>
+                <p class="text-gray-500 max-w-xs">Dynamic 3D visualization of the global network signals.</p>
+            </div>
+            <div class="controls">
+                <button class="btn active" onclick="setView('right')">Right Half</button>
+                <button class="btn" onclick="setView('bottom-left')">Bottom Left</button>
+                <button class="btn" onclick="setView('full')">Full View</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let scene, camera, renderer, globeGroup, particles;
+        let targetPos = { x: 2, y: 0, z: 0 };
+        let currentPos = { x: 2, y: 0, z: 0 };
+        let lerpSpeed = 0.05;
+
+        const init = () => {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('globe-container').appendChild(renderer.domElement);
+
+            globeGroup = new THREE.Group();
+            scene.add(globeGroup);
+
+            // Create colourful particle globe (Green & Black mode)
+            const pts = [];
+            const colors = [];
+            const radius = 2.5;
+            const count = 50000;
+
+            for (let i = 0; i < count; i++) {
+                const phi = Math.acos(-1 + (2 * i) / count);
+                const theta = Math.sqrt(count * Math.PI) * phi;
+
+                const x = radius * Math.cos(theta) * Math.sin(phi);
+                const y = radius * Math.sin(theta) * Math.sin(phi);
+                const z = radius * Math.cos(phi);
+
+                // Add some noise/distortion
+                const noise = (Math.random() - 0.5) * 0.1;
+                pts.push(x + noise, y + noise, z + noise);
+
+                // Green palette
+                const r = 0.1 + Math.random() * 0.2;
+                const g = 0.6 + Math.random() * 0.4;
+                const b = 0.3 + Math.random() * 0.3;
+                colors.push(r, g, b);
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.015,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            globeGroup.add(particles);
+
+            // Atmospheric glow
+            const glowGeo = new THREE.SphereGeometry(radius * 1.1, 64, 64);
+            const glowMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    glowColor: { value: new THREE.Color(0x10b981) },
+                    viewVector: { value: camera.position }
+                },
+                vertexShader: `
+                    varying float intensity;
+                    void main() {
+                        vec3 vNormal = normalize(normalMatrix * normal);
+                        vec3 vNormel = normalize(normalMatrix * vec3(0.0, 0.0, 1.0));
+                        intensity = pow(0.6 - dot(vNormal, vNormel), 4.0);
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 glowColor;
+                    varying float intensity;
+                    void main() {
+                        gl_FragColor = vec4(glowColor, intensity);
+                    }
+                `,
+                side: THREE.BackSide,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            const glow = new THREE.Mesh(glowGeo, glowMat);
+            globeGroup.add(glow);
+
+            camera.position.z = 6;
+            
+            animate();
+        };
+
+        const setView = (view) => {
+            // Update UI
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            switch(view) {
+                case 'right':
+                    targetPos = { x: 3, y: 0, z: 0 };
+                    break;
+                case 'bottom-left':
+                    targetPos = { x: -3, y: -2, z: 0 };
+                    break;
+                case 'full':
+                    targetPos = { x: 0, y: 0, z: 0 };
+                    break;
+            }
+        };
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            // Smoothly move globe
+            currentPos.x += (targetPos.x - currentPos.x) * lerpSpeed;
+            currentPos.y += (targetPos.y - currentPos.y) * lerpSpeed;
+            globeGroup.position.set(currentPos.x, currentPos.y, 0);
+
+            globeGroup.rotation.y += 0.002;
+            globeGroup.rotation.x += 0.001;
+
+            renderer.render(scene, camera);
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+    </script>
+</body>
+</html>

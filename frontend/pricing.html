@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | DECIPHER</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M65 20V80H45V55L25 40V20H65Z' fill='white'/%3E%3Cpath d='M25 40L45 55V80L25 65V40Z' fill='%2310b981'/%3E%3C/svg%3E">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        black: '#000000',
+                        zinc: { 900: '#18181b', 950: '#09090b' },
+                        emerald: {
+                            400: '#4ade80',
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #10b981;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .pricing-card {
+            background: #09090b;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 20px 40px -12px rgba(16, 185, 129, 0.15);
+        }
+
+        .pricing-card.featured {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: linear-gradient(to bottom, #09090b, #0c0d12);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.05);
+        }
+
+        .toggle-btn {
+            background: #18181b;
+            border-radius: 9999px;
+            padding: 4px;
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .toggle-btn button {
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn button.active {
+            background: #10b981;
+            /* Green theme as per recent request */
+            color: black;
+        }
+
+        .toggle-btn button:not(.active) {
+            color: #71717a;
+        }
+
+        .feature-category {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-black-gradient {
+            background: linear-gradient(180deg, #18181b 0%, #000000 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-black-gradient:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-emerald-500 selection:text-black">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="flex flex-col items-center gap-4">
+            <div class="loader"></div>
+            <span class="text-xs font-mono text-emerald-500 tracking-[0.2em] uppercase">Security Check</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="landing.html" class="flex items-center gap-2">
+                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M60 20V80H80V20H60Z" fill="white" />
+                    <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
+                    <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
+                </svg>
+                <span class="text-xl font-bold tracking-wider text-white">DECIPHER</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="landing.html#platform" class="hover:text-white transition">Platform</a>
+                <a href="landing.html#solutions" class="hover:text-white transition">Solutions</a>
+                <a href="landing.html#developers" class="hover:text-white transition">Developers</a>
+                <a href="pricing.html" class="text-white">Pricing</a>
+            </div>
+            <a href="auth.html"
+                class="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm font-bold text-white transition">
+                Sign In
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 pt-40 pb-32">
+        <div class="flex justify-between items-end mb-16">
+            <div class="max-w-2xl">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Pricing Plans</h1>
+                <p class="text-zinc-500 text-lg">Choose the perfect plan for your fraud detection needs. Scalable
+                    security for every stage of growth.</p>
+            </div>
+            <div class="toggle-btn mb-1">
+                <button id="monthlyBtn" class="active" onclick="setPricing('monthly')">Monthly</button>
+                <button id="yearlyBtn" onclick="setPricing('yearly')">Yearly <span
+                        class="text-[10px] opacity-70 ml-1">(Save 50%)</span></button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Starter Plan -->
+            <div class="pricing-card rounded-3xl p-10 flex flex-col">
+                <div class="text-center mb-10">
+                    <h3 class="text-xl font-bold text-white mb-2">Starter</h3>
+                    <p class="text-xs text-zinc-500 mb-8 min-h-[32px]">For individuals getting started with automated
+                        reporting</p>
+                    <div class="flex items-center justify-center gap-1 mb-2">
+                        <span class="text-4xl font-extrabold text-white">$</span>
+                        <span id="price-starter" class="text-6xl font-extrabold text-white">50</span>
+                        <span class="text-zinc-500 font-medium pt-4">/mo</span>
+                    </div>
+                    <p class="text-xs text-zinc-600 font-bold uppercase tracking-wider">billed monthly</p>
+                </div>
+
+                <a href="auth.html"
+                    class="w-full py-4 btn-black-gradient rounded-2xl text-white font-bold text-sm text-center mb-10 shadow-lg">
+                    Start for Free
+                </a>
+
+                <div class="space-y-6 flex-1">
+                    <div>
+                        <div class="feature-category">Users</div>
+                        <div class="text-sm text-zinc-400">1 Editor</div>
+                    </div>
+                    <div>
+                        <div class="feature-category border-t border-white/5 pt-6">Data</div>
+                        <ul class="space-y-3 text-sm text-zinc-500">
+                            <li>All Data Connectors</li>
+                            <li class="pl-2 text-[11px] opacity-80">(Shopify +$3/mo per store)</li>
+                            <li>1 Account Per Data Connector</li>
+                            <li>Automatic Daily Data Syncing</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="feature-category border-t border-white/5 pt-6">AI</div>
+                        <div class="text-sm text-zinc-400">10 PolymerAI Chat Responses</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro Plan (Recommended) -->
+            <div class="pricing-card featured rounded-3xl p-10 flex flex-col border-emerald-500/50">
+                <div class="text-center mb-10">
+                    <h3 class="text-xl font-bold text-white mb-2">Pro</h3>
+                    <p class="text-xs text-zinc-500 mb-8 min-h-[32px]">For analysts doing advanced reporting</p>
+                    <div class="flex items-center justify-center gap-1 mb-2">
+                        <span class="text-4xl font-extrabold text-white">$</span>
+                        <span id="price-pro" class="text-6xl font-extrabold text-white">100</span>
+                        <span class="text-zinc-500 font-medium pt-4">/mo</span>
+                    </div>
+                    <p class="text-xs text-zinc-600 font-bold uppercase tracking-wider">billed monthly</p>
+                </div>
+
+                <a href="auth.html"
+                    class="w-full py-4 btn-black-gradient rounded-2xl text-white font-bold text-sm text-center mb-10 shadow-lg">
+                    Start for Free
+                </a>
+
+                <div class="space-y-6 flex-1">
+                    <div>
+                        <div class="feature-category">Users</div>
+                        <div class="text-sm text-zinc-400">1 Editor</div>
+                    </div>
+                    <div>
+                        <div class="feature-category border-t border-white/5 pt-6">Data</div>
+                        <ul class="space-y-3 text-sm text-zinc-500">
+                            <li>All Data Connectors</li>
+                            <li class="pl-2 text-[11px] opacity-80">(Shopify +$3/mo per store)</li>
+                            <li>5 Accounts / Data Connector</li>
+                            <li>Automatic Hourly Data Syncing</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="feature-category border-t border-white/5 pt-6">AI</div>
+                        <div class="text-sm text-zinc-400">20 PolymerAI Chat Responses</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teams Plan -->
+            <div class="pricing-card rounded-3xl p-10 flex flex-col">
+                <div class="text-center mb-10">
+                    <h3 class="text-xl font-bold text-white mb-2">Teams</h3>
+                    <p class="text-xs text-zinc-500 mb-8 min-h-[32px]">For teams & agencies reporting needs</p>
+                    <div class="flex items-center justify-center gap-1 mb-2">
+                        <span class="text-4xl font-extrabold text-white">$</span>
+                        <span id="price-teams" class="text-6xl font-extrabold text-white">250</span>
+                        <span class="text-zinc-500 font-medium pt-4">/mo</span>
+                    </div>
+                    <p class="text-xs text-zinc-600 font-bold uppercase tracking-wider">billed monthly</p>
+                </div>
+
+                <a href="auth.html"
+                    class="w-full py-4 btn-black-gradient rounded-2xl text-white font-bold text-sm text-center mb-10 shadow-lg">
+                    Start for Free
+                </a>
+
+                <div class="space-y-6 flex-1">
+                    <div>
+                        <div class="feature-category">Users</div>
+                        <div class="text-sm text-zinc-400">3 Editors</div>
+                    </div>
+                    <div>
+                        <div class="feature-category border-t border-white/5 pt-6">Data</div>
+                        <ul class="space-y-3 text-sm text-zinc-500">
+                            <li>All Data Connectors</li>
+                            <li class="pl-2 text-[11px] opacity-80">(Shopify +$3/mo per store)</li>
+                            <li>15 Accounts / Data Connector</li>
+                            <li>Automatic Hourly Data Syncing</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="feature-category border-t border-white/5 pt-6">AI</div>
+                        <div class="text-sm text-zinc-400">30 PolymerAI Chat Responses</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        async function createSubscription(planType, price) {
+            const email = prompt("Please enter your email for processing:");
+            if (!email) return;
+
+            const priceMap = {
+                'Starter': 'price_starter_placeholder',
+                'Pro': 'price_pro_placeholder',
+                'Teams': 'price_teams_placeholder'
+            };
+
+            try {
+                const response = await fetch('http://localhost:8081/api/payments/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        name: email.split('@')[0],
+                        priceId: priceMap[planType]
+                    })
+                });
+
+                if (response.ok) {
+                    const session = await response.text();
+                    alert("Subscription initiated! Session ID: " + session);
+                } else {
+                    alert("Failed to initiate subscription. Make sure the backend is running.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error connecting to payment service.");
+            }
+        }
+
+        // Update buttons to call createSubscription
+        document.querySelectorAll('a[href="auth.html"]').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const card = btn.closest('.pricing-card');
+                const planName = card.querySelector('h3').innerText;
+                createSubscription(planName);
+            };
+        });
+
+        function setPricing(type) {
+            const monthlyBtn = document.getElementById('monthlyBtn');
+            const yearlyBtn = document.getElementById('yearlyBtn');
+
+            const starter = document.getElementById('price-starter');
+            const pro = document.getElementById('price-pro');
+            const teams = document.getElementById('price-teams');
+
+            if (type === 'yearly') {
+                monthlyBtn.classList.remove('active');
+                yearlyBtn.classList.add('active');
+                starter.innerText = '25';
+                pro.innerText = '50';
+                teams.innerText = '125';
+            } else {
+                yearlyBtn.classList.remove('active');
+                monthlyBtn.classList.add('active');
+                starter.innerText = '50';
+                pro.innerText = '100';
+                teams.innerText = '250';
+            }
+        }
+
+        // Loading Screen Management
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                if (loader) loader.classList.add('hidden');
+            }, 800);
+        });
+
+        // Backup safeguard for loading screen
+        setTimeout(() => {
+            const loader = document.getElementById('loading-screen');
+            if (loader && !loader.classList.contains('hidden')) {
+                loader.classList.add('hidden');
+            }
+        }, 3000);
+    </script>
+</body>
+
+</html>

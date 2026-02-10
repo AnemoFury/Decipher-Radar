@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asteroid | AI Browser Workforce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .purple-glow {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-purple {
+            background: #7c3aed;
+            transition: all 0.3s ease;
+        }
+
+        .btn-purple:hover {
+            background: #6d28d9;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.5);
+        }
+    </style>
+</head>
+
+<body class="bg-black text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav px-8 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-bold tracking-widest">ASTEROID</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-xs font-medium text-gray-400 uppercase tracking-widest">
+            <a href="landing.html" class="hover:text-white transition">Platform</a>
+            <a href="#" class="hover:text-white transition">Use Cases</a>
+            <a href="#" class="hover:text-white transition">Features</a>
+            <a href="pricing.html" class="hover:text-white transition">Pricing</a>
+            <a href="#" class="hover:text-white transition">Docs</a>
+            <a href="#" class="hover:text-white transition">Blog</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="#"
+                class="text-xs font-bold tracking-widest hover:text-purple-400 transition flex items-center gap-2">BOOK
+                A DEMO <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+            <a href="#" class="px-5 py-2 btn-purple text-[10px] font-black tracking-widest rounded-sm">BUILD AI
+                AGENT</a>
+        </div>
+    </nav>
+
+    <main class="relative min-h-screen pt-40 flex flex-col items-center">
+        <!-- New Badge -->
+        <div
+            class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-12 flex items-center gap-3 text-[10px] tracking-wide group cursor-pointer hover:bg-white/10 transition-all">
+            <span class="bg-purple-600 text-[8px] font-black px-1.5 py-0.5 rounded">NEW</span>
+            <span class="text-gray-300">Try <span class="text-white font-bold">ASTEROID</span> and build Browser Agents
+                in minutes</span>
+            <i data-lucide="chevron-right"
+                class="w-3 h-3 text-gray-500 group-hover:translate-x-1 transition-transform"></i>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Content -->
+            <div class="relative z-10">
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-8">
+                    <span class="text-purple-400">AI browser workforce</span><br>
+                    <span>handling prior</span><br>
+                    <span>authorizations|</span>
+                </h1>
+                <p class="text-xl text-gray-400 mb-12 max-w-lg leading-relaxed font-light">
+                    Automate any browser task in minutes, no technical skills required
+                </p>
+
+                <div class="flex items-center gap-6 mb-16">
+                    <button class="px-8 py-4 btn-purple text-xs font-black tracking-widest">BUILD AI AGENT</button>
+                    <button
+                        class="px-8 py-4 border border-white/10 hover:bg-white/5 transition flex items-center gap-2 text-xs font-black tracking-widest">
+                        BOOK A DEMO <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                    </button>
+                </div>
+
+                <!-- Backed by -->
+                <div class="space-y-6">
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Backed by teams at</p>
+                    <div class="flex items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all">
+                        <span class="text-sm font-bold">Hugging Face</span>
+                        <span class="text-sm font-bold italic">Y Combinator</span>
+                        <span class="text-sm font-black">OpenAI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Globe Container -->
+            <div class="relative items-center justify-center hidden lg:flex">
+                <div id="asteroid-globe" class="w-[600px] h-[600px]"></div>
+                <!-- Glossy overlays as seen in screenshot -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Asteroid Style Globe Implementation
+        let scene, camera, renderer, globe;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+            camera.position.z = 15;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(600, 600);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('asteroid-globe').appendChild(renderer.domElement);
+
+            const geometry = new THREE.SphereGeometry(6, 128, 128);
+            const positions = geometry.attributes.position.array;
+            const colors = new Float32Array(positions.length);
+
+            // Create colorful gradient colors (Blue, Purple, Orange)
+            for (let i = 0; i < positions.length; i += 3) {
+                const x = positions[i];
+                const y = positions[i + 1];
+                const z = positions[i + 2];
+
+                // Color based on position
+                if (z > 2) {
+                    // Orange/Pink
+                    colors[i] = 1.0;     // R
+                    colors[i + 1] = 0.5;   // G
+                    colors[i + 2] = 0.2;   // B
+                } else if (x > 0) {
+                    // Purple
+                    colors[i] = 0.6;
+                    colors[i + 1] = 0.2;
+                    colors[i + 2] = 1.0;
+                } else {
+                    // Blue
+                    colors[i] = 0.1;
+                    colors[i + 1] = 0.7;
+                    colors[i + 2] = 1.0;
+                }
+            }
+
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.03,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            globe = new THREE.Points(geometry, material);
+            scene.add(globe);
+
+            // Inner Glow Solid Sphere
+            const innerGeo = new THREE.SphereGeometry(5.8, 64, 64);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: 0x1a0b2e,
+                transparent: true,
+                opacity: 0.4
+            });
+            const innerSphere = new THREE.Mesh(innerGeo, innerMat);
+            scene.add(innerSphere);
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            globe.rotation.y += 0.002;
+            globe.rotation.x += 0.001;
+
+            // Randomly wiggle points a bit for "asteroid" particle effect
+            const positions = globe.geometry.attributes.position.array;
+            for (let i = 0; i < positions.length; i++) {
+                positions[i] += (Math.random() - 0.5) * 0.005;
+            }
+            globe.geometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -4,16 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | DECIPER</title>
+    <title>Login | DECIPHER</title>
     <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M65 20V80H45V55L25 40V20H65Z' fill='white'/%3E%3Cpath d='M25 40L45 55V80L25 65V40Z' fill='%2310b981'/%3E%3C/svg%3E">
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
 
     <!-- Styles -->
     <style>
         #loading-screen {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: #ffffff;
             z-index: 1000;
             display: flex;
             align-items: center;
@@ -29,7 +29,7 @@
         .loader {
             width: 40px;
             height: 40px;
-            border: 3px solid #10b981;
+            border: 3px solid #3b82f6;
             border-bottom-color: transparent;
             border-radius: 50%;
             animation: rotation 1s linear infinite;
@@ -50,20 +50,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        dark: {
-                            bg: '#0B0C10',
-                            card: '#111217',
-                            border: '#1F2026',
-                            hover: '#1A1B21'
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
                         },
-                        accent: {
-                            green: '#10b981',
-                            emerald: '#059669',
-                            dark: '#064e3b'
+                        blue: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
                         }
                     },
                     fontFamily: {
@@ -77,7 +85,7 @@
 
     <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -86,205 +94,239 @@
 
     <style>
         body {
-            background-color: #0B0C10;
-            color: #E5E7EB;
+            background-color: #f8fafc;
+            color: #1e293b;
             font-family: 'Inter', sans-serif;
             overflow: hidden;
         }
 
         .glass-panel {
-            background: rgba(17, 18, 23, 0.7);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #e2e8f0;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
-        #globe-container {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, #eff6ff 1px, transparent 1px),
+                linear-gradient(to bottom, #eff6ff 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
-        /* Mobile adjustment */
-        @media (max-width: 768px) {
-            #globe-container {
-                width: 100%;
-                opacity: 0.3;
-            }
-        }
-
-        /* Custom Scrollbar for Auth Page */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #09090b;
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #27272a;
+            background: #cbd5e1;
             border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #3f3f46;
         }
     </style>
 </head>
 
-<body class="h-screen w-full flex relative selection:bg-green-500 selection:text-black">
+<body
+    class="h-screen w-full flex relative selection:bg-blue-100 selection:text-blue-900 bg-white text-slate-900 overflow-hidden">
     <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="flex flex-col items-center gap-4">
-            <div class="loader"></div>
-            <span class="text-xs font-mono text-green-500 tracking-[0.2em] uppercase">Security Check</span>
-        </div>
-    </div>
-
-    <!-- Left Side: Content & Form -->
-    <div class="w-full md:w-1/2 h-full flex flex-col p-8 md:p-12 z-10 relative overflow-y-auto">
-        <!-- Navbar -->
-        <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
-            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <a href="landing.html" class="flex items-center gap-2">
-                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M60 20V80H80V20H60Z" fill="white" />
-                        <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
-                        <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
-                    </svg>
-                    <span class="text-xl font-bold tracking-wider text-white uppercase">DECIPER</span>
-                </a>
-
-                <div class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-400 group/nav">
-                    <div class="relative group py-8 cursor-pointer">
-                        <span class="hover:text-white transition flex items-center gap-1">Why Deciper <i
-                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                    </div>
-                    <div class="relative group py-8 cursor-pointer">
-                        <span class="hover:text-white transition flex items-center gap-1">Solutions <i
-                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                    </div>
-                    <div class="relative group py-8 cursor-pointer">
-                        <a href="landing.html#platform"
-                            class="hover:text-white transition flex items-center gap-1">Platform <i
-                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></a>
-                    </div>
-                    <div class="relative group py-8 cursor-pointer">
-                        <span class="hover:text-white transition flex items-center gap-1">Resources <i
-                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                    </div>
-                    <div class="relative group py-8 cursor-pointer">
-                        <span class="hover:text-white transition flex items-center gap-1">Company <i
-                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                    </div>
-                    <a href="pricing.html" class="hover:text-white transition">Pricing</a>
+    <div id="loading-screen" class="bg-white z-[1000] flex flex-col items-center justify-center">
+        <div
+            class="max-w-sm w-full p-8 border border-slate-200 rounded-2xl shadow-2xl bg-white relative overflow-hidden">
+            <div class="flex flex-col items-center gap-6 relative z-10">
+                <div class="loader-ring w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin">
+                </div>
+                <div class="text-center">
+                    <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-1">Security Analysis</h2>
+                    <p class="text-[10px] text-slate-400 font-mono uppercase tracking-[0.2em]" id="loading-status">
+                        Validating Identity</p>
                 </div>
 
-                <div class="flex items-center gap-4">
-                    <a href="auth.html"
-                        class="flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white transition group">
-                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
-                    </a>
+                <!-- Technical ML Logs -->
+                <div
+                    class="w-full bg-slate-950 rounded-lg p-4 font-mono text-[9px] text-emerald-500/80 h-32 overflow-hidden flex flex-col-reverse shadow-inner">
+                    <div id="ml-logs">
+                        <!-- Logs injected via JS -->
+                    </div>
                 </div>
             </div>
-        </nav>
 
-        <div class="flex-1 flex flex-col justify-center max-w-lg w-full mx-auto">
+            <!-- Scanline effect -->
+            <div
+                class="absolute inset-x-0 h-1 bg-blue-500/20 top-0 animate-[scan_3s_linear_infinite] shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes scan {
+            from {
+                top: 0%
+            }
 
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                Detect Fraud Globally. <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">Secure
-                    Locally.</span>
-            </h1>
-            <p class="text-gray-400 mb-12 text-lg">
-                Experience financial security like never before. Monitor and protect every transaction in real-time with
-                our advanced AI nucleus.
-            </p>
+            to {
+                top: 100%
+            }
+        }
 
-            <div class="w-full bg-zinc-900/50 border border-green-500/10 p-8 rounded-2xl backdrop-blur-sm">
-                <h2 class="text-2xl font-bold text-white mb-6 font-sans">Log in to your account</h2>
+        .loader-ring {
+            border-top-color: #2563eb;
+        }
+    </style>
+    <script>
+        const logs = [
+            "Initializing secure bridge...",
+            "Establishing VPN handshake...",
+            "Analyzing hardware fingerprint v4...",
+            "Scanning local memory space...",
+            "Validating behavioral vectors...",
+            "Contacting neural processing cluster [NORTH-B]...",
+            "Running probabilistic fraud model...",
+            "Checking global threat intelligence DB...",
+            "Verifying sub-second latency packets...",
+            "Analyzing biometric entropy...",
+            "Decrypting RSA-4096 session key...",
+            "Validation successful. Protocols active."
+        ];
+        const logContainer = document.getElementById('ml-logs');
+        const statusText = document.getElementById('loading-status');
+        let logIdx = 0;
 
-                <form onsubmit="handleLogin(event)" class="space-y-5">
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email</label>
-                        <input type="email" value="admin@deciper.com"
-                            class="w-full bg-black/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition"
+        function addLog() {
+            if (logIdx < logs.length) {
+                const div = document.createElement('div');
+                div.className = "mb-1 opacity-0 animate-in fade-in slide-in-from-bottom-1 duration-300";
+                div.innerHTML = `<span class="text-slate-600">[${new Date().toLocaleTimeString('en-GB', { hour12: false })}]</span> > ${logs[logIdx]}`;
+                logContainer.appendChild(div);
+                statusText.innerText = logs[logIdx].replace('...', '');
+                logIdx++;
+                setTimeout(addLog, 600 + Math.random() * 800);
+            } else {
+                setTimeout(() => {
+                    const loader = document.getElementById('loading-screen');
+                    if (loader) loader.classList.add('hidden');
+                }, 1200);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            addLog();
+        });
+
+        // Backup safety
+        setTimeout(() => {
+            const loader = document.getElementById('loading-screen');
+            if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+        }, 8000);
+    </script>
+
+    <!-- Back Button (Left Top Bold) -->
+    <a href="landing.html"
+        class="absolute top-6 left-6 z-50 flex items-center gap-2 text-slate-500 hover:text-slate-900 transition group p-2 rounded-lg hover:bg-white/50">
+        <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform stroke-[3px]"></i>
+        <span class="font-bold text-sm">Back</span>
+    </a>
+
+    <!-- Left Side: Content & Form -->
+    <div
+        class="w-full md:w-1/2 h-full flex flex-col p-8 md:p-12 z-10 relative overflow-y-auto bg-slate-50 justify-center">
+
+        <div class="flex-1 flex flex-col justify-center max-w-md w-full mx-auto relative z-10">
+
+            <div class="mb-10 text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-3 tracking-tight">
+                    Login
+                </h1>
+            </div>
+
+            <div class="w-full bg-white border border-slate-200 p-8 rounded-2xl shadow-xl shadow-slate-200/50">
+                <form onsubmit="handleLogin(event)" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Email</label>
+                        <input type="email" value="admin@decipher.com"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition font-bold"
                             placeholder="name@company.com">
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Password</label>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Password</label>
+                        </div>
                         <input type="password" value="password123"
-                            class="w-full bg-black/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition font-bold"
                             placeholder="••••••••">
                     </div>
 
-                    <div class="flex justify-between items-center text-sm pt-2">
-                        <label class="flex items-center text-gray-400 hover:text-gray-300 cursor-pointer select-none">
-                            <input type="checkbox"
-                                class="mr-2.5 rounded bg-zinc-800 border-zinc-600 text-green-500 focus:ring-0 focus:ring-offset-0">
-                            Remember me
-                        </label>
-                        <a href="#"
-                            class="text-green-400 hover:text-green-300 hover:underline text-xs font-bold transition">Forgot
-                            password?</a>
-                    </div>
-
                     <button id="submitBtn" type="submit"
-                        class="w-full bg-green-600 hover:bg-green-500 text-black font-bold py-3.5 rounded-lg transition-all shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] flex items-center justify-center gap-2 mt-4">
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30 flex items-center justify-center gap-2 mt-4 uppercase tracking-widest text-sm">
                         <span>Log In</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
 
-                <p class="mt-6 text-center text-sm text-gray-500">
-                    Don't have an account? <a href="landing.html"
-                        class="text-white font-bold hover:text-green-400 transition">Start Free Trial</a>
-                </p>
+
             </div>
 
-            <div class="text-xs text-zinc-600 text-center mt-8">
-                &copy; 2026 Deciper Security Inc. All rights reserved.
+            <!-- Access Control Hint -->
+            <div class="mt-6 p-4 bg-slate-100 border border-slate-200 rounded-lg text-[10px] text-slate-500 font-mono">
+                <div class="font-bold text-slate-900 mb-2 uppercase tracking-widest flex items-center gap-1.5">
+                    <i data-lucide="shield-alert" class="w-3 h-3 text-blue-600"></i> Access Authorization Levels
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between border-b border-slate-200 pb-1">
+                        <span class="text-blue-600 font-bold uppercase">Dashboard Tier</span>
+                        <span>[Any @gmail.com]</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>tester@decipher.com</span>
+                        <span>test_pass_123</span>
+                    </div>
+                    <div class="flex justify-between opacity-60">
+                        <span class="italic">qa_lead@decipher.com</span>
+                        <span>qa_secure_789</span>
+                    </div>
+                    <div class="pt-2 flex justify-between border-t border-slate-200">
+                        <span class="text-slate-400 font-bold uppercase">Waitlist Tier (No Plan)</span>
+                        <span>guest_audit@decipher.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-[9px] text-slate-400 text-center mt-4 italic">
+                * Public registration is disabled. Login is restricted to authorized testers and purchased
+                organic/business accounts.
+            </p>
+
+            <div class="text-xs text-slate-400 text-center mt-8 font-mono tracking-widest">
+                &copy; 2026 DECIPHER SECURITY INC.
             </div>
         </div>
     </div>
 
-    <!-- Right Side: Neural Network Visualization -->
-    <div
-        class="hidden md:block w-1/2 bg-zinc-950 relative overflow-hidden rounded-l-[3rem] border-l border-white/5 shadow-2xl">
+    <!-- Right Side: Visual (Blue/Light Theme) -->
+    <div class="hidden md:block w-1/2 bg-slate-50 relative overflow-hidden border-l border-slate-200">
+        <div class="absolute inset-0 bg-grid-pattern opacity-100"></div>
+
+        <!-- Neural Canvas -->
         <canvas id="auth-canvas" class="absolute inset-0 w-full h-full"></canvas>
 
-        <!-- Overlay UI -->
+        <!-- Gradient Overlay -->
         <div
-            class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent z-10 pointer-events-none">
+            class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10 pointer-events-none">
         </div>
 
+        <!-- Content Overlay -->
         <div class="absolute bottom-16 left-16 right-16 z-20 pointer-events-none text-left">
-            <!-- Logo -->
-            <div class="mb-8">
-                <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/10 text-xs font-mono text-white mb-6">
-                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                    SECURE LOGIN
-                </div>
-                <div class="flex items-center gap-3">
-                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M60 20V80H80V20H60Z" fill="white" />
-                        <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
-                        <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
-                    </svg>
-                    <span class="text-3xl font-bold tracking-tight text-white">DECIPER</span>
-                </div>
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 bg-white/90 backdrop-blur text-xs font-mono text-blue-700 mb-6 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                SYSTEM ACTIVE
             </div>
-            <h3 class="text-4xl font-bold text-white mb-4 leading-tight">Global Threat <br> Intelligence</h3>
-            <p class="text-zinc-400 max-w-md text-base leading-relaxed">
-                Our neural engine processes 25 million signals per second to detect anomalies before they become
-                breaches.
+            <h3 class="text-4xl font-black text-slate-900 mb-4 leading-tight tracking-tight">Decipher Intelligence.</h3>
+            <p class="text-slate-500 max-w-md text-base leading-relaxed font-medium">
+                Real-time fraud detection engine.
             </p>
         </div>
     </div>
@@ -293,27 +335,82 @@
         lucide.createIcons();
 
         // Handle Login Form Submit
-        const handleLogin = (e) => {
-            e.preventDefault();
+        const handleLogin = (event) => {
+            event.preventDefault(); // Ensure event is passed correctly
 
+            const emailInput = document.querySelector('input[type="email"]');
+            const passwordInput = document.querySelector('input[type="password"]');
             const btn = document.getElementById('submitBtn');
-            const originalContent = btn.innerHTML;
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
 
             // Loading State
             btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> AUTHENTICATING...`;
             btn.classList.add('opacity-80', 'cursor-not-allowed');
-            lucide.createIcons();
+            // Re-render icons if needed, though usually automatic
+            if (window.lucide) window.lucide.createIcons();
 
+            // --- Access Control Logic (Revised) ---
+            let userRole = "Administrator";
+            let userName = "Admin";
+            let hasPlan = true;
+
+            // 1. Gmail users are automatically Admins
+            if (email.endsWith('@gmail.com')) {
+                userRole = "Administrator";
+                userName = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
+                hasPlan = true;
+            }
+            // 2. Specific authorized testers
+            else if (email === "tester@decipher.com" && password === "test_pass_123") {
+                userRole = "QA Tester";
+                userName = "Test User";
+                hasPlan = true;
+            } else if (email === "qa_lead@decipher.com" && password === "qa_secure_789") {
+                userRole = "QA Lead";
+                userName = "Lead Tester";
+                hasPlan = true;
+            } else if (email === "admin@decipher.com" && password === "password123") {
+                userRole = "Administrator";
+                userName = "Super Admin";
+                hasPlan = true;
+            }
+            // 3. Guest Audit
+            else if (email === "guest_audit@decipher.com" && password === "guest_view_456") {
+                userRole = "Auditor";
+                userName = "Guest Audit";
+                hasPlan = false;
+            }
+            else {
+                // Secret Admin Bypass for Local Dev
+                if (email === 'admin' || email === 'root') {
+                    userRole = "Administrator";
+                    userName = "Local Admin";
+                    hasPlan = true;
+                } else {
+                    btn.innerHTML = `<span>Log In</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                    if (window.lucide) window.lucide.createIcons();
+                    alert("Unauthorized access. Please login with a purchased account or tester credentials.");
+                    return;
+                }
+            }
+
+            const mockUser = {
+                name: userName,
+                email: email,
+                role: userRole,
+                hasPlan: hasPlan,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=2563eb&color=ffffff&rounded=true&bold=true`,
+            };
+
+            localStorage.setItem('decipher_user', JSON.stringify(mockUser));
+
+            // Small delay for cinematic feel
             setTimeout(() => {
-                const mockUser = {
-                    name: "Admin User",
-                    email: "admin@deciper.com",
-                    avatar: "https://ui-avatars.com/api/?name=Admin+User&background=22c55e&color=000000&rounded=true&bold=true",
-                    role: "Administrator",
-                };
-                localStorage.setItem('deciper_user', JSON.stringify(mockUser));
-                window.location.href = 'index.html';
-            }, 1500);
+                window.location.replace((hasPlan || userRole === 'Administrator') ? 'console.html' : 'waitlist.html');
+            }, 800);
         };
 
         // Neural Network Animation (Vanilla JS)
@@ -353,14 +450,13 @@
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    // GREEN PARTICLES
-                    ctx.fillStyle = 'rgba(74, 222, 128, 0.5)'; // Green-400
+                    ctx.fillStyle = '#93c5fd'; // blue-300
                     ctx.fill();
                 }
             }
 
             // Initialize
-            for (let i = 0; i < 80; i++) {
+            for (let i = 0; i < 50; i++) {
                 particles.push(new Particle());
             }
 
@@ -375,14 +471,15 @@
                         const dy = particles[i].y - particles[j].y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
 
-                        if (distance < 120) {
-                            // GREEN LINES
-                            const opacity = 0.15 - distance / 1000;
-                            ctx.strokeStyle = `rgba(74, 222, 128, ${opacity})`;
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
+                        if (distance < 150) {
+                            const opacity = 0.3 - distance / 500;
+                            if (opacity > 0) {
+                                ctx.strokeStyle = `rgba(37, 99, 235, ${opacity})`; // blue-600
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.stroke();
+                            }
                         }
                     }
                 }
@@ -397,14 +494,6 @@
             }
 
             animate();
-
-            // Hide loading screen
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const loader = document.getElementById('loading-screen');
-                    if (loader) loader.classList.add('hidden');
-                }, 1000);
-            });
 
             // Backup safeguard
             setTimeout(() => {

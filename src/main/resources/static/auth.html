@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | DECIPER</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='white'/%3E%3Ccircle cx='55' cy='30' r='10' fill='white'/%3E%3Ccircle cx='80' cy='30' r='10' fill='white'/%3E%3Ccircle cx='30' cy='55' r='10' fill='white'/%3E%3Ccircle cx='55' cy='55' r='10' fill='white'/%3E%3Ccircle cx='80' cy='55' r='10' fill='white'/%3E%3C/svg%3E">
+
+    <!-- Styles -->
+    <style>
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #3b82f6;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            800: '#1e293b',
+                            950: '#0f172a',
+                        },
+                        blue: {
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+
+    <style>
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        #globe-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 768px) {
+            #globe-container {
+                width: 100%;
+                opacity: 0.3;
+            }
+        }
+
+        /* Custom Scrollbar for Auth Page */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+    </style>
+</head>
+
+<body class="h-screen w-full flex relative selection:bg-blue-500/30 selection:text-blue-200 bg-zinc-950">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="flex flex-col items-center gap-4">
+            <div class="loader"></div>
+            <span class="text-xs font-mono text-blue-400 tracking-[0.2em] uppercase">Security Check</span>
+        </div>
+    </div>
+
+    <!-- Left Side: Content & Form -->
+    <div class="w-full md:w-1/2 h-full flex flex-col p-8 md:p-12 z-10 relative overflow-y-auto bg-zinc-950">
+        <!-- Navbar -->
+        <nav class="fixed top-0 w-full z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <a href="landing.html" class="flex items-center gap-2">
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60 20V80H80V20H60Z" fill="white" />
+                        <path d="M20 50L60 20V45L40 60L20 50Z" fill="#3b82f6" />
+                        <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#2563eb" />
+                    </svg>
+                    <span class="text-xl font-bold tracking-wider text-white uppercase">DECIPER</span>
+                </a>
+
+                <div class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-400 group/nav">
+                    <a href="landing.html" class="hover:text-white transition">Home</a>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Why Deciper <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Solutions <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <a href="landing.html#platform"
+                            class="hover:text-white transition flex items-center gap-1">Platform <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></a>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Resources <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                    <div class="relative group py-8 cursor-pointer">
+                        <span class="hover:text-white transition flex items-center gap-1">Company <i
+                                data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="auth.html"
+                        class="flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white transition group">
+                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex-1 flex flex-col justify-center max-w-lg w-full mx-auto relative z-10">
+
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                Detect Fraud Globally. <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Secure
+                    Locally.</span>
+            </h1>
+            <p class="text-gray-400 mb-12 text-lg">
+                Experience financial security like never before. Monitor and protect every transaction in real-time with
+                our advanced AI nucleus.
+            </p>
+
+            <div class="w-full bg-zinc-900/50 border border-white/5 p-8 rounded-2xl backdrop-blur-sm shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-6 font-sans">Log in to your account</h2>
+
+                <form onsubmit="handleLogin(event)" class="space-y-5">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email</label>
+                        <input type="email" value="admin@deciper.com"
+                            class="w-full bg-black/50 border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                            placeholder="name@company.com">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Password</label>
+                        <input type="password" value="password123"
+                            class="w-full bg-black/50 border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                            placeholder="••••••••">
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm pt-2">
+                        <label class="flex items-center text-gray-400 hover:text-gray-300 cursor-pointer select-none">
+                            <input type="checkbox"
+                                class="mr-2.5 rounded bg-zinc-800 border-zinc-700 text-blue-500 focus:ring-0 focus:ring-offset-0">
+                            Remember me
+                        </label>
+                        <a href="#"
+                            class="text-blue-400 hover:text-blue-300 hover:underline text-xs font-bold transition">Forgot
+                            password?</a>
+                    </div>
+
+                    <button id="submitBtn" type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2 mt-4">
+                        <span>Log In</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-gray-500">
+                    Don't have an account? <a href="landing.html"
+                        class="text-white font-bold hover:text-blue-400 transition">Start Free Trial</a>
+                </p>
+            </div>
+
+            <div class="text-xs text-zinc-600 text-center mt-8">
+                &copy; 2026 Deciper Security Inc. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Neural Network Visualization -->
+    <div
+        class="hidden md:block w-1/2 bg-zinc-950 relative overflow-hidden rounded-l-[3rem] border-l border-white/5 shadow-2xl">
+        <canvas id="auth-canvas" class="absolute inset-0 w-full h-full"></canvas>
+
+        <!-- Overlay UI -->
+        <div
+            class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent z-10 pointer-events-none">
+        </div>
+
+        <div class="absolute bottom-16 left-16 right-16 z-20 pointer-events-none text-left">
+            <!-- Logo -->
+            <div class="mb-8">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/10 text-xs font-mono text-white mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                    SECURE LOGIN
+                </div>
+                <div class="flex items-center gap-3">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60 20V80H80V20H60Z" fill="white" />
+                        <path d="M20 50L60 20V45L40 60L20 50Z" fill="#3b82f6" />
+                        <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#2563eb" />
+                    </svg>
+                    <span class="text-3xl font-bold tracking-tight text-white">DECIPER</span>
+                </div>
+            </div>
+            <h3 class="text-4xl font-bold text-white mb-4 leading-tight">Global Threat <br> Intelligence</h3>
+            <p class="text-zinc-400 max-w-md text-base leading-relaxed">
+                Our neural engine processes 25 million signals per second to detect anomalies before they become
+                breaches.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Handle Login Form Submit
+        const handleLogin = (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const originalContent = btn.innerHTML;
+
+            // Loading State
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> AUTHENTICATING...`;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            lucide.createIcons();
+
+            setTimeout(() => {
+                const mockUser = {
+                    name: "Admin User",
+                    email: "admin@deciper.com",
+                    avatar: "https://ui-avatars.com/api/?name=Admin+User&background=2563eb&color=ffffff&rounded=true&bold=true",
+                    role: "Administrator",
+                };
+                localStorage.setItem('deciper_user', JSON.stringify(mockUser));
+                window.location.href = 'index.html';
+            }, 1500);
+        };
+
+        // Neural Network Animation (Vanilla JS)
+        (function () {
+            const canvas = document.getElementById('auth-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+
+            function resize() {
+                width = canvas.width = canvas.parentElement.offsetWidth;
+                height = canvas.height = canvas.parentElement.offsetHeight;
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2 + 1;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    // BLUE PARTICLES
+                    ctx.fillStyle = 'rgba(96, 165, 250, 0.5)'; // Blue-400
+                    ctx.fill();
+                }
+            }
+
+            // Initialize
+            for (let i = 0; i < 80; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw connections
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 120) {
+                            // BLUE LINES
+                            const opacity = 0.15 - distance / 1000;
+                            ctx.strokeStyle = `rgba(96, 165, 250, ${opacity})`;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw particles
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Hide loading screen
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const loader = document.getElementById('loading-screen');
+                    if (loader) loader.classList.add('hidden');
+                }, 1000);
+            });
+
+            // Backup safeguard
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                if (loader && !loader.classList.contains('hidden')) {
+                    loader.classList.add('hidden');
+                }
+            }, 3000);
+        })();
+    </script>
+</body>
+
+</html>

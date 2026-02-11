@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & Fees | DECIPER</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='white'/%3E%3Ccircle cx='55' cy='30' r='10' fill='white'/%3E%3Ccircle cx='80' cy='30' r='10' fill='white'/%3E%3Ccircle cx='30' cy='55' r='10' fill='white'/%3E%3Ccircle cx='55' cy='55' r='10' fill='white'/%3E%3Ccircle cx='80' cy='55' r='10' fill='white'/%3E%3C/svg%3E">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #ffffff;
+            color: #1e293b;
+        }
+
+        /* Main floating navbar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Pricing sub-tabs nav */
+        .pricing-nav {
+            position: sticky;
+            top: 5rem;
+            z-index: 39;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* Left sidebar */
+        .sidebar-link {
+            font-size: 0.875rem;
+            color: #64748b;
+            padding: 4px 0;
+            display: block;
+            transition: color 0.2s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            color: #2563eb;
+        }
+
+        .sidebar-category {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 1.25rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .sidebar-category:first-child {
+            margin-top: 0;
+        }
+
+        /* Product section */
+        .product-section {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .product-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+
+        .check-icon {
+            color: #2563eb;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Pricing detail row */
+        .pricing-detail-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .pricing-detail-row:last-child {
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        /* FAQ Accordion */
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #2563eb;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .faq-question:hover {
+            color: #1d4ed8;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: #475569;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            padding-bottom: 1.25rem;
+        }
+
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+        }
+
+        .faq-chevron {
+            transition: transform 0.2s;
+            color: #2563eb;
+        }
+
+        /* Tab active state */
+        .tab-link {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: #64748b;
+            padding: 0.75rem 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-link:hover {
+            color: #1e293b;
+        }
+
+        .tab-link.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        /* Start now button */
+        .btn-start {
+            background: #2563eb;
+            color: white;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-start:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-contact {
+            background: #1e293b;
+            color: white;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            padding: 0.625rem 1.5rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            transition: background 0.2s;
+        }
+
+        .btn-contact:hover {
+            background: #0f172a;
+        }
+
+        /* Included badge */
+        .included-badge {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.8125rem;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Floating Navbar (same as landing page) -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="10" fill="currentColor" class="text-blue-600" />
+                    <circle cx="55" cy="25" r="10" fill="currentColor" class="text-blue-600" />
+                    <circle cx="85" cy="25" r="10" fill="currentColor" class="text-blue-600" />
+                    <circle cx="25" cy="55" r="10" fill="currentColor" class="text-blue-600" />
+                    <circle cx="55" cy="55" r="10" fill="currentColor" class="text-blue-600" />
+                    <circle cx="85" cy="55" r="10" fill="currentColor" class="text-blue-600" />
+                </svg>
+                <span class="text-xl font-black tracking-tighter text-slate-900 uppercase">Deciper</span>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-8 text-[13px] font-medium text-slate-500">
+                <a href="landing.html#platform" class="hover:text-slate-900 transition flex items-center gap-1">Products
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i></a>
+                <a href="landing.html#platform"
+                    class="hover:text-slate-900 transition flex items-center gap-1">Solutions <i
+                        data-lucide="chevron-down" class="w-3.5 h-3.5"></i></a>
+                <a href="#" class="hover:text-slate-900 transition flex items-center gap-1">Developers <i
+                        data-lucide="chevron-down" class="w-3.5 h-3.5"></i></a>
+                <a href="#" class="hover:text-slate-900 transition flex items-center gap-1">Resources <i
+                        data-lucide="chevron-down" class="w-3.5 h-3.5"></i></a>
+                <a href="pricing.html" class="text-slate-900 font-semibold transition">Pricing</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="auth.html"
+                    class="text-[13px] font-semibold text-slate-900 px-4 py-2 hover:bg-slate-50 rounded transition flex items-center gap-1">
+                    Sign in <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
+                <a href="mailto:sales@deciper.com" class="btn-contact">
+                    Contact sales <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Spacer for fixed navbar -->
+    <div class="h-20"></div>
+
+    <!-- Sticky Pricing Sub-Tabs -->
+    <nav class="pricing-nav">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-12">
+            <div class="flex items-center gap-8">
+                <a href="#standard" class="tab-link active" onclick="setActiveTab(this)">Standard pricing</a>
+                <a href="#custom" class="tab-link" onclick="setActiveTab(this)">Custom pricing</a>
+                <a href="#faqs" class="tab-link" onclick="setActiveTab(this)">FAQs</a>
+            </div>
+            <a href="mailto:sales@deciper.com" class="btn-contact">
+                Contact sales <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 flex gap-12 pt-10" id="standard">
+
+        <!-- Left Sidebar (sticks below both navs) -->
+        <aside class="hidden lg:block w-56 flex-shrink-0 sticky top-36 self-start">
+            <div class="sidebar-category">Fraud Prevention</div>
+            <a href="#payments" class="sidebar-link active" onclick="activateSidebar(this)">Real-time Detection</a>
+            <a href="#radar" class="sidebar-link" onclick="activateSidebar(this)">Radar</a>
+
+            <div class="sidebar-category">Risk Management</div>
+            <a href="#connect" class="sidebar-link" onclick="activateSidebar(this)">Risk Scoring</a>
+
+            <div class="sidebar-category">Revenue & Analytics</div>
+            <a href="#billing" class="sidebar-link" onclick="activateSidebar(this)">Billing</a>
+            <a href="#invoicing" class="sidebar-link" onclick="activateSidebar(this)">Invoicing</a>
+
+            <div class="sidebar-category">More</div>
+            <a href="#atlas" class="sidebar-link" onclick="activateSidebar(this)">Atlas</a>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="flex-1 min-w-0 pb-20">
+
+            <!-- ============================ -->
+            <!-- SECTION: Fraud Prevention -->
+            <!-- ============================ -->
+            <section id="payments" class="product-section" style="border-top:none; padding-top:0;">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Fraud Prevention</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8 max-w-2xl">
+                    Optimise fraud detection, reduce chargebacks, and protect revenue with Deciper's advanced AI engine.
+                </p>
+
+                <!-- Product: Real-time Detection -->
+                <div class="product-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900 text-sm">Real-time Detection</p>
+                            <p class="text-xs text-slate-500">AI-powered fraud screening for every transaction.</p>
+                        </div>
+                    </div>
+                    <a href="auth.html" class="btn-start">Start now <i data-lucide="chevron-right"
+                            class="w-3.5 h-3.5"></i></a>
+                </div>
+
+                <div class="pl-0 space-y-1 mb-6">
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Reduce fraud with ML
+                        powered by the Deciper network.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Customise fraud
+                        prevention by creating custom rules.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Get rich fraud
+                        insights for more efficient and accurate manual reviews.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Save engineering time
+                        with pre-built UIs.</div>
+                </div>
+
+                <!-- Pricing Details -->
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Deciper's machine learning</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Fraud protection powered by billions of data
+                            points across the Deciper network.</p>
+                    </div>
+                    <div>
+                        <p class="included-badge mb-1">Included</p>
+                        <p class="text-xs text-slate-500">For accounts with all payment methods on standard pricing</p>
+                        <p class="font-bold text-slate-900 text-lg mt-3">$0.04</p>
+                        <p class="text-xs text-slate-500">per screened transaction for accounts with custom pricing for
+                            any payment method</p>
+                    </div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Deciper for Fraud Teams</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Advanced fraud protection tools allowing for
+                            greater control and customisable settings. Includes Deciper's machine learning.</p>
+                        <p class="text-xs text-slate-400 mt-2">Support for Deciper risk scores for non-platform
+                            transactions is available. <a href="#" class="text-blue-600 hover:underline">Contact
+                                sales</a> to learn more.</p>
+                        <p class="text-xs text-slate-500 mt-3 flex items-center gap-1.5">
+                            <i data-lucide="gift" class="w-3.5 h-3.5 text-slate-400"></i>
+                            Try for free for 30 days
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 text-lg">$0.06</p>
+                        <p class="text-xs text-slate-500">per screened transaction for accounts with all payment methods
+                            on standard pricing</p>
+                        <a href="#"
+                            class="text-blue-600 text-xs font-semibold hover:underline flex items-center gap-1 mt-2">Contact
+                            us <i data-lucide="chevron-right" class="w-3 h-3"></i></a>
+                    </div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Dispute prevention</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Help reduce dispute rates with dispute
+                            prevention tools powered by Verifi from Visa and Ethoca from Mastercard. <a href="#"
+                                class="text-blue-600 hover:underline">Request access.</a></p>
+                    </div>
+                    <div>
+                        <p class="included-badge mb-1">Included</p>
+                        <p class="text-xs text-blue-600 hover:underline cursor-pointer">Dispute deflection lookups</p>
+                        <p class="font-bold text-slate-900 text-lg mt-3">$10.00</p>
+                        <p class="text-xs text-slate-500">per Visa resolution</p>
+                        <p class="font-bold text-slate-900 text-lg mt-3">$10.00</p>
+                        <p class="text-xs text-slate-500">per Visa Compelling Evidence 3.0 block</p>
+                        <p class="font-bold text-slate-900 text-lg mt-3">$20.00</p>
+                        <p class="text-xs text-slate-500">per Mastercard resolution</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Radar -->
+            <!-- ============================ -->
+            <section id="radar" class="product-section">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Radar — Advanced Detection</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8 max-w-2xl">
+                    Advanced fraud detection and prevention tools, powered by the Deciper network.
+                </p>
+
+                <div class="product-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <i data-lucide="radar" class="w-5 h-5 text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900 text-sm">Radar</p>
+                            <p class="text-xs text-slate-500">Advanced fraud detection and prevention tools.</p>
+                        </div>
+                    </div>
+                    <a href="auth.html" class="btn-start">Start now <i data-lucide="chevron-right"
+                            class="w-3.5 h-3.5"></i></a>
+                </div>
+
+                <div class="pl-0 space-y-1 mb-6">
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Reduce fraud with ML
+                        powered by the Deciper network.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Customise fraud
+                        prevention by creating custom rules.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Get rich fraud
+                        insights for more efficient and accurate manual reviews.</div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Payment optimisations</p>
+                    </div>
+                    <div>
+                        <p class="included-badge mb-1">Included with Payments</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Risk Management -->
+            <!-- ============================ -->
+            <section id="connect" class="product-section">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Risk Management</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8 max-w-2xl">
+                    Enhance your platform by embedding risk services — set up risk profiles, issue alerts, and offer
+                    real-time monitoring.
+                </p>
+
+                <div class="product-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-violet-100 flex items-center justify-center">
+                            <i data-lucide="activity" class="w-5 h-5 text-violet-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900 text-sm">Risk Scoring</p>
+                            <p class="text-xs text-slate-500">Embedded risk scoring for platforms and marketplaces.</p>
+                        </div>
+                    </div>
+                    <a href="auth.html" class="btn-start">Start now <i data-lucide="chevron-right"
+                            class="w-3.5 h-3.5"></i></a>
+                </div>
+
+                <div class="pl-0 space-y-1 mb-6">
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Launch faster with
+                        pre-built embedded components.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Save time by using
+                        tooling from Deciper for onboarding, risk, and more.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Grow revenue by
+                        monetising risk analysis.</div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Deciper handles scoring for your users</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">Deciper sets and collects risk scores from
+                            your users, so you don't have to.</p>
+                    </div>
+                    <div>
+                        <p class="included-badge mb-1">Included</p>
+                        <p class="text-xs text-slate-500">with Fraud Prevention</p>
+                        <p class="font-bold text-slate-900 text-sm mt-3">0.25% starting fee for platforms that deploy
+                            their own risk scoring to earn revenue on each transaction.</p>
+                        <a href="#"
+                            class="text-blue-600 text-xs font-semibold hover:underline flex items-center gap-1 mt-2">See
+                            pricing details <i data-lucide="chevron-right" class="w-3 h-3"></i></a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Revenue & Analytics -->
+            <!-- ============================ -->
+            <section id="billing" class="product-section">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Revenue and analytics automation</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-8 max-w-2xl">
+                    Streamline critical business processes with modular billing, tax, revenue reporting, and data
+                    analysis tools that work seamlessly together.
+                </p>
+
+                <div class="product-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center">
+                            <i data-lucide="receipt" class="w-5 h-5 text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900 text-sm">Billing</p>
+                            <p class="text-xs text-slate-500">Subscription management software for recurring,
+                                usage-based, and one-time billing.</p>
+                        </div>
+                    </div>
+                    <a href="auth.html" class="btn-start">Start now <i data-lucide="chevron-right"
+                            class="w-3.5 h-3.5"></i></a>
+                </div>
+
+                <div class="pl-0 space-y-1 mb-6">
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Respond to user
+                        demand faster with flexible pricing models.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Increase revenue and
+                        reduce churn with Smart Retries and recovery workflow automations.</div>
+                    <div class="check-item"><i data-lucide="check" class="w-4 h-4 check-icon"></i> Save engineering time
+                        with no-code tools or our composable APIs.</div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Starter</p>
+                        <p class="text-xs text-slate-500">For businesses getting started with subscription billing.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 text-lg">0.5%</p>
+                        <p class="text-xs text-slate-500">of recurring charges</p>
+                    </div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Scale</p>
+                        <p class="text-xs text-slate-500">For fast-growing businesses that need advanced billing logic.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 text-lg">0.8%</p>
+                        <p class="text-xs text-slate-500">of recurring charges</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Invoicing -->
+            <!-- ============================ -->
+            <section id="invoicing" class="product-section">
+                <div class="product-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-sky-100 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-5 h-5 text-sky-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900 text-sm">Invoicing</p>
+                            <p class="text-xs text-slate-500">Create and send online invoices, no code required.</p>
+                        </div>
+                    </div>
+                    <a href="auth.html" class="btn-start">Start now <i data-lucide="chevron-right"
+                            class="w-3.5 h-3.5"></i></a>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Invoicing</p>
+                        <p class="text-xs text-slate-500">Send hosted invoices and collect payment.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 text-lg">0.4%</p>
+                        <p class="text-xs text-slate-500">per paid invoice</p>
+                        <p class="text-xs text-slate-400 mt-1">$2.00 cap per invoice</p>
+                    </div>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Advanced invoices</p>
+                        <p class="text-xs text-slate-500">Invoices with special features like multi-currency or custom
+                            numbering.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 text-lg">0.5%</p>
+                        <p class="text-xs text-slate-500">per paid invoice</p>
+                        <p class="text-xs text-slate-400 mt-1">$2.50 cap per invoice</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Atlas -->
+            <!-- ============================ -->
+            <section id="atlas" class="product-section">
+                <div class="product-card">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center">
+                            <i data-lucide="globe" class="w-5 h-5 text-orange-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900 text-sm">Atlas</p>
+                            <p class="text-xs text-slate-500">Start a company from anywhere in the world.</p>
+                        </div>
+                    </div>
+                    <a href="auth.html" class="btn-start">Start now <i data-lucide="chevron-right"
+                            class="w-3.5 h-3.5"></i></a>
+                </div>
+
+                <div class="pricing-detail-row">
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm mb-1">Company formation</p>
+                        <p class="text-xs text-slate-500">Incorporate your company with Deciper Atlas.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900 text-lg">$500</p>
+                        <p class="text-xs text-slate-500">one-time fee</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Custom Pricing -->
+            <!-- ============================ -->
+            <section id="custom" class="product-section">
+                <div class="flex items-center gap-2 mb-2">
+                    <a href="#" class="text-blue-600 text-xs font-semibold hover:underline flex items-center gap-1">
+                        Custom pricing <i data-lucide="download" class="w-3 h-3"></i>
+                    </a>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Custom pricing for large volumes</h2>
+                <p class="text-slate-500 text-sm leading-relaxed mb-6 max-w-2xl">
+                    For businesses processing large volumes or with unique business models, we offer custom pricing.
+                    Contact our sales team to discuss your needs.
+                </p>
+                <a href="mailto:sales@deciper.com" class="btn-contact">
+                    Contact sales <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: Trusted By -->
+            <!-- ============================ -->
+            <section class="py-16 border-b border-slate-100">
+                <div class="flex items-center justify-center gap-16 opacity-40 grayscale">
+                    <span class="text-2xl font-bold tracking-tight">amazon</span>
+                    <span class="text-2xl font-bold tracking-tight uppercase">Maersk</span>
+                    <span class="text-2xl font-bold tracking-tight">twilio</span>
+                    <span class="text-2xl font-bold tracking-tight">Shopify</span>
+                </div>
+            </section>
+
+            <!-- ============================ -->
+            <!-- SECTION: FAQs -->
+            <!-- ============================ -->
+            <section id="faqs" class="py-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-10">FAQs</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        How are payment fees calculated?
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-chevron"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Our pricing is based on per-transaction fees. Each transaction that passes through Deciper's
+                        fraud detection engine is charged a flat fee based on your plan. Volume discounts are available
+                        for businesses processing over $1M monthly.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Will I be charged tax?
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-chevron"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Depending on your jurisdiction, applicable taxes may be added to your invoice. All listed prices
+                        are exclusive of tax.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Are there additional fees for refunds?
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-chevron"></i>
+                    </div>
+                    <div class="faq-answer">
+                        No, there are no additional fees for refunded transactions. However, the original screening fee
+                        is non-refundable as the fraud analysis has already been performed.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Do you have setup fees or monthly fees?
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-chevron"></i>
+                    </div>
+                    <div class="faq-answer">
+                        No setup fees. Our standard pricing model is purely usage-based with no minimum monthly charges.
+                        Enterprise plans may include a monthly platform fee in exchange for lower per-transaction rates.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Do you offer discounts?
+                        <i data-lucide="chevron-down" class="w-5 h-5 faq-chevron"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! We offer volume-based discounts for businesses with high transaction volumes. Startups may
+                        qualify for our startup programme with reduced rates. Contact our sales team for details.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ============================ -->
+    <!-- FOOTER: Comprehensive Stripe-style -->
+    <!-- ============================ -->
+    <!-- Minimal Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <!-- minimalist 6-dot logo (dark for light theme) -->
+                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="10" fill="#0f172a" />
+                    <circle cx="55" cy="25" r="10" fill="#0f172a" />
+                    <circle cx="85" cy="25" r="10" fill="#0f172a" />
+                    <circle cx="25" cy="55" r="10" fill="#0f172a" />
+                    <circle cx="55" cy="55" r="10" fill="#0f172a" />
+                    <circle cx="85" cy="55" r="10" fill="#0f172a" />
+                </svg>
+                <span class="text-lg font-bold text-slate-900 tracking-tight uppercase">Deciper</span>
+            </div>
+
+            <div class="text-slate-500 text-sm font-medium">
+                &copy; 2026 Deciper Security, Inc.
+            </div>
+
+            <div class="flex gap-6 text-sm font-bold text-slate-500 uppercase tracking-wider">
+                <a href="#" class="hover:text-slate-900 transition">Privacy</a>
+                <a href="#" class="hover:text-slate-900 transition">Terms</a>
+                <a href="mailto:sales@deciper.com" class="hover:text-slate-900 transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // FAQ accordion
+        function toggleFaq(el) {
+            const item = el.closest('.faq-item');
+            item.classList.toggle('open');
+        }
+
+        // Tab navigation
+        function setActiveTab(el) {
+            document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Sidebar navigation
+        function activateSidebar(el) {
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Highlight sidebar on scroll
+        const sections = document.querySelectorAll('.product-section[id]');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

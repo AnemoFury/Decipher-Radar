@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decipher Radar | Fraud Operations Center</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+
+    <!-- Auth Guard: Ensure only users with a plan can access the Radar -->
+    <script>
+        (function () {
+            const userData = localStorage.getItem('decipher_user');
+            if (!userData) {
+                window.location.href = 'auth.html';
+                return;
+            }
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Inline CSS2DRenderer to avoid CDN issues
+        THREE.CSS2DObject = class CSS2DObject extends THREE.Object3D {
+            constructor(element) {
+                super();
+                this.element = element || document.createElement('div');
+                this.element.style.position = 'absolute';
+                this.element.style.userSelect = 'none';
+                this.element.setAttribute('draggable', false);
+                this.addEventListener('removed', function () {
+                    this.traverse(function (object) {
+                        if (object.element instanceof Element && object.element.parentNode !== null) {
+                            object.element.parentNode.removeChild(object.element);
+                        }
+                    });
+                });
+            }
+            copy(source, recursive) {
+                super.copy(source, recursive);
+                this.element = source.element.cloneNode(true);
+                return this;
+            }
+        };
+        THREE.CSS2DObject.prototype.isCSS2DObject = true;
+
+        THREE.CSS2DRenderer = class CSS2DRenderer {
+            constructor(parameters = {}) {
+                const _this = this;
+                let _width, _height;
+                let _widthHalf, _heightHalf;
+                const _vector = new THREE.Vector3();
+                const _viewMatrix = new THREE.Matrix4();
+                const _viewProjectionMatrix = new THREE.Matrix4();
+                const domElement = parameters.element !== undefined ? parameters.element : document.createElement('div');
+                domElement.style.overflow = 'hidden';
+                this.domElement = domElement;
+                this.getSize = function () { return { width: _width, height: _height }; };
+                this.render = function (scene, camera) {
+                    if (scene.autoUpdate === true) scene.updateMatrixWorld();
+                    if (camera.parent === null) camera.updateMatrixWorld();
+                    _viewMatrix.copy(camera.matrixWorldInverse);
+                    _viewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, _viewMatrix);
+                    renderObject(scene, scene, camera);
+                };
+                this.setSize = function (width, height) {
+                    _width = width; _height = height;
+                    _widthHalf = _width / 2; _heightHalf = _height / 2;
+                    domElement.style.width = width + 'px';
+                    domElement.style.height = height + 'px';
+                };
+                function renderObject(object, scene, camera) {
+                    if (object.isCSS2DObject) {
+                        _vector.setFromMatrixPosition(object.matrixWorld);
+                        _vector.applyMatrix4(_viewProjectionMatrix);
+                        const element = object.element;
+                        const visible = object.visible && _vector.z >= -1 && _vector.z <= 1;
+                        element.style.display = visible ? '' : 'none';
+                        if (visible) {
+                            element.style.transform = 'translate(-50%,-50%) translate(' + (_vector.x * _widthHalf + _widthHalf) + 'px,' + (-_vector.y * _heightHalf + _heightHalf) + 'px)';
+                            if (element.parentNode !== domElement) domElement.appendChild(element);
+                        }
+                    }
+                    for (let i = 0, l = object.children.length; i < l; i++) {
+                        renderObject(object.children[i], scene, camera);
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb',
+                            dark: '#0f172a',
+                            black: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+
+        #canvas-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        /* Scanline Effect */
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.5;
+        }
+
+        .hud-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+
+        .loading-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .alert-active {
+            animation: pulse-red 2s infinite;
+            border-color: #ef4444 !important;
+        }
+
+        @keyframes edge-pulse {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .edge-pulse-active {
+            animation: edge-pulse 1s infinite;
+        }
+
+        .threat-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-left: 4px solid #ef4444;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .threat-card.visible {
+            transform: translateX(0);
+        }
+
+        /* Callout Labels — Big Letter Style */
+        .threat-label {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            pointer-events: none;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.15), 0 0 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 140px;
+            transform: translateY(-10px);
+        }
+
+        .threat-label .city {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #ff4b4b;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            line-height: 1;
+        }
+
+        .threat-label .risk {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.08em;
+        }
+
+        .leader-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to top, rgba(239, 68, 68, 0.6), rgba(239, 68, 68, 0));
+            position: absolute;
+            bottom: -50px;
+            left: 12px;
+        }
+    </style>
+</head>
+
+<body class="dark">
+
+    <div id="loading-screen" class="loading-overlay">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4 mx-auto">
+            </div>
+            <p class="font-mono text-xs uppercase tracking-[0.3em] text-blue-500">Initializing Cyber-Defense Node...</p>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+    <div id="edge-glow"
+        class="fixed inset-0 pointer-events-none z-[100] transition-opacity duration-500 opacity-0 border-[20px] border-red-500/20">
+    </div>
+    <div class="scanlines"></div>
+
+    <!-- HUD Layout -->
+    <div class="hud-overlay">
+        <!-- Top HUD -->
+        <div class="flex justify-between items-start">
+            <div class="hud-panel p-6 rounded-2xl flex items-center gap-6">
+                <a href="console.html" class="p-2 hover:bg-white/10 rounded-lg transition-colors pointer-events-auto">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </a>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tighter uppercase italic">Decipher Radar</h1>
+                    <p class="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1">
+                        Fraud Operations Center — Node: 103.242.197.254
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-end gap-3 h-full">
+                <!-- Global Metrics -->
+                <div class="hud-panel p-4 rounded-xl flex items-center gap-6">
+                    <div class="flex flex-col items-end">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Global Risk
+                            Level</span>
+                        <span
+                            class="text-emerald-500 font-black text-[10px] uppercase bg-emerald-500/10 px-2 py-0.5 rounded">Minimal</span>
+                    </div>
+                    <div class="w-px h-8 bg-white/10"></div>
+                    <div class="flex flex-col items-end text-white/80">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Active nodes</span>
+                        <span class="font-bold text-sm">4,281</span>
+                    </div>
+                </div>
+
+                <!-- Threat DNA Box (Busy/High-Tech) -->
+                <div id="threat-dna-panel"
+                    class="hud-panel p-5 rounded-xl w-72 border-r-4 border-red-500 shadow-2xl pointer-events-auto transition-all duration-500 opacity-30">
+                    <div class="flex justify-between items-center mb-4">
+                        <span
+                            class="text-[10px] font-black text-red-500 uppercase tracking-widest font-mono">LIVE_THREAT_DNA</span>
+                        <span class="text-[8px] font-mono text-slate-500">ID: AX-7291</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                                <i data-lucide="fingerprint" class="w-5 h-5 text-red-500"></i>
+                            </div>
+                            <div class="flex-1">
+                                <span class="text-[8px] font-bold text-slate-500 block">DEVICE FINGERPRINT</span>
+                                <span id="dna-fingerprint" class="text-sm font-mono font-black">SHA-256:
+                                    8A2F..3C</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="p-2 bg-white/5 rounded-lg border border-white/5">
+                                <span class="text-[8px] font-bold text-slate-500 block">SOURCE IP</span>
+                                <span id="dna-ip" class="text-lg font-mono font-black">---.---.---.---</span>
+                            </div>
+                            <div class="p-2 bg-white/5 rounded-lg border border-white/5">
+                                <span class="text-[8px] font-bold text-slate-500 block">CONFIDENCE</span>
+                                <span id="dna-confidence" class="text-lg font-mono font-black text-red-500">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Threat Card (Detection Context) -->
+                <div id="threat-card"
+                    class="threat-card p-5 rounded-l-xl w-72 backdrop-blur-xl border border-white/5 shadow-2xl pointer-events-auto">
+                    <div class="flex justify-between items-start mb-3">
+                        <span
+                            class="text-[10px] font-black text-red-500 uppercase tracking-widest font-mono">MITIGATION_ACTIVE</span>
+                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-[10px] text-slate-400 uppercase">Vector</span>
+                            <span id="threat-vector" class="text-sm font-mono font-black">---</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] text-slate-400 uppercase">Location</span>
+                            <span id="threat-loc"
+                                class="text-xl font-mono font-black text-red-400 tracking-tight">---</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom HUD -->
+        <div class="flex justify-between items-end">
+            <!-- Transaction Feed -->
+            <div class="hud-panel w-80 rounded-2xl overflow-hidden flex flex-col pointer-events-auto">
+                <div class="p-3 border-b border-white/5 flex justify-between items-center bg-white/5">
+                    <span class="text-[9px] font-black uppercase tracking-widest">Live Signals</span>
+                    <span class="flex items-center gap-1.5 text-[8px] font-bold text-blue-500">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> STREAMING
+                    </span>
+                </div>
+                <div id="mini-feed" class="h-48 p-4 font-mono text-[9px] space-y-2 overflow-y-auto overflow-hidden">
+                    <div class="text-slate-500 opacity-50">Syncing with global clusters...</div>
+                </div>
+            </div>
+
+            <!-- Global Stats -->
+            <div class="hud-panel p-6 rounded-2xl flex gap-12 text-white/80 pointer-events-auto">
+                <div>
+                    <span
+                        class="text-[9px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Throughput</span>
+                    <span class="text-xl font-black font-mono">14.2<span class="text-xs text-slate-500 font-normal">
+                            GB/s</span></span>
+                </div>
+                <div>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Total
+                        Volume</span>
+                    <span class="text-xl font-black font-mono">$482.1M</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="cycleRadarMode()" id="radar-mode-btn"
+                        class="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 group active:scale-95 flex items-center gap-2">
+                        <i data-lucide="filter"
+                            class="w-5 h-5 text-blue-400 group-hover:rotate-12 transition-transform"></i>
+                        <span id="radar-mode-label"
+                            class="text-[9px] font-black uppercase tracking-widest text-slate-400">Mode: High</span>
+                    </button>
+                    <button onclick="toggleView()"
+                        class="p-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-95">
+                        <i id="view-icon" data-lucide="database" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- THREE.JS GLOBE CORE ---
+        let scene, camera, renderer, labelRenderer, globe, atmosphere, clouds, arcs = [], markers = [];
+        let isDataView = true;
+        let globeMat;
+        let isRotatingToTarget = false;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 2.5);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            labelRenderer = new THREE.CSS2DRenderer();
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.domElement.style.position = 'absolute';
+            labelRenderer.domElement.style.top = '0px';
+            labelRenderer.domElement.style.pointerEvents = 'none';
+            document.getElementById('canvas-container').appendChild(labelRenderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            sunLight.position.set(5, 3, 5);
+            scene.add(sunLight);
+
+            // 1. Realistic 'Space View' Globe
+            const textureLoader = new THREE.TextureLoader();
+            const earthTexture = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+            const earthNight = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-night-lights.png');
+
+            globeMat = new THREE.MeshStandardMaterial({
+                map: earthTexture,
+                emissiveMap: earthNight,
+                emissive: new THREE.Color(0xffffff),
+                emissiveIntensity: 0.2,
+                roughness: 0.9,
+                metalness: 0.1,
+                transparent: true,
+                opacity: 1
+            });
+
+            const globeGeo = new THREE.SphereGeometry(0.85, 64, 64);
+            globe = new THREE.Mesh(globeGeo, globeMat);
+            scene.add(globe);
+
+            // 2. Blueprint / Border Overlay (The 'Glowing Borders' feel)
+            const borderMat = new THREE.MeshBasicMaterial({
+                color: 0x3b82f6,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+            const borderMesh = new THREE.Mesh(new THREE.SphereGeometry(0.852, 64, 64), borderMat);
+            globe.add(borderMesh);
+
+            // Subtle atmosphere glow
+            const atmosGeo = new THREE.SphereGeometry(0.87, 64, 64);
+            const atmosMat = new THREE.MeshBasicMaterial({
+                color: 0x3b82f6,
+                transparent: true,
+                opacity: 0.05,
+                side: THREE.BackSide
+            });
+            scene.add(new THREE.Mesh(atmosGeo, atmosMat));
+
+            // 3. Static City Dots (Population)
+            const cityCount = 200;
+            const cityGeo = new THREE.BufferGeometry();
+            const cityPos = new Float32Array(cityCount * 3);
+            for (let i = 0; i < cityCount; i++) {
+                const lat = (Math.random() - 0.5) * 160;
+                const lon = (Math.random() - 0.5) * 360;
+                const v = latLongToVector3(lat, lon, 0.905);
+                cityPos[i * 3] = v.x;
+                cityPos[i * 3 + 1] = v.y;
+                cityPos[i * 3 + 2] = v.z;
+            }
+            cityGeo.setAttribute('position', new THREE.BufferAttribute(cityPos, 3));
+            const cityDots = new THREE.Points(cityGeo, new THREE.PointsMaterial({ color: 0x60a5fa, size: 0.005, transparent: true, opacity: 0.5 }));
+            globe.add(cityDots);
+
+            animate();
+            document.getElementById('loading-screen').classList.add('fade-out');
+        }
+
+        function latLongToVector3(lat, lon, radius) {
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lon + 180) * (Math.PI / 180);
+            return new THREE.Vector3(
+                -radius * Math.sin(phi) * Math.cos(theta),
+                radius * Math.cos(phi),
+                radius * Math.sin(phi) * Math.sin(theta)
+            );
+        }
+
+        function createDataArc(start, end, color = 0x3b82f6) {
+            const mid = start.clone().lerp(end, 0.5).normalize().multiplyScalar(1.4);
+            const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+            const points = curve.getPoints(50);
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: 0.4 });
+            const line = new THREE.Line(geometry, material);
+
+            // Digital Pulse (Moving Point)
+            const pulseGeo = new THREE.SphereGeometry(0.015, 8, 8);
+            const pulseMat = new THREE.MeshBasicMaterial({ color: color });
+            const pulse = new THREE.Mesh(pulseGeo, pulseMat);
+            line.add(pulse);
+
+            line.userData = {
+                curve: curve,
+                pulse: pulse,
+                birth: Date.now()
+            };
+            return line;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!isRotatingToTarget) globe.rotation.y += 0.0004; // Very slow rotation
+
+            const now = Date.now();
+
+            // Update Arcs
+            arcs = arcs.filter(arc => {
+                const age = now - arc.userData.birth;
+                const duration = 2000;
+                if (age > duration) {
+                    scene.remove(arc);
+                    return false;
+                }
+                const t = age / duration;
+                arc.material.opacity = (1 - t) * 0.4;
+                const pos = arc.userData.curve.getPointAt(t);
+                arc.userData.pulse.position.copy(pos);
+                return true;
+            });
+
+            // Update Markers (History Beacons)
+            markers = markers.filter(m => {
+                const age = now - m.userData.birth;
+                if (age > 60000) {
+                    globe.remove(m);
+                    return false;
+                }
+                // Subtle pulse for marker
+                const s = 1 + Math.sin(now * 0.01) * 0.2;
+                m.scale.set(s, s, s);
+                return true;
+            });
+
+            TWEEN.update();
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+
+        // --- HUD LOGIC ---
+        const feed = document.getElementById('mini-feed');
+        function addSignal(msg, level = 'INFO') {
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const div = document.createElement('div');
+            const color = level === 'WARN' ? 'text-amber-400' : (level === 'ERROR' ? 'text-red-500 font-bold' : 'text-blue-400');
+            div.innerHTML = `<span class="text-slate-600">${time}</span> > <span class="${color}">${level}</span> ${msg}`;
+            div.className = "animate-in slide-in-from-left duration-300";
+            feed.prepend(div);
+            if (feed.children.length > 20) feed.lastChild.remove();
+        }
+
+        // --- RADAR MODES ---
+        let radarMode = localStorage.getItem('label_density') === 'false' ? 'LOW' : 'HIGH';
+
+        // View toggle function
+        function toggleView() {
+            isDataView = !isDataView;
+            const icon = document.getElementById('view-icon');
+            if (isDataView) {
+                globeMat.emissiveIntensity = 0.2;
+                icon.setAttribute('data-lucide', 'database');
+            } else {
+                globeMat.emissiveIntensity = 0.5;
+                icon.setAttribute('data-lucide', 'globe');
+            }
+            lucide.createIcons();
+            addSignal(`SYSTEM: View mode switched to ${isDataView ? 'DATA' : 'GLOBE'}`, 'INFO');
+        }
+
+        function cycleRadarMode() {
+            const modes = ['HIGH', 'LOW', 'SILENT'];
+            const idx = (modes.indexOf(radarMode) + 1) % modes.length;
+            radarMode = modes[idx];
+
+            document.getElementById('radar-mode-label').innerText = `Mode: ${radarMode}`;
+            localStorage.setItem('label_density', radarMode === 'HIGH');
+
+            addSignal(`SYSTEM: Radar telemetry mode set to ${radarMode}`, 'INFO');
+
+            const btn = document.getElementById('radar-mode-btn');
+            btn.classList.add('border-blue-500/50');
+            setTimeout(() => btn.classList.remove('border-blue-500/50'), 500);
+        }
+
+        // Initialize HUD label on start
+        document.getElementById('radar-mode-label').innerText = `Mode: ${radarMode}`;
+
+        // Initialize
+        init();
+
+        // --- THREAT DATABASE ---
+        const threatLocations = [
+            { city: 'BERLIN', lat: 52.52, lon: 13.40, country: 'DE' },
+            { city: 'MUMBAI', lat: 19.07, lon: 72.87, country: 'IN' },
+            { city: 'NEW YORK', lat: 40.71, lon: -74.00, country: 'US' },
+            { city: 'TOKYO', lat: 35.68, lon: 139.69, country: 'JP' },
+            { city: 'LONDON', lat: 51.50, lon: -0.12, country: 'GB' },
+            { city: 'SYDNEY', lat: -33.86, lon: 151.20, country: 'AU' },
+            { city: 'SAO PAULO', lat: -23.55, lon: -46.63, country: 'BR' },
+            { city: 'MOSCOW', lat: 55.75, lon: 37.61, country: 'RU' },
+            { city: 'SHANGHAI', lat: 31.23, lon: 121.47, country: 'CN' },
+            { city: 'LAGOS', lat: 6.52, lon: 3.37, country: 'NG' },
+            { city: 'DUBAI', lat: 25.20, lon: 55.27, country: 'AE' },
+            { city: 'SINGAPORE', lat: 1.35, lon: 103.81, country: 'SG' },
+            { city: 'BRUSSELS', lat: 50.85, lon: 4.35, country: 'BE' },
+            { city: 'TORONTO', lat: 43.65, lon: -79.38, country: 'CA' },
+            { city: 'SEOUL', lat: 37.56, lon: 126.97, country: 'KR' },
+            { city: 'ISTANBUL', lat: 41.00, lon: 28.97, country: 'TR' },
+            { city: 'NAIROBI', lat: -1.28, lon: 36.81, country: 'KE' },
+            { city: 'MEXICO CITY', lat: 19.43, lon: -99.13, country: 'MX' },
+        ];
+
+        const threatVectors = [
+            'Sequential Card Attempt', 'Credential Stuffing', 'SIM Swap Fraud',
+            'Velocity Abuse', 'Device Fingerprint Mismatch', 'Geo-Anomaly',
+            'ATO - Account Takeover', 'Card Not Present', 'Bot Attack Detected',
+            'Synthetic Identity', 'Chargeback Pattern'
+        ];
+
+        function randomIP() {
+            return `${Math.floor(Math.random() * 223) + 1}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+        }
+        function randomHash() {
+            return 'SHA-256: ' + [...Array(8)].map(() => Math.floor(Math.random() * 16).toString(16).toUpperCase()).join('') + '..' + [...Array(2)].map(() => Math.floor(Math.random() * 16).toString(16).toUpperCase()).join('');
+        }
+
+        // --- SYNC WITH DASHBOARD ---
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'radar_last_transaction') {
+                const txn = JSON.parse(e.newValue);
+                addSignal(`INCOMING: ${txn.location} detection sync.`, 'WARN');
+                triggerAlert(txn.lat || 0, txn.lon || 0, txn);
+            }
+        });
+
+        // --- AUTO THREAT SIMULATION ---
+        let threatCounter = 0;
+        function simulateThreat() {
+            const loc = threatLocations[Math.floor(Math.random() * threatLocations.length)];
+            const risk = Math.floor(Math.random() * 40) + 60;
+            const ip = randomIP();
+            const vector = threatVectors[Math.floor(Math.random() * threatVectors.length)];
+            threatCounter++;
+
+            addSignal(`Flagging evt_${Date.now().toString(36)}_${loc.country}`, 'WARN');
+            addSignal(`Packet anomalies from src_${ip.replace(/\./g, '')} (Score: ${(risk / 100).toFixed(2)})`, 'ERROR');
+            addSignal(`Mitigation active for ${loc.city}`, 'INFO');
+
+            triggerAlert(loc.lat, loc.lon, {
+                location: loc.city,
+                ip: ip,
+                risk: risk + '%',
+                vector: vector,
+                fingerprint: randomHash()
+            });
+        }
+
+        // Start simulation after globe loads
+        setTimeout(() => {
+            addSignal('SYSTEM: Fraud Operations Center online.', 'INFO');
+            addSignal('SYSTEM: Connecting to global telemetry nodes...', 'INFO');
+            setTimeout(() => addSignal('SYSTEM: 4,281 nodes active. Monitoring started.', 'INFO'), 1500);
+            setTimeout(() => simulateThreat(), 3000);
+            setInterval(simulateThreat, 5000);
+        }, 2500);
+
+        function triggerAlert(lat, lon, metadata = {}) {
+            const threatCard = document.getElementById('threat-card');
+            const dnaPanel = document.getElementById('threat-dna-panel');
+            const edgeGlow = document.getElementById('edge-glow');
+
+            // Update Threat DNA Panel - BIG FONTS
+            document.getElementById('dna-fingerprint').innerText = metadata.fingerprint || randomHash();
+            document.getElementById('dna-ip').innerText = metadata.ip || '185.12.3.94';
+            document.getElementById('dna-confidence').innerText = metadata.risk || '98%';
+            dnaPanel.style.opacity = '1';
+
+            // Update Context Card — BIG LOCATION TEXT
+            document.getElementById('threat-vector').innerText = metadata.vector || 'Sequential Card Attempt';
+            document.getElementById('threat-loc').innerText = metadata.location || 'Unknown';
+
+            // UI Feedback
+            threatCard.classList.add('visible');
+            edgeGlow.classList.add('edge-pulse-active', 'opacity-100');
+
+            // SONAR RIPPLE EFFECT — multiple rings
+            const targetPos = latLongToVector3(lat, lon, 0.85);
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const rippleGeo = new THREE.RingGeometry(0.01, 0.018, 32);
+                    const rippleMat = new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: 0.8, side: THREE.DoubleSide });
+                    const ripple = new THREE.Mesh(rippleGeo, rippleMat);
+                    ripple.position.copy(targetPos);
+                    ripple.lookAt(targetPos.clone().multiplyScalar(1.1));
+                    globe.add(ripple);
+                    new TWEEN.Tween(ripple.scale).to({ x: 25, y: 25, z: 25 }, 2000).start();
+                    new TWEEN.Tween(ripple.material).to({ opacity: 0 }, 2000).onComplete(() => globe.remove(ripple)).start();
+                }, i * 300);
+            }
+
+            // PERSISTENT MARKER DOT
+            const markerGeo = new THREE.SphereGeometry(0.008, 8, 8);
+            const markerMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+            const marker = new THREE.Mesh(markerGeo, markerMat);
+            marker.position.copy(targetPos);
+            marker.userData.birth = Date.now();
+            globe.add(marker);
+            markers.push(marker);
+
+            // DATA ARC from origin to random node
+            const endLoc = threatLocations[Math.floor(Math.random() * threatLocations.length)];
+            const endPos = latLongToVector3(endLoc.lat, endLoc.lon, 0.85);
+            const arc = createDataArc(targetPos, endPos, 0xef4444);
+            scene.add(arc);
+            arcs.push(arc);
+
+            // CALLOUT LABEL (BIG LETTER)
+            if (radarMode !== 'SILENT') {
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'threat-label';
+                labelDiv.style.animation = 'none';
+                labelDiv.offsetHeight; // trigger reflow
+                labelDiv.style.animation = '';
+                labelDiv.innerHTML = `
+                    <div class="city">${metadata.location || 'TARGET_LOC'}</div>
+                    <div class="risk">RISK: ${metadata.risk || '98%'}</div>
+                    <div class="leader-line"></div>
+                `;
+
+                const label = new THREE.CSS2DObject(labelDiv);
+                label.position.copy(targetPos.clone().multiplyScalar(1.12));
+                globe.add(label);
+                setTimeout(() => globe.remove(label), 5000);
+            }
+
+            // Sync Earth Rotation
+            isRotatingToTarget = true;
+            const targetRotation = -(lon + 90) * (Math.PI / 180);
+            new TWEEN.Tween(globe.rotation)
+                .to({ y: targetRotation }, 1500)
+                .easing(TWEEN.Easing.Quadratic.Out)
+                .onComplete(() => { isRotatingToTarget = false; })
+                .start();
+
+            setTimeout(() => {
+                threatCard.classList.remove('visible');
+                edgeGlow.classList.remove('edge-pulse-active', 'opacity-100');
+                dnaPanel.style.opacity = '0.3';
+            }, 4500);
+        }
+    </script>
+</body>
+
+</html>

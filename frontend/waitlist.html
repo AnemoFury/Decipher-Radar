@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOIN WAITLIST | DECIPHER RADAR</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            cursor: crosshair;
+        }
+
+        .bg-grid {
+            background-size: 50px 50px;
+            background-image: radial-gradient(circle, #ffffff05 1px, transparent 1px);
+        }
+
+        /* Pure Dark Minimalist Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.005);
+            backdrop-filter: blur(80px);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            box-shadow: 0 50px 150px -30px rgba(0, 0, 0, 1);
+        }
+
+        .user-avatar {
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .user-avatar:hover {
+            transform: translateY(-10px) scale(1.15);
+            z-index: 50;
+        }
+
+        .avatar-tooltip {
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            filter: blur(4px);
+        }
+
+        .user-avatar:hover .avatar-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0px);
+            filter: blur(0px);
+        }
+
+        /* No-fluff Typography */
+        h1 {
+            letter-spacing: -0.06em;
+        }
+
+        .input-control {
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .input-control:focus-within {
+            border-bottom-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .submit-btn {
+            background: white;
+            color: black;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-btn:hover {
+            background: #f0f0f0;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-6 bg-grid">
+
+    <!-- Elite Back Navigation (Top Left) -->
+    <a href="landing.html"
+        class="fixed top-14 left-14 flex items-center gap-5 text-white/20 hover:text-white transition-all z-50 group">
+        <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-2 transition-transform"></i>
+        <span class="text-[9px] font-bold uppercase tracking-[0.6em] font-mono">Exit Node</span>
+    </a>
+
+    <!-- Main Entry Container -->
+    <div class="max-w-4xl w-full text-center relative z-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+
+        <div
+            class="mb-12 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] text-[9px] font-bold text-white/40 uppercase tracking-[0.3em] font-mono">
+            <span class="w-1 h-1 rounded-full bg-blue-500 animate-pulse"></span>
+            Direct Access Restriction
+        </div>
+
+        <h1 class="text-6xl md:text-8xl font-black text-white mb-10 leading-[0.85]">
+            Global node<br>
+            <span class="text-white/10">Infastructure.</span>
+        </h1>
+
+        <!-- No-fluff correct line -->
+        <p class="text-white/40 text-sm md:text-base leading-relaxed mb-20 max-w-lg mx-auto font-medium font-mono">
+            Provisioning decentralized behavioral intelligence. Request early access for sub-second fraud mitigation on
+            verified clusters.
+        </p>
+
+        <!-- Form (Elite Minimalist) -->
+        <form onsubmit="handleWaitlist(event)" class="max-w-md mx-auto mb-24">
+            <div class="flex flex-col gap-6">
+                <div class="input-control flex items-center px-4">
+                    <input type="email" id="email" placeholder="network_id@decipher.com" required
+                        class="bg-transparent border-none py-6 flex-1 text-xs focus:outline-none text-white placeholder:text-white/5 font-mono text-center">
+                </div>
+                <button type="submit" id="submitBtn"
+                    class="submit-btn py-6 rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] transition-all transform active:scale-[0.98]">
+                    Request Access
+                </button>
+            </div>
+        </form>
+
+        <!-- User Stacking (Realistic Labels) -->
+        <div class="flex flex-col items-center gap-10">
+            <div class="flex -space-x-5" id="avatar-stack">
+                <!-- Dynamic Avatars Rendered Here -->
+            </div>
+            <p id="count-label" class="text-[9px] font-bold text-white/10 uppercase tracking-[0.8em] font-mono">
+                182verified_clusters_online
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Hidden Grid Glow -->
+    <div
+        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-blue-500/[0.015] rounded-full blur-[200px] pointer-events-none">
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const STATIC_NODES = [
+            { email: 'mv@hyper.net', name: 'MARCUS V.' },
+            { email: 'sk@node-alpha.io', name: 'SARAH K.' },
+            { email: 'liam@dev.cluster', name: 'LIAM J.' }
+        ];
+
+        function renderAvatars() {
+            const stack = document.getElementById('avatar-stack');
+            const localList = JSON.parse(localStorage.getItem('decipher_waitlist') || '[]');
+            const currentUser = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+
+            // Combine static and local users
+            let allUsers = [...STATIC_NODES];
+            localList.forEach(email => {
+                if (!allUsers.find(u => u.email === email)) {
+                    allUsers.push({
+                        email: email,
+                        name: email.split('@')[0].toUpperCase(),
+                        isDynamic: true
+                    });
+                }
+            });
+
+            stack.innerHTML = allUsers.map(user => {
+                const isYou = user.email === currentUser.email;
+                const borderClass = isYou ? 'border-blue-500' : 'border-black';
+                const grayscaleClass = isYou ? '' : 'grayscale hover:grayscale-0';
+                const bgTooltip = isYou ? 'bg-blue-600' : 'bg-white';
+                const textTooltip = isYou ? 'text-white' : 'text-black';
+                const label = isYou ? `YOU (${user.name})` : user.name;
+
+                return `
+                    <div class="relative user-avatar ${isYou ? 'z-20 scale-110' : ''}">
+                        ${isYou ? '<div class="absolute -top-2 -right-2 bg-blue-500 text-white text-[7px] font-black px-1.5 py-0.5 rounded-full z-10 animate-pulse uppercase">Network Owner</div>' : ''}
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}"
+                            class="w-16 h-16 rounded-full border-[4px] ${borderClass} bg-slate-100 ${grayscaleClass} transition-all duration-500 shadow-xl" alt="U">
+                        <div class="avatar-tooltip absolute bottom-full left-1/2 mb-6 ${bgTooltip} ${textTooltip} px-6 py-4 rounded-3xl text-[11px] font-black whitespace-nowrap shadow-[0_40px_100px_rgba(0,0,0,0.5)] z-50">
+                            <div class="flex flex-col gap-1">
+                                <span class="tracking-widest">${label}</span>
+                                <span class="text-[9px] opacity-60 font-mono lowercase font-normal tracking-normal">${user.email}</span>
+                            </div>
+                            <div class="absolute w-4 h-4 ${bgTooltip} rotate-45 -bottom-2 left-1/2 -translate-x-1/2"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update count
+            document.getElementById('count-label').innerText = `${182 + localList.length} verified_clusters_online`;
+        }
+
+        renderAvatars();
+
+        function handleWaitlist(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const emailInput = document.getElementById('email');
+            const email = emailInput.value.trim().toLowerCase();
+
+            if (!email) return;
+
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin mx-auto"></i>`;
+            lucide.createIcons();
+
+            setTimeout(() => {
+                const list = JSON.parse(localStorage.getItem('decipher_waitlist') || '[]');
+                if (!list.includes(email)) {
+                    list.push(email);
+                    localStorage.setItem('decipher_waitlist', JSON.stringify(list));
+
+                    localStorage.setItem('decipher_user', JSON.stringify({
+                        email: email,
+                        name: email.split('@')[0],
+                        role: 'Staff Engineer'
+                    }));
+                }
+
+                btn.innerHTML = `Signal Sent`;
+                btn.classList.add('bg-blue-500', 'text-white');
+
+                const successMsg = document.createElement('p');
+                successMsg.className = "text-blue-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-10 animate-in fade-in slide-in-from-top-6 duration-1000 font-mono text-center w-full";
+                successMsg.innerText = `CLUSTER_ID_VERIFIED :: ${email.toUpperCase()}`;
+                btn.closest('form').appendChild(successMsg);
+
+                renderAvatars();
+
+                emailInput.value = "";
+                emailInput.disabled = true;
+                emailInput.style.opacity = "0.2";
+            }, 1500);
+        }
+    </script>
+</body>
+
+</html>

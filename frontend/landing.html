@@ -1,50 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DECIPER | Fraud Detection Platform</title>
+    <title>DECIPHER RADAR | World-Class AI Fraud Detection</title>
+    <meta name="description"
+        content="Decipher Radar is the leading AI-powered fraud prevention platform for modern enterprise. Sub-second latency, trillion-dollar data intelligence, and seamless integration.">
+    <meta property="og:title" content="DECIPHER RADAR | AI Fraud Prevention">
+    <meta property="og:description" content="Protect your revenue with the world's most advanced AI detection network.">
+    <meta property="og:type" content="website">
     <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M65 20V80H45V55L25 40V20H65Z' fill='white'/%3E%3Cpath d='M25 40L45 55V80L25 65V40Z' fill='%2310b981'/%3E%3C/svg%3E">
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
 
     <!-- Styles -->
-    <style>
-        #loading-screen {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s;
-        }
 
-        #loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #10b981;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,10 +26,15 @@
                     colors: {
                         black: '#000000',
                         zinc: { 900: '#18181b', 950: '#09090b' },
-                        green: {
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            900: '#14532d',
+                        blue: {
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        },
+                        indigo: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
                         }
                     },
                     fontFamily: {
@@ -67,7 +42,7 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     backgroundImage: {
-                        'grid-pattern': "linear-gradient(to right, #22c55e0a 1px, transparent 1px), linear-gradient(to bottom, #22c55e0a 1px, transparent 1px)",
+                        'grid-pattern': "linear-gradient(to right, #3b82f60a 1px, transparent 1px), linear-gradient(to bottom, #3b82f60a 1px, transparent 1px)",
                     }
                 }
             }
@@ -82,46 +57,72 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Three.js (Re-added for Hero Globe) -->
+    <!-- Three.js & Animation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
 
     <style>
         :root {
-            --bg-primary: #09090b;
-            --bg-secondary: #141416;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            /* Back to classic high-contrast navy */
+            --text-secondary: #64748b;
+            --accent-blue: #2563eb;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(0, 0, 0, 0.05);
+            --card-bg: #ffffff;
+        }
+
+        .dark {
+            --bg-primary: #000000;
+            /* Real Dark Mode */
+            --bg-secondary: #0a0a0a;
             --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --accent-green: #22c55e;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --nav-bg: rgba(0, 0, 0, 0.8);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --card-bg: #0a0a0a;
+        }
+
+        * {
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                backdrop-filter 0.5s ease;
         }
 
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s ease;
             overflow-x: hidden;
         }
 
-        .btn-pill-emerald {
-            padding: 0.625rem 1.5rem;
-            background-color: #22c55e;
-            color: #000;
-            font-size: 0.875rem;
-            font-weight: 700;
-            border-radius: 9999px;
+        .btn-pill-blue {
+            padding: 0.625rem 1.75rem;
+            background-color: #2563eb;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 800;
+            border-radius: 8px;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
         }
 
-        .btn-pill-emerald:hover {
-            background-color: #4ade80;
-            transform: scale(1.05);
+        .btn-pill-blue:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
         }
 
-        .btn-pill-emerald:active {
+        .btn-pill-blue:active {
             transform: scale(0.95);
         }
 
@@ -144,10 +145,10 @@
         }
 
         .glass-nav {
-            background: rgba(9, 9, 11, 0.8);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .floating-card {
@@ -184,12 +185,12 @@
             }
         }
 
-        .glow-green {
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+        .glow-blue {
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
         }
 
         .feature-icon-wrapper {
-            background: radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%);
+            background: radial-gradient(circle at center, rgba(37, 99, 235, 0.15), transparent 70%);
         }
 
         /* Hero Interactivity */
@@ -216,7 +217,7 @@
 
         .chart-container:hover {
             transform: scale(1.05);
-            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
         }
 
         .bar-wrapper {
@@ -224,8 +225,8 @@
         }
 
         .chart-bar {
-            background-color: var(--accent-green);
-            /* Emerald Green Default */
+            background-color: var(--accent-blue);
+            /* Blue Default */
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -292,171 +293,407 @@
         .marquee-content:hover {
             animation-play-state: paused;
         }
+
+        /* Theme Switch Flash Effect */
+        .theme-flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: overlay;
+        }
+
+        .dark .theme-flash {
+            background: #60a5fa;
+        }
+
+        @keyframes cinematic-flash {
+            0% {
+                opacity: 0;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(1.02);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        .animate-flash {
+            animation: cinematic-flash 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #footer-theme-toggle i {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #footer-theme-toggle:active i {
+            transform: scale(0.7) rotate(45deg);
+        }
     </style>
 </head>
 
-<body class="bg-black selection:bg-green-500 selection:text-black">
+<body
+    class="bg-slate-50 dark:bg-[#0b0e14] text-slate-900 dark:text-white selection:bg-blue-100 selection:text-blue-900 transition-colors duration-500">
+    <div id="theme-flash" class="theme-flash"></div>
 
     <!-- Navbar -->
     <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <!-- Geometric 'd' Logo (Green Theme) -->
-                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Right Pillar -->
-                    <path d="M60 20V80H80V20H60Z" fill="white" />
-                    <!-- Top Angled -->
-                    <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
-                    <!-- Bottom Angled -->
-                    <path d="M20 50L40 60V80L60 80V80L60 45" fill="#34d399" fill-opacity="0" />
-                    <!-- Masking/Placeholder -->
-                    <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
+            <a href="#" class="flex items-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="10" fill="#f97316" />
+                    <circle cx="55" cy="25" r="10" fill="#f97316" />
+                    <circle cx="85" cy="25" r="10" fill="#f97316" />
+                    <circle cx="25" cy="55" r="10" fill="#f97316" />
+                    <circle cx="55" cy="55" r="10" fill="#f97316" />
+                    <circle cx="85" cy="55" r="10" fill="#f97316" />
+                    <circle cx="25" cy="85" r="10" fill="#f97316" />
+                    <circle cx="55" cy="85" r="10" fill="#f97316" />
+                    <circle cx="85" cy="85" r="10" fill="#f97316" />
                 </svg>
-                <span class="text-xl font-bold tracking-wider text-white">DECIPER</span>
+                <span
+                    class="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase transition-colors duration-500">Decipher
+                    Radar</span>
+            </a>
+
+            <script>
+                function handleNavLink(msg, url) {
+                    const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+                    if (user.role === 'Administrator') {
+                        if (url && url !== '#') window.location.href = url;
+                        else alert('Admin Access: Feature in rapid local development.');
+                    } else {
+                        alert(msg);
+                    }
+                }
+            </script>
+
+            <!-- Navigation Links -->
+            <div class="hidden lg:flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400">
+
+                <!-- Products Dropdown -->
+                <div class="relative group">
+                    <button
+                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1 group">
+                        Products <i data-lucide="chevron-down"
+                            class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div
+                        class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                        <div
+                            class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
+                            <a href="console.html"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="layout" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">Decipher
+                                        Console</div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Real-time
+                                        fraud monitoring and behavioral analysis.</div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="handleNavLink('Module Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="globe" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                                </div>
+                                <div>
+                                    <div
+                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 flex items-center gap-2">
+                                        Decipher Radar
+                                        <span
+                                            class="px-1.5 py-0.5 rounded text-[8px] bg-blue-500 text-white font-bold">SOON</span>
+                                    </div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Global threat
+                                        intelligence and geographic visualization.</div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="handleNavLink('Shield Protection Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="shield-check"
+                                        class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
+                                </div>
+                                <div>
+                                    <div
+                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 flex items-center gap-2">
+                                        API Shield
+                                        <span
+                                            class="px-1.5 py-0.5 rounded text-[8px] bg-emerald-500 text-white font-bold">SOON</span>
+                                    </div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Secure your
+                                        endpoints with sub-second latency protection.</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solutions Dropdown -->
+                <div class="relative group">
+                    <button
+                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1">
+                        Solutions <i data-lucide="chevron-down"
+                            class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                    </button>
+                    <div
+                        class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                        <div
+                            class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
+                            <div
+                                class="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
+                                By Industry</div>
+                            <a href="javascript:void(0)" onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="shopping-bag" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">E-commerce
+                                    </div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Prevent
+                                        chargebacks and account takeovers.</div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="landmark" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">Fintech</div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">High-velocity
+                                        transaction screening and AML compliance.</div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="cloud" class="w-5 h-5 text-purple-600 dark:text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">SaaS</div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Stop trial
+                                        abuse and credential stuffing.</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Developers Dropdown -->
+                <div class="relative group">
+                    <button
+                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1">
+                        Developers <i data-lucide="chevron-down"
+                            class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                    </button>
+                    <div
+                        class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                        <div
+                            class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
+                            <a href="javascript:void(0)" onclick="handleNavLink('Docs Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-slate-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="book-open" class="w-5 h-5 text-slate-600 dark:text-slate-400"></i>
+                                </div>
+                                <div>
+                                    <div
+                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono">
+                                        Documentation</div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
+                                        Quick-start guides and SDKs.</div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="handleNavLink('API Reference Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="terminal" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <div
+                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono">
+                                        API Reference</div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
+                                        Complete endpoint library for integration.</div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="handleNavLink('Status Dashboard Coming Soon', '#')"
+                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="activity"
+                                        class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
+                                </div>
+                                <div>
+                                    <div
+                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono text-emerald-600">
+                                        System Status</div>
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
+                                        Real-time network uptime and latency metrics.</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="pricing.html"
+                    class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500">Pricing</a>
             </div>
 
-            <div class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-400 group/nav">
-                <div class="relative group py-8 cursor-pointer">
-                    <span class="hover:text-white transition flex items-center gap-1">Why Deciper <i
-                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                </div>
-                <div class="relative group py-8 cursor-pointer">
-                    <span class="hover:text-white transition flex items-center gap-1">Solutions <i
-                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                </div>
-                <div class="relative group py-8 cursor-pointer">
-                    <a href="#platform" class="hover:text-white transition flex items-center gap-1">Platform <i
-                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></a>
-                </div>
-                <div class="relative group py-8 cursor-pointer">
-                    <span class="hover:text-white transition flex items-center gap-1">Resources <i
-                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                </div>
-                <div class="relative group py-8 cursor-pointer">
-                    <span class="hover:text-white transition flex items-center gap-1">Company <i
-                            data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i></span>
-                </div>
-                <a href="pricing.html" class="hover:text-white transition">Pricing</a>
-            </div>
+            <!-- Primary Action Node (Dynamic) -->
+            <div id="nav-action-container" class="flex items-center">
+                <!-- Profile Node (When Active) -->
+                <div id="nav-profile-active" class="hidden relative group">
+                    <button
+                        class="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-blue-500/50 transition-all">
+                        <img id="nav-user-avatar" src="" class="w-9 h-9 rounded-full border border-blue-500/50" alt="P">
+                        <div class="hidden md:block text-left">
+                            <div id="nav-user-name"
+                                class="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                                Agent</div>
+                            <div id="nav-user-status"
+                                class="text-[8px] font-mono text-blue-500 uppercase tracking-widest">Node Validated
+                            </div>
+                        </div>
+                    </button>
 
-            <div class="flex items-center gap-4">
-                <a href="auth.html"
-                    class="flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white transition group">
-                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
-                </a>
+                    <!-- User Reveal Dropdown -->
+                    <div
+                        class="absolute top-full right-0 w-72 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500 z-[100]">
+                        <div
+                            class="bg-white dark:bg-[#121212] border border-slate-200 dark:border-white/5 rounded-3xl shadow-[0_40px_100px_rgba(0,0,0,0.6)] overflow-hidden scale-95 group-hover:scale-100 transition-transform">
+                            <div
+                                class="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/1">
+                                <p class="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Network
+                                    Identity</p>
+                                <p id="nav-user-email"
+                                    class="text-[11px] font-mono text-slate-600 dark:text-slate-400 lowercase break-all">
+                                    anonymous@decipher.cluster</p>
+                            </div>
+                            <div class="p-2">
+                                <a href="console.html"
+                                    class="flex items-center gap-4 px-4 py-3.5 rounded-2xl hover:bg-blue-500/5 transition-colors group/item">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                        <i data-lucide="terminal" class="w-4 h-4 text-blue-500"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-[11px] font-black text-slate-900 dark:text-white uppercase">
+                                            Access Console</p>
+                                        <p class="text-[9px] text-slate-400">Manage global clusters</p>
+                                    </div>
+                                </a>
+                                <div class="h-px bg-slate-100 dark:bg-white/5 my-2 mx-4"></div>
+                                <button onclick="handleNavLogout()"
+                                    class="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl hover:bg-red-500/5 transition-colors text-red-500">
+                                    <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+                                        <i data-lucide="power" class="w-4 h-4"></i>
+                                    </div>
+                                    <span class="text-[11px] font-black uppercase">Terminate Session</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
+
+
     <!-- Hero Section -->
     <section class="relative pt-32 pb-20 overflow-hidden min-h-[90vh] flex items-center">
-        <!-- Background Grid & Noise -->
         <div class="absolute inset-0 bg-grid-pattern bg-[length:40px_40px] opacity-10 pointer-events-none"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-black via-zinc-950/50 to-black pointer-events-none"></div>
+        <div class="absolute inset-0 bg-slate-50/50 dark:bg-zinc-950/50 pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-[45%_55%] gap-16 items-center relative z-10 w-full">
             <!-- Left Side: Messaging -->
             <div class="space-y-8">
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green-500/30 bg-green-500/5 backdrop-blur-md text-[10px] font-mono text-green-400">
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 backdrop-blur-md text-[10px] font-mono text-blue-500">
                     <span class="relative flex h-2 w-2">
                         <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                    <span class="tracking-[0.2em] font-bold uppercase">Supercharged AI — Live</span>
+                    <span class="tracking-[0.2em] font-bold uppercase">Decipher Radar — Live</span>
                 </div>
 
-                <h1 class="text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-white">
+                <h1
+                    class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] text-slate-900 dark:text-white transition-colors duration-500">
                     Stop fraud<br>
-                    <span class="text-green-500">before it happens.</span>
+                    <span class="text-blue-600">before it happens.</span>
                 </h1>
 
-                <p class="text-lg text-gray-400 max-w-lg leading-relaxed font-medium">
-                    Deciper analyzes thousands of signals per transaction to detect and block fraud automatically —
-                    without impacting legitimate users.
+                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed font-medium">
+                    Decipher Radar analyzes thousands of signals per transaction to detect and block fraud automatically
+                    — without impacting legitimate users.
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-5 items-start">
-                    <div class="space-y-3">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="auth.html" class="btn-pill-emerald uppercase tracking-wider">
-                                Enable Fraud Protection
-                                <i data-lucide="shield-check" class="w-4 h-4"></i>
-                            </a>
-                            <a href="#" class="btn-pill-outline uppercase tracking-wider">
-                                Watch Demo
-                                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                            </a>
-                        </div>
-                        <p class="text-[10px] font-mono text-gray-500 uppercase tracking-widest pl-2">
-                            No false positives. No customer friction.
-                        </p>
-                    </div>
+                    <a href="waitlist.html"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-blue-600/30 text-base md:text-lg inline-flex items-center justify-center">
+                        Join 182 others — Free Beta
+                    </a>
                 </div>
             </div>
 
             <!-- Right Side: Hero Globe -->
             <div class="relative h-[600px] flex items-center justify-center">
                 <div id="hero-globe-v2" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
-                <!-- Mini UI for Globe -->
                 <div
-                    class="absolute bottom-10 right-0 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center gap-4 z-20">
+                    class="absolute bottom-10 right-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-4 z-20 shadow-xl shadow-blue-900/10">
                     <div class="flex flex-col">
-                        <span class="text-[10px] font-mono text-green-500 uppercase tracking-widest">Global
+                        <span
+                            class="text-[10px] font-mono text-blue-600 dark:text-blue-400 uppercase tracking-widest">Global
                             Signals</span>
-                        <span class="text-xs font-bold text-white">Live Transmission Feed</span>
+                        <span class="text-xs font-bold text-slate-900 dark:text-white">Live Transmission Feed</span>
                     </div>
-                    <div class="w-10 h-10 rounded-full border border-green-500/30 flex items-center justify-center">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <div
+                        class="w-10 h-10 rounded-full border border-blue-100 dark:border-blue-900/30 flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Social Proof -->
-    <section class="border-t border-white/5 bg-zinc-950/30 py-6 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 text-center relative z-10 mb-4">
-            <p class="text-[10px] font-mono text-gray-600 uppercase tracking-[0.2em]">Trusted by industry leaders</p>
-        </div>
 
-        <div class="marquee-container opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-            <div class="marquee-content">
-                <!-- Set 1 -->
-                <span class="text-sm font-bold font-sans tracking-tight text-white/70">Acme Cor.p</span>
-                <span class="text-sm font-bold font-serif italic text-white/70">GlobalBank</span>
-                <span class="text-sm font-bold font-mono text-white/70">dev_stripe</span>
-                <span class="text-sm font-extrabold tracking-tighter text-white/70">FINTECH.IO</span>
-                <span class="text-sm font-bold text-white/70">SecurePay</span>
-                <!-- Set 2 -->
-                <span class="text-sm font-bold font-sans tracking-tight text-white/70">Acme Cor.p</span>
-                <span class="text-sm font-bold font-serif italic text-white/70">GlobalBank</span>
-                <span class="text-sm font-bold font-mono text-white/70">dev_stripe</span>
-                <span class="text-sm font-extrabold tracking-tighter text-white/70">FINTECH.IO</span>
-                <span class="text-sm font-bold text-white/70">SecurePay</span>
-                <!-- Set 3 -->
-                <span class="text-sm font-bold font-sans tracking-tight text-white/70">Acme Cor.p</span>
-                <span class="text-sm font-bold font-serif italic text-white/70">GlobalBank</span>
-                <span class="text-sm font-bold font-mono text-white/70">dev_stripe</span>
-                <span class="text-sm font-extrabold tracking-tighter text-white/70">FINTECH.IO</span>
-                <span class="text-sm font-bold text-white/70">SecurePay</span>
-            </div>
-        </div>
-    </section>
 
     <!-- STAGE 1: Trained on over a trillion -->
-    <section id="platform" class="py-24 bg-zinc-950 relative overflow-hidden">
+    <section id="platform"
+        class="py-24 bg-white dark:bg-zinc-950 relative overflow-hidden border-t border-slate-100 dark:border-white/5">
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
             <!-- Text Content -->
             <div class="order-1">
-                <div class="text-green-500 font-bold mb-4 tracking-wide text-sm uppercase">Deciper</div>
-                <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
+                <div class="text-blue-500 font-bold mb-4 tracking-wide text-sm uppercase">Decipher Radar</div>
+                <h2
+                    class="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white leading-tight transition-colors duration-500">
                     Trained on over a trillion dollars in annual payment volume
                 </h2>
-                <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                    Deciper processes payments from 197 countries for every industry, company size, and business model.
-                    There’s a 92% chance a card has been seen before on the Deciper network.
+                <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8">
+                    Decipher Radar processes payments from 197 countries for every industry, company size, and business
+                    model.
+                    There’s a 92% chance a card has been seen before on the Decipher Radar network.
                 </p>
 
                 <div class="space-y-6">
@@ -465,8 +702,9 @@
                             <i data-lucide="share-2" class="w-4 h-4 text-purple-400"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-white mb-1 text-sm">Strength in numbers</h4>
-                            <p class="text-xs text-gray-500 max-w-sm">By learning from millions of global businesses, we
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm">Strength in numbers</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">By learning from millions of
+                                global businesses, we
                                 assign risk scores to every payment automatically.</p>
                         </div>
                     </div>
@@ -475,8 +713,10 @@
                             <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-white mb-1 text-sm">Better outcomes with AI</h4>
-                            <p class="text-xs text-gray-500 max-w-sm">Our AI scans every payment using hundreds of
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm">Better outcomes with AI
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Our AI scans every payment
+                                using hundreds of
                                 signals to detect and prevent fraud.</p>
                         </div>
                     </div>
@@ -485,7 +725,7 @@
 
             <!-- Visual: Interactive Bar Chart -->
             <div class="order-2 relative h-[500px] flex items-center justify-center">
-                <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent rounded-full blur-3xl">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl">
                 </div>
 
                 <div id="analytics" class="relative z-10 w-full max-w-md perspective-1000">
@@ -497,24 +737,24 @@
                             <button onclick="toggleChartRotation()"
                                 class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-all hover:rotate-180"
                                 title="Rotate View">
-                                <i data-lucide="rotate-3d" class="w-4 h-4 text-green-500"></i>
+                                <i data-lucide="rotate-3d" class="w-4 h-4 text-blue-500"></i>
                             </button>
                         </div>
 
                         <div class="h-48 flex items-end justify-between gap-3">
-                            <div class="flex-1 bg-green-500/20 rounded-t-lg transition-all duration-500 hover:bg-green-500 hover:scale-y-110"
+                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
                                 style="height: 60%"></div>
-                            <div class="flex-1 bg-green-500/20 rounded-t-lg transition-all duration-500 hover:bg-green-500 hover:scale-y-110"
+                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
                                 style="height: 45%"></div>
-                            <div class="flex-1 bg-green-500/20 rounded-t-lg transition-all duration-500 hover:bg-green-500 hover:scale-y-110"
+                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
                                 style="height: 80%"></div>
-                            <div class="flex-1 bg-green-500/20 rounded-t-lg transition-all duration-500 hover:bg-green-500 hover:scale-y-110"
+                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
                                 style="height: 35%"></div>
-                            <div class="flex-1 bg-green-400 rounded-t-lg shadow-[0_0_15px_rgba(74,222,128,0.3)]"
+                            <div class="flex-1 bg-blue-400 rounded-t-lg shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                                 style="height: 95%"></div>
-                            <div class="flex-1 bg-green-500/20 rounded-t-lg transition-all duration-500 hover:bg-green-500 hover:scale-y-110"
+                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
                                 style="height: 55%"></div>
-                            <div class="flex-1 bg-green-500/20 rounded-t-lg transition-all duration-500 hover:bg-green-500 hover:scale-y-110"
+                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
                                 style="height: 70%"></div>
                         </div>
 
@@ -542,12 +782,12 @@
 
                 <div class="relative z-10 w-full max-w-md perspective-1000">
                     <div
-                        class="bg-zinc-900 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl transition-all duration-1000 transform-gpu hover:shadow-green-500/10">
+                        class="bg-zinc-900 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl transition-all duration-1000 transform-gpu hover:shadow-blue-500/10">
                         <div class="flex items-center justify-between mb-8">
                             <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Network Accuracy</h3>
                             <div class="flex gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                <span class="text-[10px] text-green-500 font-mono">Live</span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                <span class="text-[10px] text-blue-500 font-mono">Live</span>
                             </div>
                         </div>
 
@@ -555,15 +795,20 @@
                             <svg class="w-full h-full" viewBox="0 0 400 200">
                                 <defs>
                                     <linearGradient id="gradient-area" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#10b981" stop-opacity="0.3" />
-                                        <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
+                                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
                                     </linearGradient>
                                 </defs>
+                                <text x="10" y="30" font-family="monospace" font-size="12" fill="white">MATCH:
+                                    system.velocity_check(1h) &gt; threshold(50)</text>
+                                <text x="10" y="45" font-family="monospace" font-size="12" fill="white">IP_SCORE: 0.92
+                                    (High Risk)</text>
+                                <text x="10" y="60" font-family="monospace" font-size="12" fill="white">ACTION:
+                                    BLOCK_TRANSACTION</text>
                                 <path d="M0 150 Q 50 120, 100 140 T 200 80 T 300 110 T 400 40 L 400 200 L 0 200 Z"
                                     fill="url(#gradient-area)" />
                                 <path d="M0 150 Q 50 120, 100 140 T 200 80 T 300 110 T 400 40" fill="none"
-                                    stroke="#10b981" stroke-width="3"
-                                    class="drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                    stroke="#3b82f6" stroke-width="3"
+                                    class="drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
                             </svg>
                         </div>
                     </div>
@@ -576,7 +821,9 @@
                     More accurate than third-party tools
                 </h2>
                 <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                    Deciper ingests data from every layer of the financial stack, integrating checkout flow data, rich
+                    &copy; 2026 Decipher Radar Security, Inc. All rights reserved.ry layer of the financial stack,
+                    integrating checkout flow data,
+                    rich
                     payments data, and card network information.
                 </p>
 
@@ -607,37 +854,54 @@
     </section>
 
     <!-- STAGE 3: Sophisticated Signals (Hybrid Globe) -->
-    <!-- STAGE 3: Sophisticated Signals (Hybrid Globe) -->
-    <section id="solutions" class="py-24 bg-zinc-950 relative overflow-hidden border-t border-white/5">
+    <!-- STAGE 3: Heavy ML & Deep Neural Networks -->
+    <section id="solutions"
+        class="py-24 bg-slate-50 dark:bg-zinc-900 relative overflow-hidden border-t border-slate-100 dark:border-white/5">
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
             <!-- Text Content -->
             <div class="order-1">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4 text-white leading-tight">
-                    Sophisticated signals engineered for impact
+                <div class="text-blue-600 font-bold mb-4 tracking-wide text-sm uppercase">Advanced Intelligence</div>
+                <h2
+                    class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight uppercase tracking-tighter transition-colors duration-500">
+                    Heavy Machine Learning <br>
+                    <span class="text-blue-600">Deep Neural Networks.</span>
                 </h2>
-                <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                    We constantly tweak our algorithms to generate compound signals that precisely block fraud.
+                <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8 font-medium">
+                    Our platform uses heavy machine learning architectures and deep neural networks to analyze every
+                    transaction.
+                    We detect fraud patterns that are invisible to traditional rule-based systems, processing sub-second
+                    signals with 99.9% precision.
                 </p>
 
                 <div class="space-y-6">
                     <!-- Item 1 -->
                     <div class="flex gap-4">
-                        <div class="flex-shrink-0 w-8 h-8 rounded bg-purple-500/10 flex items-center justify-center">
-                            <i data-lucide="fingerprint" class="w-4 h-4 text-purple-400"></i>
+                        <div
+                            class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600/5 border border-blue-600/10 flex items-center justify-center dark:bg-blue-400/10 dark:border-blue-400/20">
+                            <i data-lucide="brain-circuit" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-white mb-1 text-sm">Device fingerprints</h4>
-                            <p class="text-xs text-gray-500">Tie multiple signals into a single device profile.</p>
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm uppercase tracking-wider">
+                                Deep Neural
+                                Analysis</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Multi-layer transformers
+                                analyze behavior
+                                sequences to identify synthetic identity fraud.</p>
                         </div>
                     </div>
                     <!-- Item 2 -->
                     <div class="flex gap-4">
-                        <div class="flex-shrink-0 w-8 h-8 rounded bg-pink-500/10 flex items-center justify-center">
-                            <i data-lucide="globe" class="w-4 h-4 text-pink-400"></i>
+                        <div
+                            class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600/5 border border-blue-600/10 flex items-center justify-center dark:bg-blue-400/10 dark:border-blue-400/20">
+                            <i data-lucide="shield-alert" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-white mb-1 text-sm">Proxy detection</h4>
-                            <p class="text-xs text-gray-500">Identify IP spoofing, VPNs, and Tor exit nodes.</p>
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm uppercase tracking-wider">
+                                Heavy ML Scoring
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Assign sub-second risk scores
+                                using ensemble
+                                models trained on a trillion data points.</p>
                         </div>
                     </div>
                 </div>
@@ -645,21 +909,22 @@
 
             <!-- Visual: Distribution Donut Chart -->
             <div class="order-2 relative h-[500px] flex items-center justify-center">
-                <div class="absolute top-20 right-20 w-32 h-32 bg-green-500/20 blur-[60px] rounded-full"></div>
-
+                <div class="absolute inset-0 bg-blue-600/5 rounded-full blur-[100px]"></div>
                 <div class="relative z-10 w-full max-w-sm">
                     <div
-                        class="bg-zinc-900 border border-white/10 rounded-2xl p-10 flex items-center justify-center shadow-2xl relative overflow-hidden group">
+                        class="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-white/10 rounded-3xl p-10 flex flex-col items-center justify-center shadow-2xl shadow-blue-900/10 relative overflow-hidden group">
                         <svg class="w-64 h-64 transform -rotate-90">
                             <circle cx="128" cy="128" r="90" stroke="currentColor" stroke-width="12" fill="transparent"
-                                class="text-white/5" />
-                            <circle cx="128" cy="128" r="90" stroke="#10b981" stroke-width="14" fill="transparent"
+                                class="text-slate-100 dark:text-zinc-700" />
+                            <circle cx="128" cy="128" r="90" stroke="#2563eb" stroke-width="14" fill="transparent"
                                 stroke-dasharray="565" stroke-dashoffset="140" class="transition-all duration-1000" />
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-4xl font-black text-white">92%</span>
                             <span
-                                class="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-1">Acceptance</span>
+                                class="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">99.9%</span>
+                            <span
+                                class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Detection
+                                Recall</span>
                         </div>
                     </div>
                 </div>
@@ -674,11 +939,11 @@
                 <div>
                     <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
                         Real-time visualization <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">of
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">of
                             global risk.</span>
                     </h2>
                     <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                        Deciper provides unprecedented visibility into your transaction stream. Monitor disputes,
+                        Decipher Radar provides unprecedented visibility into your transaction stream. Monitor disputes,
                         warnings, and overall fraud rates with sub-second latency.
                     </p>
 
@@ -688,7 +953,7 @@
                             </div>
                             <div class="text-2xl font-bold text-white flex items-center gap-2">
                                 0.06%
-                                <span class="px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 text-[10px]"><i
+                                <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px]"><i
                                         data-lucide="trending-down" class="w-3 h-3 inline"></i></span>
                             </div>
                         </div>
@@ -729,45 +994,56 @@
                             </div>
 
                             <!-- Bars -->
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 85%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 15%;"></div>
+                            <!-- Bars with explicit colors and widths -->
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 85%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 65%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 25%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 65%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 25%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 75%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 10%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 75%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 10%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 60%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 20%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 60%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 20%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 70%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 15%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 70%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 45%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 30%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 45%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 30%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 65%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 20%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 65%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 20%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 55%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 15%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 55%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 60%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 25%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 60%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 25%;"></div>
                             </div>
-                            <div class="bar-wrapper flex-1 flex flex-col gap-1 items-center">
-                                <div class="chart-bar w-full rounded-t-sm" style="height: 50%;"></div>
-                                <div class="chart-bar w-full rounded-t-sm opacity-60" style="height: 15%;"></div>
+                            <div class="flex-1 flex flex-col gap-1 items-center group">
+                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                    style="height: 50%;"></div>
+                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
                             </div>
                         </div>
 
@@ -780,109 +1056,14 @@
 
                     <!-- Background Glow -->
                     <div
-                        class="absolute -inset-4 bg-green-500/10 blur-[80px] rounded-full z-0 opacity-0 group-hover:opacity-100 transition duration-700">
+                        class="absolute -inset-4 bg-blue-500/10 blur-[80px] rounded-full z-0 opacity-0 group-hover:opacity-100 transition duration-700">
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CASE STUDY: Patreon -->
-    <section class="py-24 bg-zinc-900 border-t border-white/5 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16 items-center mb-16">
-                <!-- Text Content -->
-                <div class="order-2 lg:order-1">
-                    <div class="flex items-center gap-2 mb-6">
-                        <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Case Study</span>
-                        <span class="w-1 h-1 bg-gray-500 rounded-full"></span>
-                        <span class="text-xs font-mono text-green-500 uppercase tracking-widest">Creator Economy</span>
-                    </div>
-                    <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
-                        Patreon Accelerates Global Growth While Keeping Creators Safe with Deciper
-                    </h2>
-                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                        "Deciper's real-time accuracy allows us to support millions of creators across 197 countries
-                        without compromising on safety."
-                    </p>
-                    <a href="#" class="btn-pill-emerald uppercase tracking-wider group">
-                        <span>Read Full Case Study</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
 
-                <!-- Visual Card -->
-                <div
-                    class="order-1 lg:order-2 relative h-[400px] bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#000] rounded-3xl overflow-hidden border border-white/10 flex items-center justify-center p-8 group">
-                    <!-- Abstract Overlay -->
-                    <div
-                        class="absolute inset-0 opacity-30 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay">
-                    </div>
-                    <div
-                        class="absolute -top-20 -right-20 w-64 h-64 bg-green-500/30 blur-[80px] rounded-full group-hover:bg-green-500/40 transition duration-1000">
-                    </div>
-                    <div
-                        class="absolute -bottom-20 -left-20 w-64 h-64 bg-emerald-500/30 blur-[80px] rounded-full group-hover:bg-emerald-500/40 transition duration-1000">
-                    </div>
-
-                    <div class="relative z-10 flex items-center gap-6">
-                        <div class="flex items-center gap-2">
-                            <!-- Geometric 'd' Logo -->
-                            <svg width="32" height="32" viewBox="0 0 100 100" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M60 20V80H80V20H60Z" fill="white" />
-                                <path d="M20 50L60 20V45L40 60L20 50Z" fill="#10b981" />
-                                <path d="M20 50V75L60 80V45L40 60L20 50Z" fill="#059669" />
-                            </svg>
-                            <span class="text-3xl font-bold tracking-tight text-white">DECIPER</span>
-                        </div>
-                        <div class="h-12 w-px bg-white/20"></div>
-                        <span class="text-3xl font-bold tracking-wide text-white opacity-90">PATREON</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div
-                    class="bg-zinc-950 border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-green-500/20 transition duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-[4rem] group-hover:bg-green-500/20 transition-colors">
-                    </div>
-                    <div class="relative z-10">
-                        <div class="text-4xl md:text-5xl font-bold text-green-400 mb-2">19x</div>
-                        <p class="text-gray-400 font-medium">Return on <br>investment</p>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div
-                    class="bg-zinc-950 border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-yellow-500/20 transition duration-300">
-                    <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-yellow-500/10 rounded-bl-[4rem] group-hover:bg-yellow-500/20 transition-colors">
-                    </div>
-                    <div class="relative z-10">
-                        <div class="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">99%</div>
-                        <p class="text-gray-400 font-medium">New user <br>acceptance rate</p>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div
-                    class="bg-zinc-950 border border-white/5 rounded-2xl p-8 flex items-center justify-center text-center group hover:border-white/20 transition duration-300">
-                    <div>
-                        <div
-                            class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/10 transition">
-                            <i data-lucide="trending-down" class="w-6 h-6 text-green-400"></i>
-                        </div>
-                        <h4 class="text-xl font-bold text-white mb-2">Fraud Reduction</h4>
-                        <p class="text-gray-400 text-sm">Significant reduction in fraud losses year-over-year.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- How It Works (Developer Focused) - Kept as requested previously -->
     <section id="developers" class="py-24 bg-black border-t border-white/5 relative">
@@ -902,19 +1083,19 @@
                     <div class="flex gap-2 mr-4">
                         <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-blue-500/20 border border-blue-500/50"></div>
                     </div>
                     <div class="text-xs text-gray-500">fraud-detection-engine — bash — 80x24</div>
                 </div>
                 <div class="p-6 text-gray-300 space-y-4">
                     <div class="flex">
-                        <span class="text-green-500 mr-2">➜</span>
+                        <span class="text-blue-500 mr-2">➜</span>
                         <span class="text-blue-400">~</span>
-                        <span class="ml-2">tail -f /var/log/deciper/stream.log</span>
+                        <span class="ml-2">tail -f /var/log/decipher/stream.log</span>
                     </div>
                     <div class="opacity-50 text-xs">
                         [20:14:22] INGEST: Transaction #8X92-LA detected <br>
-                        [20:14:22] ANALYZE: Velocity check... <span class="text-green-400">PASS</span> <br>
+                        [20:14:22] ANALYZE: Velocity check... <span class="text-blue-400">PASS</span> <br>
                         [20:14:22] ANALYZE: IP Geolocation... <span class="text-yellow-400">WARN (New Device)</span>
                     </div>
                     <div class="text-xs">
@@ -926,109 +1107,158 @@
                     </div>
                     <div>
                         <span class="text-red-500">➜ ACTION:</span> Blocking transaction... <span
-                            class="text-green-500">DONE</span>
+                            class="text-blue-500">DONE</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SpaceAI-Style Massive Footer -->
-    <footer class="bg-black relative overflow-hidden border-t border-white/5">
-        <!-- Massive Brand Text -->
-        <div class="relative py-12 px-0 overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-b from-black via-black to-blue-950/30 pointer-events-none">
+
+    <!-- Large Footer -->
+    <footer class="bg-black py-20 border-t border-white/10 text-white relative z-10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <!-- Brand -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 font-bold text-2xl tracking-tighter uppercase">
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="25" cy="25" r="10" fill="white" />
+                        <circle cx="55" cy="25" r="10" fill="white" />
+                        <circle cx="85" cy="25" r="10" fill="white" />
+                        <circle cx="25" cy="55" r="10" fill="white" />
+                        <circle cx="55" cy="55" r="10" fill="white" />
+                        <circle cx="85" cy="55" r="10" fill="white" />
+                    </svg>
+                    Decipher Radar
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Stop fraud losses fast, create exceptional user experiences, and scale securely with Decipher
+                    Radar's
+                    tried-and-trusted platform.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i
+                            data-lucide="twitter" class="w-5 h-5"></i></a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i
+                            data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i
+                            data-lucide="github" class="w-5 h-5"></i></a>
+                </div>
             </div>
-            <div class="relative z-10 w-full overflow-hidden">
-                <h2 class="text-[25vw] md:text-[28vw] font-black text-white leading-[0.75] tracking-[-0.08em] select-none translate-y-4"
-                    style="font-family: 'Inter', sans-serif;">
-                    Deciper
-                </h2>
+
+            <!-- Links 1 -->
+            <div>
+                <h4 class="font-bold uppercase tracking-widest text-xs text-slate-500 mb-6">Why Decipher</h4>
+                <ul class="space-y-4 text-sm font-medium text-slate-300">
+                    <li><a href="#" class="hover:text-white transition">Market Leadership</a></li>
+                    <li><a href="#" class="hover:text-white transition">Professional Services</a></li>
+                    <li><a href="#" class="hover:text-white transition">Patents</a></li>
+                    <li><a href="#" class="hover:text-white transition">Community</a></li>
+                    <li><a href="#" class="hover:text-white transition">Partners</a></li>
+                </ul>
+            </div>
+
+            <!-- Links 2 -->
+            <div>
+                <h4 class="font-bold uppercase tracking-widest text-xs text-slate-500 mb-6">Quick Links</h4>
+                <ul class="space-y-4 text-sm font-medium text-slate-300">
+                    <li><a href="#platform" class="hover:text-white transition">Platform</a></li>
+                    <li><a href="pricing.html" class="hover:text-white transition">Pricing</a></li>
+                    <li><a href="#" class="hover:text-white transition">Careers</a></li>
+                    <li><a href="#" class="hover:text-white transition">Company</a></li>
+                    <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                </ul>
+            </div>
+
+            <!-- Links 3 -->
+            <div>
+                <h4 class="font-bold uppercase tracking-widest text-xs text-slate-500 mb-6">Support</h4>
+                <ul class="space-y-4 text-sm font-medium text-slate-300">
+                    <li><a href="#" class="hover:text-white transition">Contact Support</a></li>
+                    <li><a href="#" class="hover:text-white transition">System Status</a></li>
+                    <li><a href="#" class="hover:text-white transition">API Documentation</a></li>
+                    <li><a href="#" class="hover:text-white transition">Trust & Safety</a></li>
+                </ul>
             </div>
         </div>
 
-        <!-- Footer Content -->
-        <div class="max-w-7xl mx-auto px-6 pb-40">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-                <!-- Company Info -->
-                <div class="space-y-4">
-                    <p class="text-xs font-mono text-gray-500 uppercase tracking-widest">Deciper Security, Inc.</p>
-                    <p class="text-sm text-gray-400 leading-relaxed">AI-Powered Fraud Prevention<br>for Global Commerce
-                    </p>
-                    <div class="flex items-center gap-5 text-gray-500 pt-2">
-                        <a href="#" class="hover:text-white transition"><i data-lucide="youtube"
-                                class="w-4 h-4"></i></a>
-                        <a href="#" class="hover:text-white transition"><i data-lucide="linkedin"
-                                class="w-4 h-4"></i></a>
-                        <a href="#" class="hover:text-white transition"><i data-lucide="twitter"
-                                class="w-4 h-4"></i></a>
-                        <a href="#" class="hover:text-white transition"><i data-lucide="github" class="w-4 h-4"></i></a>
-                    </div>
-                </div>
-                <!-- Address 1 -->
-                <div>
-                    <p class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-3">Headquarters</p>
-                    <p class="text-sm text-gray-400 font-mono leading-relaxed">100 Innovation Way,<br>San Francisco, CA
-                        94107,<br>United States</p>
-                </div>
-                <!-- Address 2 -->
-                <div>
-                    <p class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-3">EMEA Office</p>
-                    <p class="text-sm text-gray-400 font-mono leading-relaxed">Canary Wharf,<br>London E14
-                        5AB,<br>United Kingdom</p>
-                </div>
+        <div
+            class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 font-mono">
+            <div>
+                &copy; 2026 Decipher Radar Security, Inc. All rights reserved.
             </div>
-
-            <!-- Bottom Bar -->
-            <div
-                class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pt-8 border-t border-white/5">
-                <div class="text-[11px] text-gray-600">
-                    &copy; 2026 Deciper Security Inc. All rights reserved.
-                </div>
-                <div class="flex items-center gap-6 text-[11px] text-gray-500">
-                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition">Cookie Settings</a>
-                    <div class="flex items-center gap-1 bg-white/5 rounded-full border border-white/5 p-1"
-                        id="theme-toggle">
-                        <button onclick="setTheme('light')" data-theme-btn="light" title="Light mode"
-                            class="theme-btn flex items-center justify-center w-7 h-7 rounded-full transition">
-                            <i data-lucide="sun" class="w-3 h-3"></i>
-                        </button>
-                        <button onclick="setTheme('dark')" data-theme-btn="dark" title="Dark mode"
-                            class="theme-btn flex items-center justify-center w-7 h-7 rounded-full transition">
-                            <i data-lucide="moon" class="w-3 h-3"></i>
-                        </button>
-                        <button onclick="setTheme('system')" data-theme-btn="system" title="System preference"
-                            class="theme-btn flex items-center justify-center w-7 h-7 rounded-full transition">
-                            <i data-lucide="monitor" class="w-3 h-3"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="flex gap-6 mt-4 md:mt-0 items-center">
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Service</a>
+                <a href="#" class="hover:text-white transition">Security</a>
+                <div class="w-px h-3 bg-white/10 mx-1"></div>
+                <button onclick="toggleTheme()"
+                    class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all text-slate-500 hover:text-orange-500"
+                    aria-label="Toggle Theme">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                </button>
             </div>
         </div>
     </footer>
 
 
-
     <script>
         lucide.createIcons();
 
+        // Hero Globe Visualization
+
+
         // 3-Mode Theme Toggle (dark / light / system)
         function setTheme(mode) {
-            localStorage.setItem('theme', mode);
-            applyTheme(mode);
-            updateThemeButtons(mode);
+            const flash = document.getElementById('theme-flash');
+            if (flash) {
+                flash.classList.remove('animate-flash');
+                void flash.offsetWidth; // trigger reflow
+                flash.classList.add('animate-flash');
+            }
+
+            setTimeout(() => {
+                localStorage.setItem('theme', mode);
+                applyTheme(mode);
+                updateThemeButtons(mode);
+            }, 100);
         }
 
+        // Bridge for Three.js theme updates
+        let globeMaterial, glowMaterial, globePoints;
+
         function applyTheme(mode) {
-            if (mode === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.classList.toggle('light', !prefersDark);
+            const root = document.documentElement;
+            if (mode === 'dark') {
+                root.classList.add('dark');
             } else if (mode === 'light') {
-                document.documentElement.classList.add('light');
+                root.classList.remove('dark');
             } else {
-                document.documentElement.classList.remove('light');
+                // System
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                    root.classList.add('dark');
+                } else {
+                    root.classList.remove('dark');
+                }
+            }
+
+            // Update Three.js visuals if initialized
+            if (globeMaterial && glowMaterial) {
+                const isDark = root.classList.contains('dark');
+                const targetGlow = isDark ? new THREE.Color(0x0ea5e9) : new THREE.Color(0x3b82f6);
+
+                // Keep the planet realistic but subtle emissive shift
+                const emissiveTarget = isDark ? new THREE.Color(0xffff88) : new THREE.Color(0xffffff);
+
+                new TWEEN.Tween(glowMaterial.color).to(targetGlow, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+                if (globeMaterial.emissive) {
+                    new TWEEN.Tween(globeMaterial.emissive).to(emissiveTarget, 800).start();
+                }
             }
         }
 
@@ -1045,12 +1275,25 @@
             });
         }
 
-        // Initialize theme
+        // Default to Dark
         const savedTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(savedTheme);
+        updateThemeButtons(savedTheme);
+
+        // Toggle between light and dark
+        document.getElementById('footer-theme-toggle')?.addEventListener('click', () => {
+            // Restriction: Light mode only on landing footer/platform
+            // But for now, just let it toggle the whole page as requested contextually
+            const current = localStorage.getItem('theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            setTheme(next);
+        });
+
         // Listen for system preference changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            if (localStorage.getItem('theme') === 'system') applyTheme('system');
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (localStorage.getItem('theme') === 'system') {
+                applyTheme('system');
+            }
         });
 
         // Chart rotation
@@ -1060,7 +1303,7 @@
             container.style.transform = container.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
         }
 
-        // === CINEMATIC HERO GLOBE (SpaceAI-inspired) ===
+        // === CINEMATIC HERO GLOBE (PRO PHYSICAL PLANET) ===
         function initHeroGlobeV2() {
             const container = document.getElementById('hero-globe-v2');
             if (!container || typeof THREE === 'undefined') return;
@@ -1068,127 +1311,151 @@
             const scene = new THREE.Scene();
             const w = container.offsetWidth;
             const h = container.offsetHeight;
-            const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
+            const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(w, h);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
+            const textureLoader = new THREE.TextureLoader();
             const globeGroup = new THREE.Group();
             scene.add(globeGroup);
 
-            // Generate sphere points with cinematic color gradient
-            const positions = [], colors = [], origPositions = [];
-            const radius = 3.0, count = 50000;
-            for (let i = 0; i < count; i++) {
-                const phi = Math.acos(-1 + (2 * i) / count);
-                const theta = Math.sqrt(count * Math.PI) * phi;
-                const x = radius * Math.cos(theta) * Math.sin(phi);
-                const y = radius * Math.sin(theta) * Math.sin(phi);
-                const z = radius * Math.cos(phi);
-                positions.push(x, y, z);
-                origPositions.push(x, y, z);
+            // 1. Lighting Setup (Dramatic 'Sun' for Depth)
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.15); // Low ambient for dark side
+            scene.add(ambientLight);
 
-                // Multi-color gradient: top=orange/red, mid=purple, bottom=cyan/blue
-                const normalY = (y / radius + 1) / 2; // 0 at bottom, 1 at top
-                let r, g, b;
-                if (normalY > 0.6) {
-                    // Top: warm orange/amber
-                    const t = (normalY - 0.6) / 0.4;
-                    r = 0.9 + t * 0.1;
-                    g = 0.3 + t * 0.3;
-                    b = 0.05;
-                } else if (normalY > 0.35) {
-                    // Mid: purple/magenta transition
-                    const t = (normalY - 0.35) / 0.25;
-                    r = 0.4 + t * 0.5;
-                    g = 0.1 + t * 0.2;
-                    b = 0.6 - t * 0.3;
-                } else {
-                    // Bottom: deep blue → cyan
-                    const t = normalY / 0.35;
-                    r = 0.02 + t * 0.35;
-                    g = 0.15 + t * 0.1;
-                    b = 0.5 + t * 0.15;
-                }
-                // Add slight random variance
-                colors.push(
-                    Math.min(1, r + (Math.random() - 0.5) * 0.08),
-                    Math.min(1, g + (Math.random() - 0.5) * 0.08),
-                    Math.min(1, b + (Math.random() - 0.5) * 0.08)
-                );
-            }
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1.6);
+            sunLight.position.set(-5, 3, 5);
+            scene.add(sunLight);
 
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-            const material = new THREE.PointsMaterial({
-                size: 0.018,
-                vertexColors: true,
+            // 2. Physical Earth Mesh (The "Texture Sandwich")
+            const globeGeo = new THREE.SphereGeometry(3, 64, 64);
+            const earthMaterial = new THREE.MeshPhongMaterial({
+                map: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg'),
+                bumpMap: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-topology.png'),
+                bumpScale: 0.1,
+                specularMap: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-water.png'),
+                specular: new THREE.Color('grey'),
+                shininess: 15,
+                // Night Lights Map (City lights)
+                emissiveMap: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-night-lights.png'),
+                emissive: new THREE.Color(0xffff88),
+                emissiveIntensity: 0.6
+            });
+
+            // Link to global for theme switcher safety
+            globeMaterial = earthMaterial;
+
+            const earthMesh = new THREE.Mesh(globeGeo, earthMaterial);
+            globeGroup.add(earthMesh);
+
+            // 3. Parallax Cloud Layer (Depth Trick)
+            const cloudGeo = new THREE.SphereGeometry(3.06, 64, 64);
+            const cloudMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-clouds.png'),
                 transparent: true,
-                opacity: 0.9,
-                blending: THREE.AdditiveBlending,
+                opacity: 0.4,
                 depthWrite: false
             });
-            const globe = new THREE.Points(geometry, material);
-            globeGroup.add(globe);
+            const clouds = new THREE.Mesh(cloudGeo, cloudMaterial);
+            globeGroup.add(clouds);
 
-            // Atmospheric glow ring
-            const glowGeo = new THREE.RingGeometry(3.1, 3.6, 64);
-            const glowMat = new THREE.MeshBasicMaterial({
-                color: 0x3b82f6,
-                transparent: true,
-                opacity: 0.08,
-                side: THREE.DoubleSide
-            });
-            const glow = new THREE.Mesh(glowGeo, glowMat);
-            globeGroup.add(glow);
-
-            camera.position.set(1.5, 0.8, 5.5);
+            camera.position.set(2, 1, 9);
             camera.lookAt(0, 0, 0);
-
-            // Displacement wave animation
-            const posAttr = geometry.getAttribute('position');
-            let time = 0;
 
             function animate() {
                 requestAnimationFrame(animate);
-                time += 0.008;
-
-                // Subtle displacement wave on the surface
-                for (let i = 0; i < count; i++) {
-                    const ox = origPositions[i * 3];
-                    const oy = origPositions[i * 3 + 1];
-                    const oz = origPositions[i * 3 + 2];
-                    const wave = Math.sin(oy * 2.5 + time * 1.5) * 0.06 + Math.sin(ox * 3.0 + time) * 0.04;
-                    const scale = 1 + wave;
-                    posAttr.array[i * 3] = ox * scale;
-                    posAttr.array[i * 3 + 1] = oy * scale;
-                    posAttr.array[i * 3 + 2] = oz * scale;
-                }
-                posAttr.needsUpdate = true;
-
-                globeGroup.rotation.y += 0.002;
-                globeGroup.rotation.x = Math.sin(time * 0.3) * 0.05 + 0.15;
+                globeGroup.rotation.y += 0.0005; // Earth Rotation (Slow-Mo)
+                clouds.rotation.y += 0.0007; // Cloud Parallax
+                TWEEN.update();
                 renderer.render(scene, camera);
             }
             animate();
 
+            // Resize
             window.addEventListener('resize', () => {
-                if (!container.offsetWidth) return;
-                camera.aspect = container.offsetWidth / container.offsetHeight;
+                const w = container.offsetWidth;
+                const h = container.offsetHeight;
+                camera.aspect = w / h;
                 camera.updateProjectionMatrix();
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
+                renderer.setSize(w, h);
             });
+        }
+
+        function updateProfileUI() {
+            const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+            const email = user.email || 'guest@decipher.com';
+            const name = user.name || 'Anonymous Agent';
+            const role = user.role || 'External Auditor';
+            const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${email}&backgroundColor=3b82f6`;
+
+            // Sidebar
+            document.getElementById('sidebar-user-name').innerText = name;
+        }
+
+        function updateNavProfile() {
+            const user = JSON.parse(localStorage.getItem('decipher_user'));
+            const actionContainer = document.getElementById('nav-action-container');
+            const loginBtn = document.getElementById('nav-login-btn');
+            const profileActive = document.getElementById('nav-profile-active');
+
+            if (user && user.email) {
+                if (loginBtn) loginBtn.classList.add('hidden');
+                if (profileActive) profileActive.classList.remove('hidden');
+
+                // Human Avatar look (avataaars)
+                const avatarIcon = document.getElementById('nav-user-avatar');
+                if (avatarIcon) avatarIcon.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`;
+
+                const nameLabel = document.getElementById('nav-user-name');
+                if (nameLabel) {
+                    nameLabel.innerText = user.name ? user.name.toUpperCase() : user.email.split('@')[0].toUpperCase();
+                    // Bold/High Contrast UI
+                    nameLabel.className = "text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-tight";
+                }
+
+                const emailLabel = document.getElementById('nav-user-email');
+                if (emailLabel) emailLabel.innerText = user.email.toLowerCase();
+
+                if (window.lucide) window.lucide.createIcons();
+            } else {
+                if (loginBtn) loginBtn.classList.remove('hidden');
+                if (profileActive) profileActive.classList.add('hidden');
+            }
+        }
+
+        function handleNavLogout() {
+            localStorage.removeItem('decipher_user');
+            // We keep waitlist data but clear the active session
+            window.location.reload();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             initHeroGlobeV2();
+            updateNavProfile();
 
-            setTimeout(() => {
-                const loader = document.getElementById('loading-screen');
-                if (loader) loader.classList.add('hidden');
-            }, 800);
+            // Theme Management
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            window.toggleTheme = function () {
+                const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                setTheme(current === 'dark' ? 'light' : 'dark');
+            }
+
+            // Initialize theme
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
 
             const btt = document.getElementById('back-to-top');
             if (btt) {

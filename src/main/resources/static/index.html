@@ -2,31 +2,16 @@
 <html lang="en">
 
 <head>
-    <title>DECIPHER | Artificial Intelligence Fraud Detection</title>
+    <title>DECIPER | Artificial Intelligence Fraud Detection</title>
     <meta name="description"
-        content="Decipher is the world's most advanced AI-powered fraud detection platform. Protect your revenue with sub-second latency and trillion-dollar intelligence.">
+        content="Deciper is the world's most advanced AI-powered fraud detection platform. Protect your revenue with sub-second latency and trillion-dollar intelligence.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="DECIPHER | AI Fraud Detection">
+    <meta property="og:title" content="DECIPER | AI Fraud Detection">
     <meta property="og:description"
         content="Sub-second fraud protection trained on a trillion dollars in annual volume.">
     <meta property="og:type" content="website">
     <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
-
-    <!-- Auth Guard: Middleware simulation -->
-    <script>
-        (function () {
-            const userData = localStorage.getItem('decipher_user');
-            if (!userData) {
-                window.location.href = 'auth.html';
-                return;
-            }
-            const user = JSON.parse(userData);
-            if (!user.hasPlan) {
-                window.location.href = 'waitlist.html';
-            }
-        })();
-    </script>
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='white'/%3E%3Ccircle cx='55' cy='30' r='10' fill='white'/%3E%3Ccircle cx='80' cy='30' r='10' fill='white'/%3E%3Ccircle cx='30' cy='55' r='10' fill='white'/%3E%3Ccircle cx='55' cy='55' r='10' fill='white'/%3E%3Ccircle cx='80' cy='55' r='10' fill='white'/%3E%3C/svg%3E">
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -300,7 +285,7 @@
                 {/* Dashboard Header Bar */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center glass-panel p-6 rounded-2xl shadow-sm gap-4">
                     <div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight leading-none">Fraud Operations Center</h1>
+                        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight leading-none">Console v2.1</h1>
                         <p className="text-slate-500 text-[10px] font-mono uppercase tracking-widest mt-2 flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                             Status: <span className="text-blue-600 font-bold">OPTIMAL</span>
@@ -338,9 +323,9 @@
                     </div>
                     <div className="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:shadow-md transition-shadow">
                         <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Processing Time</div>
-                        <div className="text-3xl font-bold text-slate-900">3.2ms</div>
-                        <div className="text-[10px] text-blue-600 mt-2 font-mono font-bold">ULTRA-LOW LATENCY</div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Avg. Latency</div>
+                        <div className="text-3xl font-bold text-slate-900">12ms</div>
+                        <div className="text-[10px] text-blue-600 mt-2 font-mono font-bold">SUB-SECOND RESPONSE</div>
                     </div>
                 </div>
 
@@ -400,9 +385,8 @@
                         <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-black/20">
                             <h3 className="font-bold text-xs text-slate-300 uppercase tracking-widest flex items-center gap-2">
                                 <i data-lucide="terminal" className="w-3.5 h-3.5 text-blue-500"></i> Event Stream
-                                <span className="ml-2 w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                             </h3>
-                            <span className="text-[10px] font-mono text-slate-500">tail -f /var/log/decipher/auth.log</span>
+                            <span className="text-[10px] font-mono text-slate-500">tail -f /var/log/deciper/auth.log</span>
                         </div>
                         <div className="flex-1 overflow-y-auto p-4 space-y-2 font-mono text-[10px] md:text-[11px] custom-scrollbar">
                             {logs.map((log) => (
@@ -429,118 +413,93 @@
         );
 
         // ... Other Views (UsersView, RulesEngineView, LiveEventsView, ThreatMapView, PlaceholderView) unchanged ...
-        const UsersView = ({ users }) => {
-            const handleAddEntity = () => {
-                alert("Simulating Entity Addition Wizard...\n\nIn production, this opens a modal form to register a new user, merchant, or API node.");
-            };
-
-            const handleViewProfile = (name) => {
-                alert(`Opening detailed profile for: ${name}\n\n- Transaction History\n- Device Graph\n- Risk Score Forecast`);
-            };
-
-            return (
-                <div className="space-y-6 animate-fadeIn">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-slate-800 uppercase tracking-tight">Active Entities</h2>
-                        <button onClick={handleAddEntity} className="btn-pill-blue px-4 py-2 text-xs hover:bg-blue-700 transition">Add New Entity</button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {users.map(user => (
-                            <div key={user.id} className="glass-panel p-5 rounded-xl border-l-4 border-blue-500">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-blue-600 border border-slate-200">
-                                            {user.name.charAt(0)}
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-bold text-slate-800">{user.name}</div>
-                                            <div className="text-xs text-gray-500 font-mono">{user.email}</div>
-                                        </div>
-                                    </div>
-                                    <div className={`text-xs font-bold ${user.riskScore < 30 ? 'text-blue-600' : 'text-yellow-600'}`}>
-                                        Risk: {user.riskScore}
-                                    </div>
-                                </div>
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex justify-between text-[10px] uppercase text-gray-500 font-mono">
-                                        <span>Last Login</span>
-                                        <span className="text-slate-700 font-bold">{user.lastSeen}</span>
-                                    </div>
-                                    <div className="flex justify-between text-[10px] uppercase text-gray-500 font-mono">
-                                        <span>Device ID</span>
-                                        <span className="text-slate-700 font-mono">dev_{Math.random().toString(36).substr(2, 6)}</span>
-                                    </div>
-                                </div>
-                                <button onClick={() => handleViewProfile(user.name)} className="w-full py-2 bg-slate-50 hover:bg-slate-100 text-[10px] font-bold uppercase tracking-widest rounded transition text-slate-600 border border-slate-200">View Profile</button>
-                            </div>
-                        ))}
-                    </div>
+        const UsersView = ({ users }) => (
+            <div className="space-y-6 animate-fadeIn">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold text-slate-800 uppercase tracking-tight">Active Entities</h2>
+                    <button className="btn-pill-blue px-4 py-2 text-xs hover:bg-blue-700 transition">Add New Entity</button>
                 </div>
-            );
-        };
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {users.map(user => (
+                        <div key={user.id} className="glass-panel p-5 rounded-xl border-l-4 border-blue-500">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-blue-600 border border-slate-200">
+                                        {user.name.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-bold text-slate-800">{user.name}</div>
+                                        <div className="text-xs text-gray-500 font-mono">{user.email}</div>
+                                    </div>
+                                </div>
+                                <div className={`text-xs font-bold ${user.riskScore < 30 ? 'text-blue-600' : 'text-yellow-600'}`}>
+                                    Risk: {user.riskScore}
+                                </div>
+                            </div>
+                            <div className="space-y-2 mb-4">
+                                <div className="flex justify-between text-[10px] uppercase text-gray-500 font-mono">
+                                    <span>Last Login</span>
+                                    <span className="text-slate-700 font-bold">{user.lastSeen}</span>
+                                </div>
+                                <div className="flex justify-between text-[10px] uppercase text-gray-500 font-mono">
+                                    <span>Device ID</span>
+                                    <span className="text-slate-700 font-mono">dev_{Math.random().toString(36).substr(2, 6)}</span>
+                                </div>
+                            </div>
+                            <button className="w-full py-2 bg-slate-50 hover:bg-slate-100 text-[10px] font-bold uppercase tracking-widest rounded transition text-slate-600 border border-slate-200">View Profile</button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
 
         // Placeholder for unchanged components to save space, but keeping them functional
         // Copying full implementation for consistency
-        const RulesEngineView = () => {
-            const [rules, setRules] = useState([
-                { id: 1, name: 'Velocity Check (1h)', action: 'BLOCK', count: 124, perf: '99.9%', active: true },
-                { id: 2, name: 'IP Geolocation Mismatch', action: 'REVIEW', count: 42, perf: '88.2%', active: true },
-                { id: 3, name: 'Sudden High Volume', action: 'FLAG', count: 18, perf: '94.5%', active: true },
-                { id: 4, name: 'Blacklisted Email Domain', action: 'BLOCK', count: 312, perf: '100%', active: true },
-                { id: 5, name: 'Sequential Card Attempt', action: 'SMS_VERIFY', count: 8, perf: '92.1%', active: false },
-            ]);
-
-            const toggleRule = (id) => {
-                setRules(rules.map(r => r.id === id ? { ...r, active: !r.active } : r));
-            };
-
-            const handleTest = () => alert("Running dry-run simulation on 10,000 recent transactions...");
-            const handleDeploy = () => alert("Deploying rule set v2.4 to global edge nodes...");
-
-            return (
-                <div className="space-y-6 animate-fadeIn pb-20 md:pb-0">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-slate-800">Active Logic Rules</h2>
-                        <div className="flex gap-2">
-                            <button onClick={handleTest} className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-xs rounded-md text-slate-600 font-bold uppercase tracking-widest transition">Test Rule</button>
-                            <button onClick={handleDeploy} className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-xs rounded-md text-white font-bold uppercase tracking-widest transition shadow-lg shadow-blue-500/20">+ Deploy</button>
-                        </div>
-                    </div>
-                    <div className="glass-panel rounded-xl overflow-hidden mt-6">
-                        <table className="w-full text-left text-xs">
-                            <thead className="bg-slate-50 text-slate-500 uppercase font-mono border-b border-slate-100">
-                                <tr>
-                                    <th className="px-6 py-4">Rule Name</th>
-                                    <th className="px-6 py-4">Action</th>
-                                    <th className="px-6 py-4">Triggered (24h)</th>
-                                    <th className="px-6 py-4">Performance</th>
-                                    <th className="px-6 py-4">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {rules.map((rule) => (
-                                    <tr key={rule.id} className="hover:bg-slate-50 transition">
-                                        <td className="px-6 py-4 font-bold text-slate-700">{rule.name}</td>
-                                        <td className="px-6 py-4"><span className={`px-2 py-0.5 rounded text-[10px] font-mono ${rule.action === 'BLOCK' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>{rule.action}</span></td>
-                                        <td className="px-6 py-4 font-mono text-slate-500">{rule.count} hits</td>
-                                        <td className="px-6 py-4 font-mono text-blue-600 font-bold">{rule.perf}</td>
-                                        <td className="px-6 py-4">
-                                            <button
-                                                onClick={() => toggleRule(rule.id)}
-                                                className={`w-8 h-4 rounded-full relative transition duration-300 ${rule.active ? 'bg-blue-600' : 'bg-slate-300'}`}
-                                                aria-label="Toggle Rule"
-                                            >
-                                                <div className={`absolute top-1 w-2 h-2 rounded-full bg-white transition-all duration-300 ${rule.active ? 'left-5' : 'left-1'}`}></div>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+        const RulesEngineView = () => (
+            <div className="space-y-6 animate-fadeIn pb-20 md:pb-0">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-bold text-slate-800">Active Logic Rules</h2>
+                    <div className="flex gap-2">
+                        <button className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-xs rounded-md text-slate-600 font-bold uppercase tracking-widest">Test Rule</button>
+                        <button className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-xs rounded-md text-white font-bold uppercase tracking-widest">+ Deploy</button>
                     </div>
                 </div>
-            );
-        };
+                <div className="glass-panel rounded-xl overflow-hidden mt-6">
+                    <table className="w-full text-left text-xs">
+                        <thead className="bg-slate-50 text-slate-500 uppercase font-mono border-b border-slate-100">
+                            <tr>
+                                <th className="px-6 py-4">Rule Name</th>
+                                <th className="px-6 py-4">Action</th>
+                                <th className="px-6 py-4">Triggered (24h)</th>
+                                <th className="px-6 py-4">Performance</th>
+                                <th className="px-6 py-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {[
+                                { name: 'Velocity Check (1h)', action: 'BLOCK', count: 124, perf: '99.9%', active: true },
+                                { name: 'IP Geolocation Mismatch', action: 'REVIEW', count: 42, perf: '88.2%', active: true },
+                                { name: 'Sudden High Volume', action: 'FLAG', count: 18, perf: '94.5%', active: true },
+                                { name: 'Blacklisted Email Domain', action: 'BLOCK', count: 312, perf: '100%', active: true },
+                                { name: 'Sequential Card Attempt', action: 'SMS_VERIFY', count: 8, perf: '92.1%', active: false },
+                            ].map((rule, i) => (
+                                <tr key={i} className="hover:bg-slate-50 transition">
+                                    <td className="px-6 py-4 font-bold text-slate-700">{rule.name}</td>
+                                    <td className="px-6 py-4"><span className={`px-2 py-0.5 rounded text-[10px] font-mono ${rule.action === 'BLOCK' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>{rule.action}</span></td>
+                                    <td className="px-6 py-4 font-mono text-slate-500">{rule.count} hits</td>
+                                    <td className="px-6 py-4 font-mono text-blue-600 font-bold">{rule.perf}</td>
+                                    <td className="px-6 py-4">
+                                        <div className={`w-8 h-4 rounded-full relative transition ${rule.active ? 'bg-blue-600' : 'bg-slate-300'}`}>
+                                            <div className={`absolute top-1 w-2 h-2 rounded-full bg-white transition-all ${rule.active ? 'left-5' : 'left-1'}`}></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
 
         const LiveEventsView = ({ logs }) => (
             <div className="space-y-6 animate-fadeIn h-full flex flex-col pb-20 md:pb-0">
@@ -550,18 +509,18 @@
                         Live Decision Stream
                     </h2>
                     <div className="flex gap-2">
-                        <button onClick={() => alert("Pod Health: 100%\nCPU: 12%\nMemory: 456MB")} className="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-mono border border-blue-100 rounded-full animate-pulse hover:bg-blue-100 transition">● K8S_POD_ACTIVE</button>
-                        <button onClick={() => alert("Java Runtime Environment\nVersion: 17.0.2\nGC: G1GC")} className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-mono border border-slate-200 rounded-full hover:bg-slate-200 transition">JVM_v17</button>
+                        <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-mono border border-blue-100 rounded-full animate-pulse">● K8S_POD_ACTIVE</span>
+                        <span className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-mono border border-slate-200 rounded-full">JVM_v17</span>
                     </div>
                 </div>
                 <div className="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col shadow-lg bg-slate-900 border-none">
                     <div className="bg-black/40 px-4 py-2 flex items-center gap-2">
                         <div className="flex gap-1.5">
-                            <button className="w-2.5 h-2.5 rounded-full bg-red-500/80 hover:bg-red-500 transition" title="Close"></button>
-                            <button className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition" title="Minimize"></button>
-                            <button className="w-2.5 h-2.5 rounded-full bg-green-500/80 hover:bg-green-500 transition" title="Maximize"></button>
+                            <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                            <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-500 ml-2 italic">root@decipher-k8s-pod: /app/java -jar decipher-backend.jar</span>
+                        <span className="text-[10px] font-mono text-slate-500 ml-2 italic">root@deciper-k8s-pod: /app/java -jar deciper-backend.jar</span>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 font-mono text-xs custom-scrollbar">
                         {logs.map((log) => (
@@ -592,22 +551,16 @@
                     </div>
                 </div>
                 <div className="flex-1 glass-panel rounded-2xl p-6 relative flex flex-col items-center justify-center border-dashed border-2 border-slate-200 group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50 pointer-events-none"></div>
-                    <button onClick={() => alert("Switching to 3D Globe Projection...")} className="relative z-10 transition-transform hover:scale-105 active:scale-95 focus:outline-none">
-                        <i data-lucide="globe" className="w-32 h-32 text-slate-300 mb-6 transition duration-1000"></i>
-                    </button>
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50"></div>
+                    <i data-lucide="globe" className="w-32 h-32 text-slate-300 mb-6 group-hover:scale-105 transition duration-1000"></i>
                     <p className="text-slate-500 text-sm max-w-sm text-center mb-8 font-medium">Real-time geographic visualization is initializing WebGL context...</p>
-                    <div className="w-full max-w-2xl space-y-2 relative z-10">
+                    <div className="w-full max-w-2xl space-y-2">
                         {[
                             { loc: 'Novosibirsk, RU', type: 'DDoS / HTTP Flood', risk: 'CRITICAL', time: '0.2s ago' },
                             { loc: 'Lagos, NG', type: 'Account Takeover Attempt', risk: 'HIGH', time: '1.4s ago' },
                             { loc: 'Shenzhen, CN', type: 'Brute Force / SSH', risk: 'MED', time: '2.8s ago' },
                         ].map((threat, i) => (
-                            <div
-                                key={i}
-                                onClick={() => alert(`Investigating threat vector: ${threat.type}\nOrigin: ${threat.loc}\nRisk Level: ${threat.risk}`)}
-                                className="flex justify-between items-center px-4 py-3 bg-white/50 rounded-lg border border-slate-200 hover:border-blue-300 transition shadow-sm cursor-pointer hover:bg-white"
-                            >
+                            <div key={i} className="flex justify-between items-center px-4 py-3 bg-white/50 rounded-lg border border-slate-200 hover:border-blue-300 transition shadow-sm">
                                 <div className="flex items-center gap-4">
                                     <span className="font-mono text-red-600 text-[10px] font-bold">{threat.risk}</span>
                                     <div>
@@ -645,7 +598,7 @@
 
         // --- Main App Component ---
         const App = () => {
-            const [logs, setLogs] = useState([]); // Removed persistence to prevent stale data
+            const [logs, setLogs] = usePersistentState('deciper_logs', []);
             const [isSimulating, setIsSimulating] = useState(true);
             const userNetwork = useNetworkInfo();
             const [user, setUser] = useState(null);
@@ -668,16 +621,17 @@
             ]);
 
             useEffect(() => {
-                const storedUser = localStorage.getItem('decipher_user');
-                if (storedUser) {
+                const storedUser = localStorage.getItem('deciper_user');
+                // Auto-login for demo if no user
+                if (!storedUser) {
+                    setUser({ name: 'Admin User', email: 'admin@deciper.com', role: 'admin' });
+                } else {
                     try {
                         setUser(JSON.parse(storedUser));
                     } catch (e) {
                         console.error("Failed to parse user data", e);
-                        setUser({ name: 'Admin User', email: 'admin@decipher.com', role: 'Administrator' });
+                        setUser({ name: 'Admin User', email: 'admin@deciper.com', role: 'admin' });
                     }
-                } else {
-                    setUser({ name: 'Admin User', email: 'admin@decipher.com', role: 'Administrator' });
                 }
             }, []);
 
@@ -689,7 +643,7 @@
             };
 
             const handleSignOut = () => {
-                localStorage.removeItem('decipher_user');
+                localStorage.removeItem('deciper_user');
                 window.location.href = 'auth.html';
             };
 
@@ -702,92 +656,48 @@
             useEffect(() => {
                 if (!isSimulating) return;
 
-                const runSimulation = () => {
-                    const txId = Math.floor(Math.random() * 99999);
-                    const amount = (Math.random() * 2000).toFixed(2);
-                    const deviceId = `dev_${Math.random().toString(36).substr(2, 6)}`;
-                    const ipAddress = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-                    const locations = ['Singapore', 'United States', 'Germany', 'Japan', 'Brazil', 'France', 'China', 'United Kingdom', 'Canada', 'Australia'];
-                    const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+                const interval = setInterval(() => {
+                    const locations = ['United States', 'Germany', 'Japan', 'Brazil', 'France', 'China'];
+                    const statuses = ['approved', 'approved', 'approved', 'flagged', 'review'];
+                    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
 
-                    // Probabilities
-                    const isFraud = Math.random() > 0.85; // 15% chance of fraud
-                    const isHighRisk = !isFraud && Math.random() > 0.7; // 25% chance of high risk but not fraud
+                    const newTxn = {
+                        id: `TXN-${Math.floor(Math.random() * 9000) + 1000}`,
+                        amount: `$${(Math.random() * 2000).toFixed(2)}`,
+                        ip: `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                        location: locations[Math.floor(Math.random() * locations.length)],
+                        score: Math.floor(Math.random() * 100),
+                        status: randomStatus,
+                        time: 'Just now'
+                    };
 
-                    const steps = [
-                        { source: 'GATEWAY', msg: `Incoming transaction request #${txId}`, type: 'info' },
-                        { source: 'ENRICH', msg: `Resolving device fingerprint ${deviceId}...`, type: 'info' },
-                    ];
+                    setTransactions(prev => [newTxn, ...prev].slice(0, 10));
 
-                    if (isFraud) {
-                        steps.push({ source: 'ML_ENGINE', msg: `Anomalous velocity detected from IP ${ipAddress}`, type: 'warning' });
-                        steps.push({ source: 'RULES', msg: `Geo-velocity mismatch: ${randomLocation} to last seen (2 mins ago)`, type: 'error' });
-                        steps.push({ source: 'DECISION', msg: `BLOCKING transaction #${txId} (Score: 0.9${Math.floor(Math.random() * 9)})`, type: 'error' });
-                    } else if (isHighRisk) {
-                        steps.push({ source: 'ML_ENGINE', msg: `Elevated risk score observed (0.6${Math.floor(Math.random() * 9)})`, type: 'warning' });
-                        steps.push({ source: 'RULES', msg: `Triggering 3DS verification challenge...`, type: 'warning' });
-                        steps.push({ source: 'DECISION', msg: `CHALLENGE issued for transaction #${txId}`, type: 'warning' });
+                    // Generate Corresponding Log
+                    if (newTxn.status === 'flagged') {
+                        addLog('SPRING_BOOT', `Fraud detected: ${newTxn.ip} | Action: K8S_SCALE_UP(Security)`, 'error');
+                    } else if (newTxn.status === 'review') {
+                        addLog('MYSQL_REPO', `Saved trace for review: ${newTxn.id} to transaction_logs`, 'warning'); // custom type but handled as default
                     } else {
-                        steps.push({ source: 'ML_ENGINE', msg: `Behavioral analysis normal (Score: 0.0${Math.floor(Math.random() * 9)})`, type: 'success' });
-                        steps.push({ source: 'DECISION', msg: `APPROVING transaction #${txId}`, type: 'success' });
+                        addLog('REST_API', `GET /transactions/${newTxn.id} - 200 OK`, 'success');
                     }
-
-                    // Add logs sequentially
-                    let stepDelay = 0;
-                    steps.forEach(step => {
-                        setTimeout(() => {
-                            addLog(step.source, step.msg, step.type);
-                        }, stepDelay);
-                        stepDelay += Math.random() * 400 + 200; // Random delay
-                    });
-
-                    // Add transaction to table
-                    setTimeout(() => {
-                        let status = 'approved';
-                        let score = Math.floor(Math.random() * 20) + 80; // Default high safety score
-
-                        if (isFraud) {
-                            status = 'flagged';
-                            score = Math.floor(Math.random() * 30);
-                        } else if (isHighRisk) {
-                            status = 'review';
-                            score = Math.floor(Math.random() * 30) + 40;
-                        }
-
-                        const newTxn = {
-                            id: `TXN-${txId}`,
-                            amount: `$${amount}`,
-                            ip: ipAddress,
-                            location: randomLocation,
-                            score: score,
-                            status: status,
-                            time: 'Just now'
-                        };
-                        setTransactions(prev => [newTxn, ...prev].slice(0, 10));
-                    }, stepDelay);
-                };
-
-                // Initial run
-                runSimulation();
-
-                // Periodic run
-                const interval = setInterval(runSimulation, 3500); // New flow every 3.5 seconds
+                }, 3500); // Slightly faster for "Real" feel
 
                 return () => clearInterval(interval);
             }, [isSimulating]);
 
             const addLog = (source, message, type = 'info') => {
                 const timestamp = new Date().toLocaleTimeString();
-                setLogs(prev => [{ id: Date.now() + Math.random(), timestamp, source, message, type }, ...prev].slice(0, 50));
+                setLogs(prev => [{ id: Date.now(), timestamp, source, message, type }, ...prev].slice(0, 50));
             };
 
             const getStatusBadge = (status) => {
-                // Normalize status to lowercase for comparison
-                const s = status.toLowerCase();
-                if (s === 'approved') return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-600 border border-emerald-200 uppercase tracking-tighter">Approved</span>;
-                if (s === 'flagged') return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 border border-red-200 uppercase tracking-tighter">High Risk</span>;
-                if (s === 'review') return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-600 border border-amber-200 uppercase tracking-tighter">Review</span>;
-                return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200 uppercase tracking-tighter">{status}</span>;
+                switch (status) {
+                    case 'approved': return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-600 border border-blue-200">Approved</span>;
+                    case 'flagged': return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 border border-red-200 uppercase tracking-tighter">High Risk</span>;
+                    case 'review': return <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 text-yellow-600 border border-yellow-200 uppercase tracking-tighter">Review</span>;
+                    default: return null;
+                }
             };
 
             // --- Render ---
@@ -800,16 +710,13 @@
                     {/* Mobile Nav Toggle */}
                     <div className="md:hidden fixed top-0 left-0 w-full glass-nav z-50 px-4 py-3 flex justify-between items-center">
                         <div className="flex items-center gap-2 font-bold text-slate-900">
-                            {/* minimalist 6-dot logo */}
-                            <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="25" cy="25" r="10" fill="#2563eb" />
-                                <circle cx="55" cy="25" r="10" fill="#2563eb" />
-                                <circle cx="85" cy="25" r="10" fill="#2563eb" />
-                                <circle cx="25" cy="55" r="10" fill="#2563eb" />
-                                <circle cx="55" cy="55" r="10" fill="#2563eb" />
-                                <circle cx="85" cy="55" r="10" fill="#2563eb" />
-                            </svg>
-                            DECIPHER
+                            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                                <div className="w-4 h-4 grid grid-cols-2 gap-0.5">
+                                    <div className="bg-white rounded-full"></div><div className="bg-white rounded-full"></div>
+                                    <div className="bg-white rounded-full"></div><div className="bg-white rounded-full"></div>
+                                </div>
+                            </div>
+                            DECIPER
                         </div>
                         <button onClick={() => setIsNavOpen(!isNavOpen)} className="p-2 text-slate-600">
                             <i data-lucide={isNavOpen ? "x" : "menu"} className="w-6 h-6"></i>
@@ -820,15 +727,13 @@
                     <aside className={`fixed md:relative inset-y-0 left-0 w-64 glass-sidebar border-r border-slate-200 flex flex-col z-40 transform transition-transform duration-300 md:translate-x-0 ${isNavOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                         {/* Logo Section */}
                         <div className="p-6 hidden md:flex items-center gap-3 border-b border-transparent">
-                            <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="25" cy="25" r="10" fill="#2563eb" />
-                                <circle cx="55" cy="25" r="10" fill="#2563eb" />
-                                <circle cx="85" cy="25" r="10" fill="#2563eb" />
-                                <circle cx="25" cy="55" r="10" fill="#2563eb" />
-                                <circle cx="55" cy="55" r="10" fill="#2563eb" />
-                                <circle cx="85" cy="55" r="10" fill="#2563eb" />
-                            </svg>
-                            <span className="text-lg font-black tracking-tight text-slate-900">DECIPHER</span>
+                            <div className="w-8 h-8 bg-black rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/10">
+                                <div className="w-3.5 h-3.5 grid grid-cols-2 gap-[2px]">
+                                    <div className="bg-white rounded-full"></div><div className="bg-white rounded-full"></div>
+                                    <div className="bg-white rounded-full"></div><div className="bg-white rounded-full"></div>
+                                </div>
+                            </div>
+                            <span className="text-lg font-black tracking-tight text-slate-900">DECIPER</span>
                         </div>
 
                         {/* Navigation */}
@@ -867,18 +772,6 @@
                                 <i data-lucide="shield-check" className="w-4 h-4"></i> Rules Engine
                             </a>
 
-                            <div class="mt-auto pt-6 border-t border-slate-100">
-                                <div class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center gap-3">
-                                    <div class="relative flex h-2 w-2">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="text-[10px] font-bold text-slate-700 uppercase tracking-widest leading-none">Secure Session</span>
-                                        <span class="text-[9px] text-slate-400 font-mono mt-0.5">TLS 1.3 | AES-256</span>
-                                    </div>
-                                </div>
-                            </div>
                         </nav>
 
                         {/* User Profile */}
@@ -926,18 +819,18 @@
                                     </span>
                                 </div>
                             </div>
-
-                        </header>
-
-                        {/* View Content */}
-                        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-                            {activeView === 'Dashboard' && <DashboardView transactions={transactions} getStatusBadge={getStatusBadge} logs={logs} userNetwork={userNetwork} />}
-                            {activeView === 'Live Events' && <LiveEventsView logs={logs} />}
-                            {activeView === 'Users' && <UsersView users={users} />}
-                            {activeView === 'Rules Engine' && <RulesEngineView />}
-                            {activeView === 'Threat Map' && <ThreatMapView />}
                         </div>
-                    </main>
+                    </header>
+
+                    {/* View Content */}
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+                        {activeView === 'Dashboard' && <DashboardView transactions={transactions} getStatusBadge={getStatusBadge} logs={logs} userNetwork={userNetwork} />}
+                        {activeView === 'Live Events' && <LiveEventsView logs={logs} />}
+                        {activeView === 'Users' && <UsersView users={users} />}
+                        {activeView === 'Rules Engine' && <RulesEngineView />}
+                        {activeView === 'Threat Map' && <ThreatMapView />}
+                    </div>
+                </main>
                 </div >
             );
         };

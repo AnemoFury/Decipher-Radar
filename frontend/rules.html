@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules Engine | Decipher Radar</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb',
+                            dark: '#0f172a',
+                            black: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #sidebar.collapsed {
+            width: 52px;
+        }
+
+        #sidebar.collapsed span,
+        #sidebar.collapsed h5,
+        #sidebar.collapsed p {
+            display: none !important;
+        }
+
+        #sidebar.collapsed nav {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        #sidebar.collapsed .sidebar-link {
+            padding: 8px;
+            justify-content: center;
+        }
+
+        #sidebar.collapsed .sidebar-profile-node {
+            padding: 0.5rem;
+            justify-content: center;
+        }
+
+        #sidebar.collapsed .logo-container {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+    </style>
+</head>
+
+<body
+    class="h-screen w-full flex relative selection:bg-blue-100 selection:text-blue-900 bg-white dark:bg-[#0b0e14] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside
+        class="fixed left-0 top-0 h-screen w-64 border-r border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0b0e14] flex flex-col z-20 transition-all duration-300 collapsed"
+        id="sidebar">
+
+        <div class="h-[49px] logo-container flex items-center px-5 border-b border-slate-200 dark:border-white/[0.06]">
+            <a href="console.html" class="flex items-center gap-2.5">
+                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="12" fill="#f97316" />
+                    <circle cx="50" cy="25" r="12" fill="#f97316" />
+                    <circle cx="75" cy="25" r="12" fill="#f97316" />
+                    <circle cx="25" cy="50" r="12" fill="#f97316" />
+                    <circle cx="50" cy="50" r="12" fill="#f97316" />
+                    <circle cx="75" cy="50" r="12" fill="#f97316" />
+                    <circle cx="25" cy="75" r="12" fill="#f97316" />
+                    <circle cx="50" cy="75" r="12" fill="#f97316" />
+                    <circle cx="75" cy="75" r="12" fill="#f97316" />
+                </svg>
+                <span
+                    class="text-sm font-bold tracking-tight text-slate-900 dark:text-white/90 whitespace-nowrap">Decipher
+                    Radar</span>
+                <span
+                    class="text-[9px] font-mono font-bold text-slate-400 dark:text-white/30 bg-slate-100 dark:bg-white/[0.06] px-1.5 py-0.5 rounded uppercase tracking-wider">Free</span>
+            </a>
+            <!-- Access Status Card -->
+            <div class="px-3 mb-2">
+                <div
+                    class="p-3 rounded-xl bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] transition-all hover:border-brand-blue/30 group">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Access
+                            Level</span>
+                        <span
+                            class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[7px] font-black uppercase tracking-widest border border-blue-500/20">FREE</span>
+                    </div>
+                    <div class="text-[10px] font-bold dark:text-white leading-tight mb-2">Upgrade to Cloud Node</div>
+                    <button onclick="window.location.href='pricing.html'"
+                        class="w-full py-1.5 rounded-lg bg-blue-600 dark:bg-blue-600 text-white text-[8px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all active:scale-95">
+                        Elevate Access
+                    </button>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-0.5">
+                <a href="console.html"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="layout-dashboard" class="w-[16px] h-[16px]"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="events.html"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="activity" class="w-[16px] h-[16px]"></i>
+                    <span>Live Events</span>
+                </a>
+                <a href="radar.html"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="map" class="w-[16px] h-[16px]"></i>
+                    <span>Threat Map</span>
+                </a>
+                <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
+                <a href="console.html"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="database" class="w-[16px] h-[16px]"></i>
+                    <span>Database</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="shield" class="w-[16px] h-[16px]"></i>
+                    <span>Authentication</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="hard-drive" class="w-[16px] h-[16px]"></i>
+                    <span>Storage</span>
+                </a>
+                <a href="rules.html"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md bg-slate-100 dark:bg-white/[0.08] text-slate-900 dark:text-white text-[13px] font-medium">
+                    <i data-lucide="terminal" class="w-[16px] h-[16px] text-slate-500 dark:text-slate-400"></i>
+                    <span>Rules Engine</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="radio" class="w-[16px] h-[16px]"></i>
+                    <span>Realtime</span>
+                </a>
+                <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="sparkles" class="w-[16px] h-[16px]"></i>
+                    <span>Advisors</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="bar-chart-3" class="w-[16px] h-[16px]"></i>
+                    <span>Observability</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="scroll-text" class="w-[16px] h-[16px]"></i>
+                    <span>Logs</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="file-text" class="w-[16px] h-[16px]"></i>
+                    <span>API Docs</span>
+                </a>
+                <a href="#"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="blocks" class="w-[16px] h-[16px]"></i>
+                    <span>Integrations</span>
+                </a>
+                <!-- Section: Collaborators Placeholder -->
+                <div class="mt-6 pt-4 border-t border-slate-200 dark:border-white/[0.06]">
+                    <div class="px-5 mb-3 flex items-center justify-between">
+                        <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Engineers</h5>
+                        <span class="text-[8px] font-mono text-emerald-500">1 Online</span>
+                    </div>
+                    <div id="team-list" class="px-3 space-y-1 opacity-50">
+                        <!-- Dynamic on Dashboard -->
+                    </div>
+                </div>
+
+                <!-- Restore Settings Link -->
+                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-white/[0.06]">
+                    <a href="#" onclick="toggleProfileDrawer(); return false;"
+                        class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <i data-lucide="settings" class="w-[16px] h-[16px]"></i>
+                        <span>Project Settings</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Dedicated Settings block -->
+            <div class="border-t border-slate-200 dark:border-white/[0.06] p-4 bg-slate-50 dark:bg-black/10">
+                <div class="sidebar-profile-node flex items-center gap-3 px-2 py-3 rounded-xl hover:bg-white dark:hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-slate-200 dark:hover:border-white/5 group/settings"
+                    onclick="toggleProfileDrawer()" id="sidebar-profile-card">
+                    <div class="relative shrink-0">
+                        <div id="sidebar-user-avatar-initials"
+                            class="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center text-[10px] font-bold text-white shadow-lg group-hover/settings:scale-105 transition-transform">
+                            SA</div>
+                        <div
+                            class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#0b0e14] shadow-sm">
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div id="sidebar-user-name"
+                            class="text-[11px] font-black text-slate-900 dark:text-white truncate leading-none uppercase tracking-wider">
+                            Super Admin
+                        </div>
+                        <div id="sidebar-user-role" class="text-[9px] text-slate-400 font-mono mt-1 opacity-60">
+                            ADMIN_NODE_01</div>
+                    </div>
+                    <button
+                        class="p-1.5 opacity-0 group-hover/settings:opacity-100 transition-opacity text-slate-400 hover:text-brand-blue">
+                        <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+                <button onclick="handleLogout()"
+                    class="w-full mt-3 flex items-center justify-center gap-2 py-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/5 text-[9px] font-black uppercase tracking-widest transition-all">
+                    <i data-lucide="log-out" class="w-3 h-3"></i> Suspend Session
+                </button>
+            </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 transition-all duration-300 ml-[52px]" id="main-content">
+        <!-- Top Nav -->
+        <header
+            class="h-16 border-b border-slate-200 dark:border-white/5 px-8 flex items-center justify-between z-10 bg-white dark:bg-[#0b0e14]">
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <span class="opacity-50">/ platform</span>
+                <span class="opacity-100 text-slate-900 dark:text-white">/ rules-engine</span>
+            </div>
+            <button onclick="toggleTheme()"
+                class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 transition-colors">
+                <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+            </button>
+        </header>
+
+        <!-- Rules Interface -->
+        <div class="flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-8">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h2
+                        class="text-3xl font-black tracking-tight text-slate-800 dark:text-white uppercase text-blue-600">
+                        Behavioral Rules</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-mono tracking-tight">Modify real-time
+                        heuristics and fraud detection logic.</p>
+                </div>
+                <button
+                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-blue-600/20 flex items-center gap-2 group">
+                    <i data-lucide="plus" class="w-4 h-4 group-hover:scale-125 transition-transform"></i> Create New
+                    Rule
+                </button>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Active Rules List -->
+                <div class="space-y-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Active Heuristics
+                        (4)</h3>
+
+                    <div
+                        class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-blue-500/20 shadow-lg shadow-blue-500/5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white">Velocity Check (H-104)</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 font-mono">Blocks cards used > 5 times in
+                                    60s.</p>
+                            </div>
+                            <span
+                                class="px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase">Active</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:underline">Edit
+                                Code</button>
+                            <button
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:underline">View
+                                Stats</button>
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white">Geo-IP Inconsistency</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 font-mono">Flag mismatch between IP and BIN
+                                    country.</p>
+                            </div>
+                            <span
+                                class="px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase">Active</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:underline">Edit
+                                Code</button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 opacity-70">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white">High-Risk Wallet BINs</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 font-mono">Auto-block known high-dispute
+                                    virtual BINs.</p>
+                            </div>
+                            <span
+                                class="px-2 py-1 rounded-full bg-slate-500/10 text-slate-500 text-[8px] font-black uppercase">Paused</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Editor Preview (JSON) -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Rule Definition
+                        (JSON)</h3>
+                    <div
+                        class="flex-1 rounded-2xl code-block p-6 font-mono text-[11px] text-blue-300 leading-relaxed shadow-2xl relative overflow-hidden group">
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="p-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                        <pre><code>{
+  "rule_id": "H-104",
+  "name": "Velocity_Check_60s",
+  "priority": 1,
+  "conditions": [
+    {
+      "field": "card_id",
+      "operator": "occurrence_greater_than",
+      "value": 5,
+      "window": "60s"
+    },
+    {
+      "field": "amount",
+      "operator": "greater_than",
+      "value": 0
+    }
+  ],
+  "action": "BLOCK",
+  "notification": ["Slack_Engineering", "Email_Admin"]
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        function setTheme(theme) {
+            if (theme === 'dark') document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', theme);
+        }
+        function toggleTheme() {
+            setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark');
+        }
+        if (localStorage.theme === 'dark') setTheme('dark');
+
+        // --- SECURITY: PREVENT BACK TO LANDING ---
+        if (window.history && window.history.pushState) {
+            window.history.pushState(null, null, window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, null, window.location.href);
+            };
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('decipher_user');
+            window.location.replace('landing.html');
+        }
+
+        // --- SIDEBAR HOVER LOGIC ---
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+
+        if (sidebar) {
+            sidebar.addEventListener('mouseenter', () => {
+                sidebar.classList.remove('collapsed');
+                if (mainContent) mainContent.style.marginLeft = '16rem';
+            });
+
+            sidebar.addEventListener('mouseleave', () => {
+                sidebar.classList.add('collapsed');
+                if (mainContent) mainContent.style.marginLeft = '52px';
+            });
+        }
+    </script>
+</body>
+
+</html>

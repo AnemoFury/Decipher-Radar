@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the Waitlist - Deciper</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+                linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+    <!-- Navbar (Simplified) -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="landing.html" class="flex items-center gap-2">
+                <!-- minimalist 6-dot logo -->
+                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="10" fill="#2563eb" />
+                    <circle cx="55" cy="25" r="10" fill="#2563eb" />
+                    <circle cx="85" cy="25" r="10" fill="#2563eb" />
+                    <circle cx="25" cy="55" r="10" fill="#2563eb" />
+                    <circle cx="55" cy="55" r="10" fill="#2563eb" />
+                    <circle cx="85" cy="55" r="10" fill="#2563eb" />
+                </svg>
+                <span class="text-xl font-black tracking-tighter text-slate-900 uppercase">Deciper</span>
+            </a>
+
+            <a href="auth.html"
+                class="text-sm font-bold text-slate-500 hover:text-slate-900 transition uppercase tracking-widest">
+                Login
+            </a>
+        </div>
+    </nav>
+
+    <!-- Waitlist Content -->
+    <main class="flex-grow flex items-center justify-center relative pt-20 px-6">
+        <div class="absolute inset-0 bg-grid-pattern bg-[length:40px_40px] opacity-20 pointer-events-none"></div>
+
+        <div class="max-w-xl w-full text-center relative z-10">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 backdrop-blur-md text-[10px] font-mono text-blue-600 mb-8">
+                <span class="relative flex h-2 w-2">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                <span class="tracking-[0.2em] font-bold uppercase">Early Access</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 mb-6 uppercase leading-tight">
+                Join the<br><span class="text-blue-600">Network.</span>
+            </h1>
+
+            <p class="text-lg text-slate-500 mb-10 font-medium leading-relaxed">
+                Beta-test the next-generation fraud detection platform. Join 4,000+ engineers building the future of
+                safe commerce.
+            </p>
+
+            <form class="space-y-4" onsubmit="handleWaitlist(event)">
+                <div class="relative">
+                    <input type="email" id="email" placeholder="Enter your work email"
+                        class="w-full px-6 py-4 rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none font-bold text-lg shadow-sm placeholder:font-medium placeholder:text-slate-400 transition-all"
+                        required>
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2">
+                    Join Waitlist — It's Free
+                </button>
+            </form>
+
+            <p class="mt-8 text-xs font-mono text-slate-400 uppercase tracking-widest">
+                Strictly confidential. No spam.
+            </p>
+        </div>
+    </main>
+
+    <!-- Minimal Footer -->
+    <footer class="py-8 bg-white border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 text-center text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+            &copy; 2026 Deciper Security, Inc.
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function handleWaitlist(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const email = document.getElementById('email').value;
+
+            // Loading state
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Processing...`;
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // Simulate API call
+            setTimeout(() => {
+                btn.innerHTML = `<i data-lucide="check" class="w-5 h-5"></i> You're on the list!`;
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+                // Reset form after delay
+                setTimeout(() => {
+                    // Ideally redirect to a "thank you" page or just keep state
+                    // window.location.href = 'thank-you.html'; 
+                }, 1000);
+            }, 1500);
+        }
+    </script>
+</body>
+
+</html>

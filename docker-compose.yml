@@ -20,6 +20,18 @@ services:
     depends_on:
       - db
 
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Test Credentials for QA/Black Box Testing:
+      # 1. tester@decipher.com / test_pass_123
+      # 2. qa_lead@decipher.com / qa_secure_789
+      # 3. guest_audit@decipher.com / guest_view_456
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_KEY: ${SUPABASE_KEY}
+
   frontend:
     image: nginx:alpine
     volumes:

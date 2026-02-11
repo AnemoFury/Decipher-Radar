@@ -1,0 +1,2236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decipher Radar | Fraud Operations Center</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+
+    <!-- Auth Guard: Ensure only users with a plan can access the Dashboard -->
+    <script>
+        (function () {
+            const userData = localStorage.getItem('decipher_user');
+            if (!userData) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            const user = JSON.parse(userData);
+            // Allow entry if user has a plan OR is an Administrator
+            if (!user.hasPlan && user.role !== 'Administrator') {
+                window.location.href = 'waitlist.html';
+            }
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb',
+                            dark: '#0f172a',
+                            black: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .ripple-effect {
+            animation: ripple 1.5s ease-out forwards;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Sidebar Transition - Elite Refinement */
+        #sidebar.collapsed {
+            width: 52px;
+        }
+
+        #sidebar.collapsed span,
+        #sidebar.collapsed h5,
+        #sidebar.collapsed p {
+            display: none !important;
+        }
+
+        #sidebar.collapsed nav {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        #sidebar.collapsed .sidebar-link {
+            padding: 8px;
+            justify-content: center;
+        }
+
+        #sidebar.collapsed .sidebar-link i {
+            margin: 0;
+        }
+
+        #sidebar.collapsed .sidebar-profile-node {
+            padding: 0.5rem;
+            justify-content: center;
+        }
+
+        #sidebar.collapsed .sidebar-profile-node>div {
+            display: none;
+        }
+
+        #sidebar.collapsed .h-\\[49px\\] {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        #earth-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dark .bg-slate-50 {
+            background-color: #0b0e14;
+        }
+
+        .dark .bg-white {
+            background-color: #0b0e14;
+        }
+
+        @keyframes location-pulse {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                filter: brightness(1.5);
+                color: #fff;
+            }
+
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        .location-pulse {
+            animation: location-pulse 1s ease-in-out;
+        }
+
+        /* Scanline Effect for Globe */
+        .globe-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0.3;
+        }
+
+        .fraud-pulse {
+            animation: fraud-pulse 1s infinite alternate;
+        }
+
+        @keyframes fraud-pulse {
+            from {
+                background-color: transparent;
+            }
+
+            to {
+                background-color: rgba(239, 68, 68, 0.2);
+            }
+        }
+
+        /* Modern Elite Elements - Zero Fluff */
+        .modern-close {
+            width: 30px;
+            height: 30px;
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            box-shadow: none;
+            filter: none;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 101;
+            flex-shrink: 0;
+        }
+
+        .modern-close:hover {
+            background: #1a1a1a;
+            border-color: #ff4b4b;
+        }
+
+        .modern-close i {
+            width: 13px;
+            height: 13px;
+            pointer-events: none;
+        }
+
+        .close-btn i {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Exit Radar Specific */
+        .exit-radar-wrapper {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .exit-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.2em;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .exit-radar-wrapper:hover .exit-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Background Blur when Settings Open */
+        .dashboard-blur {
+            filter: grayscale(0.5) contrast(1.1);
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        /* Circular Gear Button */
+        .settings-trigger {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #94a3b8;
+        }
+
+        .settings-trigger:hover {
+            background: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            transform: rotate(90deg);
+        }
+
+        /* City Labels for Globe */
+        #city-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 1);
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+
+        #city-label.visible {
+            opacity: 1;
+            transform: translate(-50%, -40%);
+        }
+
+        /* Profile Drawer Animation */
+        #profile-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        #profile-drawer.open {
+            transform: translateX(0);
+        }
+
+        @keyframes arc-flash {
+            0% {
+                box-shadow: 0 0 0 0px rgba(59, 130, 246, 0.4);
+                transform: scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 40px 10px rgba(59, 130, 246, 0.2);
+                transform: scale(1.02);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(59, 130, 246, 0);
+                transform: scale(1);
+            }
+        }
+
+        .arc-pulse {
+            animation: arc-flash 0.8s ease-out;
+        }
+    </style>
+</head>
+
+<body
+    class="h-screen w-full flex relative selection:bg-blue-100 selection:text-blue-900 bg-white dark:bg-[#0b0e14] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside
+        class="fixed left-0 top-0 h-screen w-64 border-r border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0b0e14] flex flex-col z-20 transition-all duration-300 collapsed"
+        id="sidebar">
+
+        <!-- Logo Header -->
+        <div class="h-[49px] flex items-center px-5 border-b border-slate-200 dark:border-white/[0.06] relative">
+            <a href="console.html" class="flex items-center gap-2.5">
+                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="12" fill="#f97316" />
+                    <circle cx="50" cy="25" r="12" fill="#f97316" />
+                    <circle cx="75" cy="25" r="12" fill="#f97316" />
+                    <circle cx="25" cy="50" r="12" fill="#f97316" />
+                    <circle cx="50" cy="50" r="12" fill="#f97316" />
+                    <circle cx="75" cy="50" r="12" fill="#f97316" />
+                    <circle cx="25" cy="75" r="12" fill="#f97316" />
+                    <circle cx="50" cy="75" r="12" fill="#f97316" />
+                    <circle cx="75" cy="75" r="12" fill="#f97316" />
+                </svg>
+                <span
+                    class="text-sm font-bold tracking-tight text-slate-900 dark:text-white/90 whitespace-nowrap">Decipher
+                    Radar</span>
+                <span
+                    class="text-[9px] font-mono font-bold text-slate-400 dark:text-white/30 bg-slate-100 dark:bg-white/[0.06] px-1.5 py-0.5 rounded uppercase tracking-wider">Free</span>
+            </a>
+
+            <!-- Manual Toggle Button -->
+            <button id="sidebar-manual-toggle"
+                class="absolute -right-3 top-3 w-6 h-6 bg-white dark:bg-[#0b0e14] border border-slate-200 dark:border-white/10 rounded-full flex items-center justify-center z-50 shadow-sm hover:scale-110 transition-transform">
+                <i id="toggle-icon-manual" data-lucide="chevron-left" class="w-3 h-3 text-slate-400"></i>
+            </button>
+        </div>
+
+        <!-- Access Status Card -->
+        <div class="px-3 mb-2">
+            <div
+                class="p-3 rounded-xl bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] transition-all hover:border-brand-blue/30 group">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Access
+                        Level</span>
+                    <span
+                        class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[7px] font-black uppercase tracking-widest border border-blue-500/20">FREE</span>
+                </div>
+                <div class="text-[10px] font-bold dark:text-white leading-tight mb-2">Upgrade to Cloud Node</div>
+                <button onclick="window.location.href='pricing.html'"
+                    class="w-full py-1.5 rounded-lg bg-blue-600 dark:bg-blue-600 text-white text-[8px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all active:scale-95">
+                    Elevate Access
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-0.5">
+
+            <!-- Section: Core -->
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md bg-slate-100 dark:bg-white/[0.08] text-slate-900 dark:text-white text-[13px] font-medium">
+                <i data-lucide="layout-dashboard" class="w-[16px] h-[16px] text-slate-500 dark:text-slate-400"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="events.html"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="activity" class="w-[16px] h-[16px]"></i>
+                <span>Live Events</span>
+            </a>
+            <a href="radar.html"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="map" class="w-[16px] h-[16px]"></i>
+                <span>Threat Map</span>
+            </a>
+
+            <!-- Divider -->
+            <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
+
+            <!-- Section: Management -->
+            <a href="console.html"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="database" class="w-[16px] h-[16px]"></i>
+                <span>Database</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="shield" class="w-[16px] h-[16px]"></i>
+                <span>Authentication</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="hard-drive" class="w-[16px] h-[16px]"></i>
+                <span>Storage</span>
+            </a>
+            <a href="rules.html"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="terminal" class="w-[16px] h-[16px]"></i>
+                <span>Rules Engine</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="radio" class="w-[16px] h-[16px]"></i>
+                <span>Realtime</span>
+            </a>
+
+            <!-- Divider -->
+            <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
+
+            <!-- Section: Tools -->
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="sparkles" class="w-[16px] h-[16px]"></i>
+                <span>Advisors</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="bar-chart-3" class="w-[16px] h-[16px]"></i>
+                <span>Observability</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="scroll-text" class="w-[16px] h-[16px]"></i>
+                <span>Logs</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="file-text" class="w-[16px] h-[16px]"></i>
+                <span>API Docs</span>
+            </a>
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                <i data-lucide="blocks" class="w-[16px] h-[16px]"></i>
+                <span>Integrations</span>
+            </a>
+
+            <!-- Divider -->
+            <!-- Section: Dynamic Collaborators -->
+            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-white/[0.06]">
+                <div class="px-5 mb-3 flex items-center justify-between">
+                    <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Engineers</h5>
+                    <span id="team-count" class="text-[8px] font-mono text-emerald-500">1 Online</span>
+                </div>
+                <div id="team-list" class="px-3 space-y-1">
+                    <!-- Team members rendered here -->
+                </div>
+            </div>
+
+            <!-- Restore Settings Link -->
+            <div class="mt-4 pt-4 border-t border-slate-200 dark:border-white/[0.06]">
+                <a href="#" onclick="toggleProfileDrawer(); return false;"
+                    class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <i data-lucide="settings" class="w-[16px] h-[16px]"></i>
+                    <span>Project Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Dedicated Settings block -->
+        <div class="border-t border-slate-200 dark:border-white/[0.06] p-4 bg-slate-50 dark:bg-black/10">
+            <div class="sidebar-profile-node flex items-center gap-3 px-2 py-3 rounded-xl hover:bg-white dark:hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-slate-200 dark:hover:border-white/5 group/settings"
+                onclick="toggleProfileDrawer()" id="sidebar-profile-card">
+                <div class="relative shrink-0">
+                    <img id="sidebar-user-avatar" src=""
+                        class="w-8 h-8 rounded-lg border border-slate-200 dark:border-white/10 object-cover shadow-sm group-hover/settings:scale-105 transition-transform"
+                        alt="SA">
+                    <div
+                        class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#0b0e14] shadow-sm">
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div id="sidebar-user-name"
+                        class="text-[11px] font-black text-slate-900 dark:text-white truncate leading-none uppercase tracking-wider">
+                        Super Admin
+                    </div>
+                    <div id="sidebar-user-role" class="text-[9px] text-slate-400 font-mono mt-1 opacity-60">
+                        ADMIN_NODE_01</div>
+                </div>
+                <button
+                    class="p-1.5 opacity-0 group-hover/settings:opacity-100 transition-opacity text-slate-400 hover:text-brand-blue">
+                    <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+            <button onclick="handleLogout()"
+                class="w-full mt-3 flex items-center justify-center gap-2 py-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/5 text-[9px] font-black uppercase tracking-widest transition-all">
+                <i data-lucide="log-out" class="w-3 h-3"></i> Suspend Session
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-1 flex flex-col min-w-0 transition-all duration-300 ml-[52px]">
+
+
+
+        <!-- Top Nav -->
+        <header
+            class="h-16 border-b border-slate-200 dark:border-white/[0.06] px-8 flex items-center justify-between z-10 bg-white dark:bg-[#0b0e14]">
+            <div
+                class="flex items-center gap-2 text-[10px] font-mono font-black uppercase tracking-widest text-slate-400">
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 hover:text-brand-blue transition-colors group/btn">
+                        <span class="opacity-40 whitespace-nowrap">/ PLATFORM</span>
+                        <i data-lucide="chevron-down"
+                            class="w-3 h-3 opacity-20 group-hover/btn:rotate-180 transition-transform"></i>
+                    </button>
+                    <div
+                        class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-[#0b0e14] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl py-3 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all translate-y-2 group-hover:translate-y-0 z-50 backdrop-blur-xl">
+                        <div class="px-4 py-2 border-b border-white/5 mb-2">
+                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Global
+                                Ops</span>
+                        </div>
+                        <a href="#"
+                            class="flex items-center justify-between px-4 py-2 hover:bg-brand-blue/10 text-[9px] font-black">
+                            NETWORK STATUS <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        </a>
+                        <a href="#"
+                            class="flex items-center justify-between px-4 py-2 hover:bg-slate-50 dark:hover:bg-white/5 text-[9px] font-black">
+                            DATA PRIVACY <i data-lucide="lock" class="w-2.5 h-2.5 opacity-30"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center gap-1.5 hover:text-white transition-colors group/btn">
+                        <span class="opacity-100 text-slate-900 dark:text-white">/ DASHBOARD</span>
+                        <i data-lucide="chevron-down"
+                            class="w-3 h-3 opacity-20 group-hover/btn:rotate-180 transition-transform"></i>
+                    </button>
+                    <div
+                        class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-[#0b0e14] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl py-3 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all translate-y-2 group-hover:translate-y-0 z-50 backdrop-blur-xl">
+                        <div class="px-4 py-2 border-b border-white/5 mb-2">
+                            <span
+                                class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Navigation</span>
+                        </div>
+                        <a href="console.html"
+                            class="flex items-center justify-between px-4 py-2 bg-brand-blue/10 text-brand-blue text-[9px] font-black">
+                            SYSTEM OVERVIEW <i data-lucide="layout-grid" class="w-2.5 h-2.5"></i>
+                        </a>
+                        <a href="events.html"
+                            class="flex items-center justify-between px-4 py-2 hover:bg-slate-50 dark:hover:bg-white/5 text-[9px] font-black">
+                            SECURITY LOGS <i data-lucide="scroll-text" class="w-2.5 h-2.5 opacity-30"></i>
+                        </a>
+                        <a href="#" onclick="toggleProfileDrawer()"
+                            class="flex items-center justify-between px-4 py-2 hover:bg-slate-50 dark:hover:bg-white/5 text-[9px] font-black">
+                            TEAM SETTINGS <i data-lucide="users" class="w-2.5 h-2.5 opacity-30"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <!-- Space View Toggle -->
+                <button onclick="toggleSpaceView()"
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group">
+                    <i data-lucide="orbit"
+                        class="w-3.5 h-3.5 text-blue-600 group-hover:rotate-180 transition-transform duration-700"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-60">SpaceView</span>
+                </button>
+
+                <div class="flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest opacity-60">
+                    <div class="flex flex-col items-end">
+                        <span class="text-slate-400 dark:text-slate-500">Total Throughput</span>
+                        <span class="text-brand-blue text-sm">42.8M</span>
+                    </div>
+                </div>
+                <button id="theme-toggle"
+                    class="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full transition-all">
+                    <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Body -->
+        <div class="flex-1 p-8 space-y-8 overflow-y-auto custom-scrollbar">
+
+            <div class="flex justify-between items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-6 rounded-2xl shadow-sm relative overflow-hidden"
+                id="header-pulse-area">
+                <div class="relative z-10">
+                    <h1 class="text-3xl font-black tracking-tighter">Decipher Console</h1>
+                    <div class="flex items-center gap-3 mt-2 font-mono text-[10px] uppercase font-bold tracking-widest">
+                        <span class="flex items-center gap-1 text-emerald-500">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Status: Optimal
+                        </span>
+                        <span class="opacity-40 whitespace-nowrap">Node: 103.242.197.254</span>
+                    </div>
+                </div>
+                <div id="fraud-alert-notification"
+                    class="hidden relative z-10 flex items-center gap-4 animate-in slide-in-from-right duration-500">
+                    <div class="flex flex-col items-end">
+                        <span class="text-[10px] font-black text-red-500 uppercase tracking-[0.2em] mb-1">CRITICAL
+                            THREAT DETECTED</span>
+                        <span class="text-[12px] font-mono text-slate-500 dark:text-slate-400">COUNTERMEASURES
+                            ENGAGED</span>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-red-500"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global KPI Cards -->
+            <div class="grid grid-cols-3 gap-6">
+                <div
+                    class="p-8 rounded-2xl bg-white dark:bg-[#0b0e14] border border-slate-200 dark:border-white/5 shadow-sm hover:border-brand-blue/30 transition-all duration-500 group">
+                    <div
+                        class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 flex items-center justify-between">
+                        Fraud Blocked (24h)
+                        <i data-lucide="shield-check"
+                            class="w-3.5 h-3.5 opacity-20 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                    <div class="text-4xl font-black leading-none dark:text-white" id="kpi-fraud-blocked">$0.00</div>
+                    <div
+                        class="mt-6 flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i> 14.2% vs prev
+                    </div>
+                </div>
+                <div
+                    class="p-8 rounded-2xl bg-white dark:bg-[#0b0e14] border border-slate-200 dark:border-white/5 shadow-sm hover:border-brand-blue/30 transition-all duration-500 group">
+                    <div
+                        class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 flex items-center justify-between">
+                        Model Accuracy
+                        <i data-lucide="brain-circuit"
+                            class="w-3.5 h-3.5 opacity-20 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                    <div class="text-4xl font-black leading-none dark:text-white" id="kpi-model-accuracy">---</div>
+                    <div class="mt-6 text-[10px] font-mono uppercase font-bold text-slate-500 opacity-60">Stable
+                        v4.2.1-PROD</div>
+                </div>
+                <div
+                    class="p-8 rounded-2xl bg-white dark:bg-[#161b22] border border-slate-200 dark:border-white/5 shadow-sm hover:border-brand-blue/30 transition-all duration-500 group">
+                    <div
+                        class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 flex items-center justify-between">
+                        Processing Time
+                        <i data-lucide="zap"
+                            class="w-3.5 h-3.5 opacity-20 group-hover:opacity-100 transition-opacity text-brand-blue"></i>
+                    </div>
+                    <div class="text-4xl font-black leading-none text-brand-blue" id="kpi-latency">---</div>
+                    <div class="mt-6 text-[10px] font-mono uppercase font-bold text-brand-blue tracking-[0.1em]">
+                        Ultra-low latency</div>
+                </div>
+            </div>
+
+            <!-- Lower Layout: Table + Globe + Live Stream -->
+            <div class="grid lg:grid-cols-[1fr_400px_1fr] gap-6 items-stretch min-h-[500px]">
+
+                <!-- Live Transactions Table -->
+                <div
+                    class="rounded-2xl bg-white dark:bg-[#0b0e14] shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden flex flex-col">
+                    <div
+                        class="p-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-white/5">
+                        <div class="flex items-center gap-4">
+                            <h3 class="font-black uppercase tracking-widest text-[10px]">Live Activity</h3>
+                            <div class="flex items-center gap-2 text-[9px] font-bold text-brand-blue animate-pulse">
+                                <i data-lucide="circle-dot" class="w-2.5 h-2.5"></i> Streaming
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="generateTransaction()"
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand-blue/30 bg-brand-blue/5 hover:bg-brand-blue/10 text-brand-blue transition-all active:scale-95 group">
+                                <i data-lucide="radio" class="w-3 h-3 group-hover:animate-ping"></i>
+                                <span class="text-[9px] font-black uppercase tracking-widest">Simulate Signal</span>
+                            </button>
+                            <button onclick="toggleTableFilter()" id="filter-btn"
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group active:scale-95">
+                                <i data-lucide="filter" class="w-3 h-3 text-slate-400 group-hover:text-brand-blue"></i>
+                                <span id="filter-label"
+                                    class="text-[9px] font-black uppercase tracking-widest text-slate-500">Filter:
+                                    All</span>
+                            </button>
+                            <button onclick="exportTransactions()"
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-white text-slate-900 dark:text-black font-black text-[9px] uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95">
+                                <i data-lucide="download" class="w-3 h-3"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                        <table class="w-full text-left text-[11px]">
+                            <thead>
+                                <tr
+                                    class="text-[9px] uppercase font-bold tracking-widest text-slate-400 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5">
+                                    <th class="px-4 py-3">ID</th>
+                                    <th class="px-4 py-3 text-right">Amount</th>
+                                    <th class="px-4 py-3">Origin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaction-table-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Center Column: Global Data View -->
+                <div
+                    class="relative bg-[#0b0e14] rounded-3xl overflow-hidden border border-white/10 shadow-2xl group flex flex-col">
+                    <div class="absolute top-4 left-4 z-20">
+                        <div
+                            class="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-[9px] font-mono text-blue-400 uppercase tracking-widest">
+                            Regional Load: <span class="text-white">Optimal</span>
+                        </div>
+                    </div>
+
+                    <div id="earth-container" class="flex-1">
+                        <!-- Three.js Globe -->
+                        <div class="globe-overlay"></div>
+                    </div>
+
+                    <div class="p-4 bg-black/40 backdrop-blur-md border-t border-white/10 z-20">
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Global
+                                    Signals</span>
+                                <span class="text-[10px] font-mono text-white">Active Sessions: 12,402</span>
+                            </div>
+                            <div class="flex -space-x-2">
+                                <div class="w-6 h-6 rounded-full border border-slate-900 bg-blue-500/20"></div>
+                                <div class="w-6 h-6 rounded-full border border-slate-900 bg-red-500/20 animate-pulse">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Live Terminal + Team -->
+                <div class="flex flex-col gap-4">
+                    <div
+                        class="rounded-2xl bg-[#0b0e14] shadow-2xl overflow-hidden flex flex-col border border-white/10 flex-1 min-h-[300px]">
+                        <div class="p-4 bg-slate-900 border-b border-white/5 flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="terminal" class="w-3 h-3 text-brand-blue"></i>
+                                <h3 class="font-black uppercase tracking-widest text-[9px] text-white/50">Intelligence
+                                    Feed</h3>
+                            </div>
+                            <div class="font-mono text-[8px] text-white/20">secure-link [ENCRYPTED]</div>
+                        </div>
+                        <div id="event-stream"
+                            class="flex-1 p-5 font-mono text-[10px] leading-relaxed space-y-2 overflow-y-auto custom-scrollbar bg-[rgba(2,6,23,0.95)]">
+                            <!-- Dynamic log lines -->
+                            <div class="text-slate-600 opacity-50">Initializing secure stream connection...</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Threat DNA & Engineering Hub -->
+                    <div class="rounded-2xl bg-white dark:bg-[#0b0e14] border border-slate-200 dark:border-white/10 p-6 flex flex-col gap-6 shadow-sm transition-all duration-700"
+                        id="dna-card">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest"
+                                id="dna-title">Live
+                                Threat DNA</h4>
+                            <div id="dna-status"
+                                class="text-[9px] font-mono text-emerald-500 px-2 py-0.5 rounded-full bg-emerald-500/10">
+                                STABLE</div>
+                        </div>
+
+                        <!-- Active Threat Stats / Recent History Toggle -->
+                        <div id="active-dna-content" class="space-y-4">
+                            <!-- Showing Recent Block History by default when idle -->
+                            <div class="space-y-3" id="dna-idle-view">
+                                <div
+                                    class="flex items-center justify-between text-[9px] text-slate-400 font-bold uppercase tracking-widest border-b border-slate-100 dark:border-white/5 pb-2">
+                                    <span>Recent Blocked</span>
+                                    <span>Rule</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[10px] font-mono">
+                                    <span class="text-slate-600 dark:text-slate-100 italic">21.09.112.4</span>
+                                    <span class="text-red-500/80">Velocity</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[10px] font-mono">
+                                    <span class="text-slate-600 dark:text-slate-100 italic">89.212.1.04</span>
+                                    <span class="text-red-500/80">Geo-IP</span>
+                                </div>
+                                <div class="flex items-center justify-between text-[10px] font-mono">
+                                    <span class="text-slate-600 dark:text-slate-100 italic">103.22.41.9</span>
+                                    <span class="text-red-500/80">BIN_List</span>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Content for Live Threats (hidden when idle) -->
+                            <div class="hidden space-y-4" id="dna-active-view">
+                                <div
+                                    class="p-4 bg-slate-50 dark:bg-black/20 rounded-xl border border-slate-100 dark:border-white/5 shadow-inner">
+                                    <span
+                                        class="text-[9px] font-black text-slate-400 block mb-2 uppercase tracking-widest">Source
+                                        Trace</span>
+                                    <div class="flex flex-col gap-1">
+                                        <span id="dna-ip-display"
+                                            class="text-2xl font-mono font-black text-slate-900 dark:text-white tracking-tighter">192.168.1.104</span>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                                            <span id="dna-loc-display"
+                                                class="text-[11px] font-mono text-blue-500 font-bold uppercase">Singapore,
+                                                SG</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div
+                                        class="p-4 bg-slate-50 dark:bg-black/20 rounded-xl border border-slate-100 dark:border-white/5">
+                                        <span
+                                            class="text-[9px] font-black text-slate-400 block mb-2 uppercase tracking-widest">Risk
+                                            Score</span>
+                                        <span id="dna-score-display"
+                                            class="text-xl font-mono font-black text-red-500">98%</span>
+                                    </div>
+                                    <div
+                                        class="p-4 bg-slate-50 dark:bg-black/20 rounded-xl border border-slate-100 dark:border-white/5">
+                                        <span
+                                            class="text-[9px] font-black text-slate-400 block mb-2 uppercase tracking-widest">Protocol</span>
+                                        <span id="dna-fp-display"
+                                            class="text-xl font-mono font-black text-blue-500 truncate">TCP_SEC</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collaborator Provisioning Node -->
+                        <div
+                            class="pt-6 border-t border-slate-100 dark:border-white/5 mt-4 p-4 rounded-xl bg-orange-500/5 border border-orange-500/10">
+                            <h4
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i data-lucide="user-plus" class="w-3 h-3 text-brand-blue"></i>
+                                Provision Access Node
+                            </h4>
+                            <div class="space-y-4">
+                                <!-- Searchable Active Slot -->
+                                <div class="relative">
+                                    <i data-lucide="at-sign" class="absolute left-3 top-2.5 w-3 h-3 text-slate-400"></i>
+                                    <input type="email" id="invite-email" placeholder="agent_node@network.cluster"
+                                        class="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2.5 text-[10px] font-mono focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/20 transition-all">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <!-- Role Dropdown -->
+                                    <div class="relative">
+                                        <select id="invite-role"
+                                            class="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-[10px] font-bold appearance-none focus:outline-none focus:border-brand-blue transition-all cursor-pointer">
+                                            <option value="Analyst">Analyst</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="SRE">SRE</option>
+                                            <option value="Viewer">Viewer</option>
+                                        </select>
+                                        <i data-lucide="chevron-down"
+                                            class="absolute right-3 top-3 w-3 h-3 text-slate-400 pointer-events-none"></i>
+                                    </div>
+
+                                    <!-- Primary Orange Button (Brand Color) -->
+                                    <button onclick="sendInvite()" id="invite-btn"
+                                        class="bg-orange-500 hover:bg-orange-600 text-white font-black text-[9px] uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-orange-500/20 active:scale-95 flex items-center justify-center gap-2 group/btn">
+                                        Send Invite
+                                        <i data-lucide="send"
+                                            class="w-3 h-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                                    </button>
+                                </div>
+
+                                <p
+                                    class="text-[8px] text-slate-500 font-medium italic leading-relaxed text-center px-4">
+                                    Invitation generates a secure cryptographic link valid for 24 hours.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+    </main>
+
+    <!-- Profile Settings Drawer -->
+    <div id="profile-drawer"
+        class="fixed inset-y-0 left-0 w-80 bg-white dark:bg-[#171717] border-r border-slate-200 dark:border-white/[0.06] z-[100] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-all duration-500 overflow-hidden">
+
+        <!-- Drawer Header -->
+        <div class="p-8 border-b border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/[0.02]">
+            <div class="flex justify-between items-start mb-8">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Security Control
+                            Center</h3>
+                    </div>
+                    <div
+                        class="text-[12px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] font-mono underline decoration-blue-500/50 underline-offset-8">
+                        Node
+                        Settings</div>
+                </div>
+                <button onclick="toggleProfileDrawer()" class="modern-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <div class="relative group/avatar">
+                    <div
+                        class="w-20 h-20 rounded-3xl bg-brand-blue flex items-center justify-center text-xl font-black text-white shadow-2xl shadow-blue-500/30 relative overflow-hidden">
+                        <img id="drawer-avatar-img" src="" class="absolute inset-0 w-full h-full object-cover">
+                        <button onclick="randomizeAvatar()"
+                            class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-all cursor-pointer border-none">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 text-white mb-1"></i>
+                            <span class="text-[7px] font-black text-white uppercase tracking-widest">Re-seed</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 space-y-3">
+                    <div class="relative">
+                        <input type="text" id="edit-user-name"
+                            class="w-full bg-transparent border-none p-0 text-lg font-black text-slate-900 dark:text-white focus:outline-none focus:ring-0 placeholder:opacity-20"
+                            placeholder="Agent Name">
+                        <div
+                            class="absolute bottom-0 left-0 w-full h-px bg-slate-200 dark:bg-white/10 scale-x-0 group-focus-within:scale-x-100 transition-transform origin-left">
+                        </div>
+                    </div>
+                    <div>
+                        <p id="drawer-user-email" class="text-[10px] font-mono text-slate-500 mb-2 lowercase">
+                            user@network.cluster</p>
+                        <span
+                            class="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase tracking-widest border border-emerald-500/20">Authorized
+                            Node</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex gap-2">
+                <button onclick="saveProfile()" id="save-profile-btn"
+                    class="flex-1 bg-black text-white py-2.5 px-4 rounded-lg text-[9px] font-mono font-black uppercase tracking-[0.15em] transition-all hover:bg-slate-800 border border-white/10">
+                    Propagate Changes
+                </button>
+                <button onclick="toggleProfileDrawer()"
+                    class="px-4 py-2.5 rounded-lg text-[9px] font-mono font-black uppercase tracking-[0.15em] text-slate-400 hover:text-white border border-slate-200 dark:border-white/10 hover:border-white/30 transition-all">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- Drawer Content (Scrollable) -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-8 space-y-10">
+
+            <!-- Security Policy -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Global Security Policies</h5>
+                <div class="space-y-3">
+                    <label
+                        class="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-blue-500"></i>
+                            <div>
+                                <div class="text-[10px] font-bold dark:text-white">Multi-Factor Auth</div>
+                                <div class="text-[8px] text-slate-500">Required for all nodes</div>
+                            </div>
+                        </div>
+                        <input type="checkbox" checked
+                            class="w-8 h-4 bg-slate-200 rounded-full appearance-none checked:bg-blue-600 relative after:content-[''] after:absolute after:w-3 after:h-3 after:bg-white after:rounded-full after:top-0.5 after:left-0.5 checked:after:translate-x-4 transition-all cursor-pointer">
+                    </label>
+
+                    <label
+                        class="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="clock" class="w-4 h-4 text-blue-500"></i>
+                            <div>
+                                <div class="text-[10px] font-bold dark:text-white">Session Timeout</div>
+                                <div class="text-[8px] text-slate-500">Auto-lock after 15m</div>
+                            </div>
+                        </div>
+                        <select
+                            class="bg-black/20 border border-white/10 rounded px-1.5 py-0.5 text-[9px] font-mono text-slate-300 focus:outline-none focus:border-blue-500">
+                            <option>15m</option>
+                            <option>30m</option>
+                            <option>1h</option>
+                            <option>Never</option>
+                        </select>
+                    </label>
+
+                    <label
+                        class="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="database" class="w-4 h-4 text-blue-500"></i>
+                            <div>
+                                <div class="text-[10px] font-bold dark:text-white">Data Retention</div>
+                                <div class="text-[8px] text-slate-500">Purge logs > 90 days</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-mono dark:text-slate-500">90d</span>
+                            <div class="w-12 h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="w-2/3 h-full bg-blue-500"></div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="globe-2" class="w-4 h-4 text-blue-500"></i>
+                            <div>
+                                <div class="text-[10px] font-bold dark:text-white">Regional Isolation</div>
+                                <div class="text-[8px] text-slate-500">Geo-fencing active</div>
+                            </div>
+                        </div>
+                        <input type="checkbox"
+                            class="w-8 h-4 bg-slate-200 rounded-full appearance-none checked:bg-blue-600 relative after:content-[''] after:absolute after:w-3 after:h-3 after:bg-white after:rounded-full after:top-0.5 after:left-0.5 checked:after:translate-x-4 transition-all cursor-pointer">
+                    </label>
+                </div>
+            </section>
+
+            <!-- Radar Sensitivity -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex justify-between">
+                    Radar Aggression
+                    <span id="threshold-val" class="text-blue-500">85%</span>
+                </h5>
+                <div class="space-y-4">
+                    <input type="range" id="sensitivity-slider" min="50" max="99" value="85"
+                        oninput="updateSensitivity(this.value)"
+                        class="w-full h-1.5 bg-slate-100 dark:bg-white/5 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                    <p class="text-[9px] text-slate-500 leading-relaxed italic">
+                        Adjust global blocking aggressiveness. High intensity increases "Shield" field strength.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Security Bridge (RBAC) -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Enterprise Bridge</h5>
+                <div class="p-4 rounded-xl dark:bg-white/5 border border-slate-200 dark:border-white/5 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500" id="bridge-status-light"></div>
+                            <span class="text-[10px] font-mono dark:text-slate-300">API_CONNECTOR_v2</span>
+                        </div>
+                        <span class="text-[8px] font-black text-emerald-500 uppercase">Heathy</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="password" value="sk_decipher_live_8829..." readonly
+                            class="flex-1 bg-black/20 border border-white/5 rounded-lg px-3 py-1.5 text-[10px] font-mono text-slate-400">
+                        <button class="p-1.5 hover:bg-white/5 rounded-lg"><i data-lucide="copy"
+                                class="w-3.5 h-3.5"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notification Heartbeat -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Alert Heartbeat</h5>
+                <div class="space-y-3">
+                    <label class="flex justify-between items-center group cursor-pointer">
+                        <span
+                            class="text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:dark:text-white transition-colors">Critical
+                            Threat Pulse</span>
+                        <input type="checkbox" id="pulse-toggle"
+                            class="w-8 h-4 bg-slate-200 rounded-full appearance-none checked:bg-blue-600 relative after:content-[''] after:absolute after:w-3 after:h-3 after:bg-white after:rounded-full after:top-0.5 after:left-0.5 checked:after:translate-x-4 transition-all cursor-pointer">
+                    </label>
+                    <label class="flex justify-between items-center group cursor-pointer">
+                        <span
+                            class="text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:dark:text-white transition-colors">Audio
+                            Sonar Ping</span>
+                        <input type="checkbox" id="audio-toggle"
+                            class="w-8 h-4 bg-slate-200 rounded-full appearance-none checked:bg-blue-600 relative after:content-[''] after:absolute after:w-3 after:h-3 after:bg-white after:rounded-full after:top-0.5 after:left-0.5 checked:after:translate-x-4 transition-all cursor-pointer">
+                    </label>
+                </div>
+            </section>
+
+            <!-- Alert Protocol -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Alert Protocols</h5>
+                <div class="space-y-2">
+                    <label
+                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+                        <input type="checkbox" checked
+                            class="w-3.5 h-3.5 rounded border-white/10 bg-black accent-blue-600">
+                        <span class="text-[10px] text-slate-300">Push Notifications (Browser)</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+                        <input type="checkbox" class="w-3.5 h-3.5 rounded border-white/10 bg-black accent-blue-600">
+                        <span class="text-[10px] text-slate-300">Email Dispatch (Incident Summary)</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+                        <input type="checkbox" checked
+                            class="w-3.5 h-3.5 rounded border-white/10 bg-black accent-blue-600">
+                        <span class="text-[10px] text-slate-300">Webhook Forwarding (Production)</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Network Topology -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Network Topology</h5>
+                <div class="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-blue-400">Packet Inspection</span>
+                        <span class="text-[8px] font-mono text-blue-500/50">L7_DEEP</span>
+                    </div>
+                    <div class="h-1 w-full bg-blue-500/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-[72%]"></div>
+                    </div>
+                    <div class="flex justify-between text-[8px] font-mono text-slate-500 mt-1 uppercase">
+                        <span>Passive</span>
+                        <span class="text-blue-400">Active</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audit Trail -->
+            <section class="space-y-4">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">System Audit Trail</h5>
+                <div class="rounded-xl border border-white/5 divide-y divide-white/5 overflow-hidden">
+                    <div class="p-2 text-[8px] font-mono text-slate-500 flex justify-between bg-white/[0.02]">
+                        <span>REF_882_AUTH</span>
+                        <span class="text-emerald-500">SUCCESS</span>
+                    </div>
+                    <div class="p-2 text-[8px] font-mono text-slate-500 flex justify-between">
+                        <span>REF_881_SYNC</span>
+                        <span class="text-blue-500">SYNCED</span>
+                    </div>
+                    <div class="p-2 text-[8px] font-mono text-slate-500 flex justify-between">
+                        <span>REF_880_KEY_ROT</span>
+                        <span class="text-amber-500">PENDING</span>
+                    </div>
+                </div>
+                <button
+                    class="w-full py-2 text-[8px] font-black uppercase text-slate-400 hover:text-white transition-colors">
+                    Download Full Audit History (.sig)
+                </button>
+            </section>
+
+            <!-- Active Access Nodes -->
+            <section class="space-y-4 pb-8">
+                <h5 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Access Nodes</h5>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 rounded-xl dark:bg-white/5 border border-white/5">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="monitor" class="w-4 h-4 text-blue-500"></i>
+                            <div>
+                                <div class="text-[10px] font-bold dark:text-white leading-none">Console Session</div>
+                                <div class="text-[8px] font-mono text-slate-500 mt-1">103.242.197.254 (Current)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center justify-between p-3 rounded-xl dark:bg-white/5 border border-white/5 opacity-50">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="smartphone" class="w-4 h-4 text-slate-500"></i>
+                            <div>
+                                <div class="text-[10px] font-bold dark:text-white leading-none">Mobile Bridge</div>
+                                <div class="text-[8px] font-mono text-slate-500 mt-1">Last active 4h ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-8 border-t border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/[0.01]">
+            <button onclick="handleLogout()"
+                class="w-full flex items-center justify-center gap-3 px-3 py-2.5 rounded-lg border border-red-500/20 text-red-500 text-[9px] font-mono font-black uppercase tracking-[0.15em] hover:bg-red-500/10 transition-all">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Suspend Session
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay Theme Flash -->
+    <div id="theme-flash"
+        class="fixed inset-0 pointer-events-none z-[110] opacity-0 bg-white dark:bg-black transition-opacity duration-300">
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- INITIALIZATION & PERSISTENCE ---
+        const eventStream = document.getElementById('event-stream');
+        const sensitivitySlider = document.getElementById('sensitivity-slider');
+
+        function updateProfileUI() {
+            const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+            const email = user.email || 'guest@decipher.com';
+            const name = user.name || 'Anonymous Agent';
+            const role = user.role || 'External Auditor';
+            const avatarSeed = user.avatarSeed || email;
+
+            // Human style: avataaars
+            const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarSeed}`;
+
+            // Sidebar
+            document.getElementById('sidebar-user-name').innerText = name.toUpperCase();
+            document.getElementById('sidebar-user-role').innerText = role;
+            document.getElementById('sidebar-user-id').innerText = email.toLowerCase();
+            document.getElementById('sidebar-user-avatar').src = avatar;
+
+            // Drawer
+            document.getElementById('edit-user-name').value = name;
+            document.getElementById('drawer-avatar-img').src = avatar;
+            document.getElementById('drawer-user-email').innerText = email.toLowerCase();
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        async function restoreSession() {
+            // 1. Restore Toggles (Local Only)
+            const savedSens = localStorage.getItem('radar_sensitivity');
+            if (savedSens && sensitivitySlider) {
+                sensitivitySlider.value = savedSens;
+                updateSensitivity(savedSens);
+            }
+
+            const pulseToggle = document.getElementById('pulse-toggle');
+            const audioToggle = document.getElementById('audio-toggle');
+            if (pulseToggle) {
+                pulseToggle.checked = localStorage.getItem('pulse_active') === 'true';
+                pulseToggle.onchange = () => localStorage.setItem('pulse_active', pulseToggle.checked);
+            }
+            if (audioToggle) {
+                audioToggle.checked = localStorage.getItem('audio_active') === 'true';
+                audioToggle.onchange = () => localStorage.setItem('audio_active', audioToggle.checked);
+            }
+
+            // Restore Drawer State
+            const isDrawerOpen = localStorage.getItem('drawer_open') === 'true';
+            if (isDrawerOpen) toggleProfileDrawer(true);
+
+            // 2. Fetch DATA from Supabase (or fallback to local)
+            const transactions = await DecipherDB.getRecentTransactions(10);
+            const logs = await DecipherDB.getRecentLogs(20);
+
+            const tableBody = document.getElementById('transaction-table-body');
+            tableBody.innerHTML = '';
+
+            // Update live KPIs from DB
+            if (DecipherDB.isLive()) {
+                DecipherDB.getLiveStats().then(stats => {
+                    if (stats) {
+                        document.getElementById('kpi-fraud-blocked').innerText = `$${(stats.fraud_blocked_amount / 1000000).toFixed(2)}M`;
+                        document.getElementById('kpi-model-accuracy').innerText = stats.transactions_24h > 0 ? "99.98%" : "100.00%"; // Simulation of accuracy
+                        document.getElementById('kpi-latency').innerText = "3.2ms"; // System baseline
+                    }
+                });
+            }
+
+            if (transactions.length > 0) {
+                transactions.forEach(event => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-risk', event.risk_level);
+                    row.className = "border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition-all cursor-pointer group";
+                    row.innerHTML = `
+                        <td class="px-4 py-3 font-mono opacity-60">${event.event_id.substring(4, 12)}</td>
+                        <td class="px-4 py-3 text-right font-bold">${event.amount} ${event.currency}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex flex-col">
+                                <span class="font-bold">${event.city}</span>
+                                <span class="text-[8px] opacity-40 font-mono">${event.lat.toFixed(2)}, ${event.lon.toFixed(2)}</span>
+                            </div>
+                        </td>
+                    `;
+                    row.onclick = () => rotateEarthTo(event.lat, event.lon, event.city);
+                    tableBody.appendChild(row);
+                });
+            } else {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="3" class="px-4 py-10 text-center text-slate-400 font-mono text-[9px] uppercase tracking-widest opacity-40">
+                        <i data-lucide="activity" class="w-4 h-4 mx-auto mb-2 animate-pulse"></i>
+                        Waiting for global signals...
+                    </td>
+                `;
+                tableBody.appendChild(emptyRow);
+                if (window.lucide) window.lucide.createIcons();
+            }
+
+            if (logs.length > 0) {
+                logs.forEach(log => addSignalToFeed(log.message, log.level, false));
+                addSignalToFeed(`SYSTEM: Database sync complete. ${logs.length} operations recovered.`, 'INFO', false);
+            } else {
+                addSignalToFeed("SYSTEM: New operational cycle initialized. Listening for global telemetry.", "INFO", false);
+            }
+
+            updateProfileUI();
+            renderTeam();
+
+            // Set up Real-time Subscriptions
+            if (DecipherDB.isLive()) {
+                addSignalToFeed("BRIDGE: Attempting to establish secure telemetry bridge...", "INFO", false);
+
+                DecipherDB.subscribeToTransactions((newTxn) => {
+                    updateDashboardUI(newTxn);
+                    addSignalToFeed(`SECURE_PACKET: Verified transaction from ${newTxn.city}`, 'SYNC', false);
+                });
+
+                DecipherDB.subscribeToLogs((newLog) => {
+                    addSignalToFeed(newLog.message, newLog.level, false);
+                });
+
+                setTimeout(() => {
+                    addSignalToFeed("BRIDGE: Secure telemetry bridge ESTABLISHED. SSL/TLS Active.", "SYNC", false);
+                }, 1000);
+            } else {
+                addSignalToFeed("BRIDGE_WARN: No active DB connection. Running in local fallback mode.", "WARN", false);
+            }
+        }
+
+        function addSignalToFeed(msg, level = 'INFO', persist = true) {
+            const time = `[${new Date().toLocaleTimeString('en-GB', { hour12: false })}]`;
+            const color = level === 'ERROR' ? 'text-red-500 bg-red-500/10' : (level === 'WARN' ? 'text-amber-400 bg-amber-400/10' : 'text-blue-400 bg-blue-400/10');
+            const logHTML = `${time} <span class="${color} px-1 rounded">${level}</span> ${msg}`;
+
+            const div = document.createElement('div');
+            div.innerHTML = logHTML;
+            div.className = "animate-in fade-in slide-in-from-bottom-1 duration-300";
+
+            if (eventStream.children.length > 20) eventStream.removeChild(eventStream.firstChild);
+            eventStream.appendChild(div);
+            eventStream.scrollTop = eventStream.scrollHeight;
+
+            if (persist) {
+                const logs = JSON.parse(localStorage.getItem('radar_logs') || '[]');
+                logs.push(logHTML);
+                if (logs.length > 20) logs.shift();
+                localStorage.setItem('radar_logs', JSON.stringify(logs));
+            }
+        }
+
+        // Run restoration on load
+        document.addEventListener('DOMContentLoaded', restoreSession);
+
+        // --- SECURITY: PREVENT BACK TO LANDING ---
+        if (window.history && window.history.pushState) {
+            window.history.pushState(null, null, window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, null, window.location.href);
+            };
+        }
+
+        // Sidebar Profile Toggle Fix
+        function toggleProfileDrawer(forceState) {
+            const drawer = document.getElementById('profile-drawer');
+            const main = document.getElementById('main-content');
+            const sidebar = document.getElementById('sidebar');
+
+            const willOpen = forceState !== undefined ? forceState : !drawer.classList.contains('open');
+
+            if (willOpen) {
+                drawer.classList.add('open');
+                main.classList.add('dashboard-blur');
+                sidebar.classList.add('dashboard-blur');
+            } else {
+                drawer.classList.remove('open');
+                main.classList.remove('dashboard-blur');
+                sidebar.classList.remove('dashboard-blur');
+            }
+            localStorage.setItem('drawer_open', willOpen);
+        }
+
+        let currentPendingSeed = null;
+
+        function randomizeAvatar() {
+            const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+            currentPendingSeed = Math.random().toString(36).substring(7);
+            const previewAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentPendingSeed}&backgroundColor=3b82f6`;
+            document.getElementById('drawer-avatar-img').src = previewAvatar;
+            addSignalToFeed(`SYSTEM: New node signature generated. Propagation required.`, 'WARN');
+        }
+
+        function saveProfile() {
+            const btn = document.getElementById('save-profile-btn');
+            const newName = document.getElementById('edit-user-name').value;
+            const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> UPDATING`;
+            lucide.createIcons();
+
+            user.name = newName;
+            if (currentPendingSeed) {
+                user.avatarSeed = currentPendingSeed;
+            }
+
+            setTimeout(() => {
+                localStorage.setItem('decipher_user', JSON.stringify(user));
+                updateProfileUI();
+                btn.innerHTML = `Changes Propagated`;
+                btn.classList.add('bg-emerald-500', 'text-white');
+
+                setTimeout(() => {
+                    btn.innerHTML = `Propagate Changes`;
+                    btn.classList.remove('bg-emerald-500', 'text-white');
+                    toggleProfileDrawer();
+                }, 1000);
+
+                addSignalToFeed(`SYSTEM: Agent node synchronized. Identity: ${newName}`, 'INFO');
+            }, 800);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('decipher_user');
+            window.location.replace('landing.html');
+        }
+
+        // --- THEME MANAGEMENT ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const flash = document.getElementById('theme-flash');
+
+        function setTheme(theme) {
+            flash.style.opacity = '1';
+            setTimeout(() => {
+                if (theme === 'dark') document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', theme);
+                flash.style.opacity = '0';
+            }, 150);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(isDark ? 'light' : 'dark');
+        });
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // --- SIDEBAR LOGIC (Hybrid Hover & Manual) ---
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const manualToggle = document.getElementById('sidebar-manual-toggle');
+        const toggleIcon = document.getElementById('toggle-icon-manual');
+        let isLocked = false;
+
+        if (sidebar) {
+            sidebar.addEventListener('mouseenter', () => {
+                if (isLocked) return;
+                sidebar.classList.remove('collapsed');
+                if (mainContent) mainContent.style.marginLeft = '16rem';
+            });
+
+            sidebar.addEventListener('mouseleave', () => {
+                if (isLocked) return;
+                sidebar.classList.add('collapsed');
+                if (mainContent) mainContent.style.marginLeft = '52px';
+            });
+        }
+
+        if (manualToggle) {
+            manualToggle.addEventListener('click', () => {
+                isLocked = !isLocked;
+                sidebar.classList.toggle('collapsed');
+                const isCollapsed = sidebar.classList.contains('collapsed');
+
+                if (toggleIcon) {
+                    toggleIcon.style.transform = isCollapsed ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+
+                if (mainContent) {
+                    mainContent.style.marginLeft = isCollapsed ? '52px' : '16rem';
+                }
+            });
+        }
+
+        // --- SPACE VIEW TOGGLE ---
+        let isSpaceView = false;
+        function toggleSpaceView() {
+            isSpaceView = !isSpaceView;
+            const btn = event.currentTarget || document.querySelector('button[onclick="toggleSpaceView()"]');
+
+            if (globeMat) {
+                globeMat.wireframe = !isSpaceView;
+                globeMat.opacity = isSpaceView ? 1 : 0.6;
+                globeMat.color.setHex(isSpaceView ? 0xffffff : 0x2563eb);
+            }
+            if (clouds) clouds.visible = isSpaceView;
+
+            // UI Update
+            if (btn) {
+                btn.querySelector('span').innerText = isSpaceView ? "DataView" : "SpaceView";
+                btn.querySelector('i').setAttribute('data-lucide', isSpaceView ? "database" : "orbit");
+                if (window.lucide) window.lucide.createIcons();
+            }
+
+            // Adjust scene background subtly
+            const container = document.getElementById('earth-container').parentElement;
+            if (isSpaceView) {
+                container.classList.add('bg-black');
+                container.classList.remove('bg-slate-900');
+            } else {
+                container.classList.add('bg-slate-900');
+                container.classList.remove('bg-black');
+            }
+        }
+
+        let team = [];
+
+        function toggleInviteForm() {
+            const form = document.getElementById('invite-form');
+            form.classList.toggle('hidden');
+        }
+
+        function toggleInviteForm() {
+            const form = document.getElementById('invite-form');
+            form.classList.toggle('hidden');
+        }
+
+        function sendInvite() {
+            const emailInput = document.getElementById('invite-email');
+            const roleSelect = document.getElementById('invite-role');
+            const email = emailInput.value.trim();
+            const role = roleSelect ? roleSelect.value : 'Engineer';
+
+            if (!email) {
+                emailInput.classList.add('border-red-500');
+                setTimeout(() => emailInput.classList.remove('border-red-500'), 1000);
+                return;
+            }
+
+            // 1. Visual HUD Update & "Data Arc" Logic
+            addSignalToFeed(`SYSTEM: Dispatching secure ${role} invitation to ${email}`, 'INFO');
+
+            // 2. Trigger DNA Link Visual Feedback
+            triggerInviteFeedback();
+
+            // 3. Update the UI state
+            const member = { email, role, status: 'Pending' };
+            team.push(member);
+            renderTeam();
+
+            // Clear Input
+            emailInput.value = '';
+        }
+
+        function renderTeam() {
+            const list = document.getElementById('team-list');
+            const count = document.getElementById('team-count');
+            if (!list) return;
+
+            list.innerHTML = '';
+
+            team.forEach(member => {
+                const item = document.createElement('div');
+                const isPending = member.status === 'Pending';
+                item.className = "flex items-center justify-between p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/[0.05] transition-all group/member relative overflow-hidden";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2 min-w-0 z-10">
+                        <div class="w-5 h-5 rounded-md ${isPending ? 'bg-amber-500/10' : 'bg-brand-blue/10'} dark:bg-white/5 border ${isPending ? 'border-amber-500/20' : 'border-brand-blue/20'} dark:border-white/10 flex items-center justify-center text-[7px] font-black ${isPending ? 'text-amber-500' : 'text-brand-blue'} dark:text-white shrink-0 group-hover/member:bg-brand-blue group-hover:text-white transition-all">
+                            ${member.email.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-[9px] font-bold text-slate-900 dark:text-white leading-none truncate">${member.email.split('@')[0]}</div>
+                            <div class="text-[7px] ${isPending ? 'text-amber-500 font-black' : 'text-slate-500 dark:text-white/30'} truncate uppercase tracking-widest leading-none mt-1">${isPending ? 'PENDING INVITE' : member.role}</div>
+                        </div>
+                    </div>
+                    ${isPending ? '<div class="absolute inset-0 bg-amber-500/5 animate-pulse"></div>' : ''}
+                `;
+                list.appendChild(item);
+            });
+
+            if (count) count.innerText = `${team.length} NODE${team.length !== 1 ? 'S' : ''}`;
+        }
+
+        function triggerInviteFeedback() {
+            // Flash the globe area or show a blue flash on the feed
+            const feed = document.getElementById('intelligence-feed-container');
+            if (feed) {
+                feed.classList.add('arc-pulse');
+                setTimeout(() => feed.classList.remove('arc-pulse'), 800);
+            }
+
+            // Pulse the Radar
+            const pulse = document.getElementById('header-pulse-area');
+            if (pulse) {
+                pulse.classList.add('bg-blue-500/10', 'arc-pulse');
+                setTimeout(() => pulse.classList.remove('bg-blue-500/10', 'arc-pulse'), 1000);
+            }
+
+            // DNA Card Pulse (The Arc simulation)
+            const dna = document.getElementById('dna-card');
+            if (dna) {
+                dna.classList.add('ring-2', 'ring-blue-500/40', 'arc-pulse');
+                setTimeout(() => dna.classList.remove('ring-2', 'ring-blue-500/40', 'arc-pulse'), 800);
+            }
+
+            // Dispatch global signal
+            if (typeof triggerGlobePulse === 'function') triggerGlobePulse('BLUE');
+        }
+
+        const tableBody = document.getElementById('transaction-table-body');
+
+        // Trigger restore manually as fallback if DOMContentLoaded fired
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            restoreSession();
+        }
+
+        // Simulated Live Team Join
+        setTimeout(() => {
+            const guest = { email: "gaurav_sre@decipher.com", role: "SRE", status: "Active" };
+            team.push(guest);
+            renderTeam();
+            addSignalToFeed(`INFO: Engineer 'Gaurav' joined the session from Mumbai Node.`, 'INFO');
+        }, 15000);
+
+        const REAL_WORLD_LOCATIONS = [
+            { city: "New York", country: "USA", lat: 40.7128, lon: -74.0060, currency: "USD" },
+            { city: "Berlin", country: "Germany", lat: 52.5200, lon: 13.4050, currency: "EUR" },
+            { city: "Mumbai", country: "India", lat: 19.0760, lon: 72.8777, currency: "INR" },
+            { city: "Brussels", country: "EU", lat: 50.8503, lon: 4.3517, currency: "EUR" }
+        ];
+
+        async function generateTransaction() {
+            const loc = REAL_WORLD_LOCATIONS[Math.floor(Math.random() * REAL_WORLD_LOCATIONS.length)];
+            const risk_score = Math.random();
+            let risk_level = "SAFE";
+            let decision = "APPROVED";
+            let rule = "NONE";
+
+            if (risk_score > 0.85) {
+                risk_level = "CRITICAL";
+                decision = "BLOCKED";
+                rule = "IMPOSSIBLE_TRAVEL";
+            } else if (risk_score > 0.6) {
+                risk_level = "SUSPICIOUS";
+                decision = "REVIEW";
+                rule = "NEW_DEVICE";
+            }
+
+            const event = {
+                event_id: `evt_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+                timestamp: new Date().toISOString(),
+                lat: loc.lat,
+                lon: loc.lon,
+                country: loc.country,
+                city: loc.city,
+                risk_level: risk_level,
+                risk_score: parseFloat(risk_score.toFixed(2)),
+                amount: Math.floor(Math.random() * 5000) + 100,
+                currency: loc.currency,
+                rule_triggered: rule,
+                decision: decision
+            };
+
+            // Push to Supabase (if available)
+            if (DecipherDB.isLive()) {
+                await DecipherDB.insertTransaction(event);
+                if (risk_level === 'CRITICAL') {
+                    await DecipherDB.insertThreatEvent({
+                        city: loc.city,
+                        country_code: loc.country,
+                        lat: loc.lat,
+                        lon: loc.lon,
+                        risk_score: Math.floor(risk_score * 100),
+                        vector: rule
+                    });
+                }
+            } else {
+                updateDashboardUI(event);
+            }
+        }
+
+        let currentFilter = 'ALL'; // Default filter state
+
+        function toggleTableFilter() {
+            const filterBtn = document.getElementById('filter-btn');
+            const filterLabel = document.getElementById('filter-label');
+
+            const filters = ['ALL', 'CRITICAL', 'SUSPICIOUS', 'SAFE'];
+            let currentIndex = filters.indexOf(currentFilter);
+            currentFilter = filters[(currentIndex + 1) % filters.length];
+
+            filterLabel.innerText = `Filter: ${currentFilter}`;
+
+            const rows = tableBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const risk = row.getAttribute('data-risk');
+                if (currentFilter === 'ALL' || risk === currentFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function exportTransactions() {
+            const transactions = JSON.parse(localStorage.getItem('radar_transactions') || '[]');
+            if (transactions.length === 0) {
+                addSignalToFeed("WARN: No transactions to export.", "WARN");
+                return;
+            }
+
+            const csvRows = [];
+            const headers = Object.keys(transactions[0]);
+            csvRows.push(headers.join(','));
+
+            for (const transaction of transactions) {
+                const values = headers.map(header => {
+                    const escaped = ('' + transaction[header]).replace(/"/g, '\\"');
+                    return `"${escaped}"`;
+                });
+                csvRows.push(values.join(','));
+            }
+
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'transactions_export.csv';
+            link.click();
+            addSignalToFeed("INFO: Transactions exported to CSV.", "INFO");
+        }
+
+        function updateDashboardUI(event) {
+            const isCritical = event.risk_level === "CRITICAL";
+            const isSuspicious = event.risk_level === "SUSPICIOUS";
+            const tableBody = document.getElementById('transaction-table-body');
+
+            // 0. Remove empty state if present
+            const emptyState = tableBody.querySelector('td[colspan="3"]');
+            if (emptyState) {
+                tableBody.innerHTML = '';
+            }
+
+            // 1. Update Table
+            const row = document.createElement('tr');
+            row.setAttribute('data-risk', event.risk_level);
+            row.className = "border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition-all cursor-pointer group";
+            if (currentFilter !== 'ALL' && event.risk_level !== currentFilter) row.style.display = 'none';
+
+            row.innerHTML = `
+                <td class="px-4 py-3 font-mono opacity-60">${event.event_id.substring(4, 12)}</td>
+                <td class="px-4 py-3 text-right font-bold">${event.amount} ${event.currency}</td>
+                <td class="px-4 py-3">
+                    <div class="flex flex-col">
+                        <span class="font-bold">${event.city}</span>
+                        <span class="text-[8px] opacity-40 font-mono">${event.lat.toFixed(2)}, ${event.lon.toFixed(2)}</span>
+                    </div>
+                </td>
+            `;
+
+            row.onclick = () => rotateEarthTo(event.lat, event.lon, event.city);
+
+            if (tableBody.children.length >= 10) tableBody.removeChild(tableBody.lastChild);
+            tableBody.prepend(row);
+
+            // 2. Update Event Stream (Logs)
+            const time = `[${new Date(event.timestamp).toLocaleTimeString('en-GB', { hour12: false })}]`;
+            const logLines = [];
+
+            if (isCritical) {
+                logLines.push(`${time} <span class="text-red-500 bg-red-500/10 px-1 rounded">ALERT</span> Packet anomalous from ${event.event_id} (Score: ${event.risk_score})`);
+                logLines.push(`${time} <span class="text-amber-400 bg-amber-400/10 px-1 rounded">SRE_HOOK</span> Mitigation active for ${event.city}`);
+
+                // Real-time DNA Update for Engineer
+                document.getElementById('dna-status').innerText = 'CRITICAL';
+                document.getElementById('dna-status').className = 'text-[9px] font-mono text-red-500 px-2 py-0.5 rounded-full bg-red-500/10';
+                document.getElementById('dna-card').classList.add('border-red-500/50', 'bg-red-500/[0.02]');
+                document.getElementById('dna-title').innerText = 'Active Threat DNA';
+
+                document.getElementById('dna-idle-view').classList.add('hidden');
+                document.getElementById('dna-active-view').classList.remove('hidden');
+
+                document.getElementById('dna-ip-display').innerText = event.city.toUpperCase();
+                document.getElementById('dna-loc-display').innerText = `${event.city}, ${event.country}`;
+                document.getElementById('dna-score-display').innerText = (event.risk_score * 100).toFixed(0) + '%';
+                document.getElementById('dna-fp-display').innerText = event.rule || 'TCP_SEC';
+
+                // Pulse Location Text
+                const locDisplay = document.getElementById('dna-loc-display');
+                if (locDisplay) {
+                    locDisplay.classList.add('location-pulse');
+                    setTimeout(() => locDisplay.classList.remove('location-pulse'), 1000);
+                }
+
+                // Broadcast to Radar.html
+                localStorage.setItem('radar_last_transaction', JSON.stringify({
+                    lat: event.lat,
+                    lon: event.lon,
+                    location: event.city,
+                    ip: `${Math.floor(Math.random() * 155) + 100}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                    risk: (event.risk_score * 100).toFixed(0) + '%',
+                    vector: event.rule
+                }));
+
+                triggerAsteroid({ lat: event.lat, lon: event.lon, risk_level: event.risk_level, risk_score: event.risk_score });
+                triggerFraudAlertSession();
+            } else if (isSuspicious) {
+                logLines.push(`${time} <span class="text-amber-400 bg-amber-400/10 px-1 rounded">SRE_HEURISTIC</span> Flagging ${event.event_id}`);
+
+                // Broadcast even suspicious
+                localStorage.setItem('radar_last_transaction', JSON.stringify({
+                    lat: event.lat,
+                    lon: event.lon,
+                    location: event.city,
+                    ip: `10${Math.floor(Math.random() * 9)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                    risk: (event.risk_score * 100).toFixed(0) + '%',
+                    vector: event.rule
+                }));
+
+                triggerAsteroid({ lat: event.lat, lon: event.lon, risk_level: event.risk_level, risk_score: event.risk_score });
+            } else {
+                logLines.push(`${time} <span class="text-brand-blue bg-brand-blue/10 px-1 rounded">SYSLOG</span> Processing transaction ${event.event_id}`);
+            }
+
+            logLines.forEach(line => {
+                const div = document.createElement('div');
+                div.innerHTML = line;
+                div.className = "animate-in fade-in slide-in-from-bottom-1 duration-300 mb-1 font-mono text-[9px]";
+                if (eventStream.children.length > 20) eventStream.removeChild(eventStream.firstChild);
+                eventStream.appendChild(div);
+
+                // Persist Logs
+                const logs = JSON.parse(localStorage.getItem('radar_logs') || '[]');
+                logs.push(line);
+                if (logs.length > 20) logs.shift();
+                localStorage.setItem('radar_logs', JSON.stringify(logs));
+            });
+
+            // Persist Table Data
+            const transactions = JSON.parse(localStorage.getItem('radar_transactions') || '[]');
+            transactions.unshift(event);
+            if (transactions.length > 10) transactions.pop();
+            localStorage.setItem('radar_transactions', JSON.stringify(transactions));
+
+            // Save Last View
+            localStorage.setItem('last_lat', event.lat);
+            localStorage.setItem('last_lon', event.lon);
+            localStorage.setItem('last_city', event.city);
+
+            eventStream.scrollTop = eventStream.scrollHeight;
+        }
+
+        function triggerFraudAlertSession() {
+            const header = document.getElementById('header-pulse-area');
+            const alertTag = document.getElementById('fraud-alert-notification');
+
+            header.classList.add('fraud-pulse');
+            header.style.boxShadow = "inset 0 0 50px rgba(239, 68, 68, 0.4)";
+            alertTag.classList.remove('hidden');
+
+            setTimeout(() => {
+                header.classList.remove('fraud-pulse');
+                header.style.boxShadow = "none";
+                alertTag.classList.add('hidden');
+            }, 5000);
+        }
+
+        // setInterval(generateTransaction, 3000); // Switched to REAL mode (No mock data)
+
+        // --- THE "REAL EARTH" HUD (PHYSICAL PLANET MODE) ---
+        let scene, camera, renderer, globe, clouds;
+        let globeMat;
+        function initEarth() {
+            const container = document.getElementById('earth-container');
+            const rect = container.getBoundingClientRect();
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, rect.width / rect.height, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(rect.width, rect.height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const group = new THREE.Group();
+            scene.add(group);
+            globe = group;
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);
+            scene.add(ambientLight);
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+            sunLight.position.set(5, 3, 5);
+            scene.add(sunLight);
+
+            // 1. Realistic 'Space View' Globe
+            const textureLoader = new THREE.TextureLoader();
+            const earthTexture = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+            const earthNight = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-night-lights.png');
+
+            globeMat = new THREE.MeshStandardMaterial({
+                map: earthTexture,
+                emissiveMap: earthNight,
+                emissive: new THREE.Color(0xffffff),
+                emissiveIntensity: 0.2,
+                roughness: 0.9,
+                metalness: 0.1,
+                transparent: true,
+                opacity: 1
+            });
+            const globeGeo = new THREE.SphereGeometry(2, 48, 48);
+            const earthMesh = new THREE.Mesh(globeGeo, globeMat);
+            group.add(earthMesh);
+
+            // 1.1 Atmosphere Shield (Requested "Shield" Control)
+            const atmosGeo = new THREE.SphereGeometry(2.1, 64, 64);
+            const atmosMat = new THREE.MeshBasicMaterial({
+                color: 0x3b82f6,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.BackSide
+            });
+            const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
+            atmosphere.name = "atmosphere";
+            group.add(atmosphere);
+
+            // Add selective outer glow
+            const glowGeo = new THREE.SphereGeometry(2.1, 64, 64);
+            const glowMat = new THREE.MeshBasicMaterial({
+                color: 0x3b82f6,
+                transparent: true,
+                opacity: 0.05,
+                side: THREE.FrontSide
+            });
+            const glowField = new THREE.Mesh(glowGeo, glowMat);
+            glowField.name = "shield_field";
+            group.add(glowField);
+
+            // 2. Parallax Cloud Layer (Hidden by default in data view)
+            const cloudGeo = new THREE.SphereGeometry(2.05, 48, 48);
+            const cloudMat = new THREE.MeshStandardMaterial({
+                map: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-clouds.png'),
+                transparent: true,
+                opacity: 0.3
+            });
+            clouds = new THREE.Mesh(cloudGeo, cloudMat);
+            clouds.visible = false;
+            group.add(clouds);
+
+            camera.position.z = 6;
+
+            earthContainer.style.opacity = '1';
+            earthContainer.style.transform = 'scale(1)';
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (!isTargeting) globe.rotation.y += 0.001;
+                if (clouds && clouds.visible) clouds.rotation.y += 0.0015;
+                TWEEN.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                const rect = container.getBoundingClientRect();
+                camera.aspect = rect.width / rect.height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(rect.width, rect.height);
+            });
+        }
+
+        let isTargeting = false;
+        let labelTimeout;
+        function rotateEarthTo(lat, lon, cityName) {
+            isTargeting = true;
+            const radius = 2;
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lon + 180) * (Math.PI / 180);
+
+            // Show City Label
+            if (cityName) {
+                const label = document.getElementById('city-label');
+                label.innerText = cityName;
+                label.classList.add('visible');
+                clearTimeout(labelTimeout);
+                labelTimeout = setTimeout(() => label.classList.remove('visible'), 4000);
+            }
+
+            new TWEEN.Tween(globe.rotation)
+                .to({
+                    x: phi - Math.PI / 2,
+                    y: -theta + Math.PI / 2
+                }, 1000)
+                .easing(TWEEN.Easing.Quadratic.Out)
+                .onComplete(() => {
+                    setTimeout(() => isTargeting = false, 2000);
+                })
+                .start();
+        }
+
+        function triggerAsteroid(payload) {
+            if (!globe) return;
+
+            const color = payload.risk_level === 'CRITICAL' ? 0xff4d00 : 0xfacc15;
+
+            // Create Meteor Group
+            const meteorGroup = new THREE.Group();
+
+            // 1. Core (Intense White)
+            const core = new THREE.Mesh(
+                new THREE.SphereGeometry(0.12, 16, 16),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, blending: THREE.AdditiveBlending })
+            );
+            meteorGroup.add(core);
+
+            // 2. Head Glow (Fiery)
+            const glow = new THREE.Mesh(
+                new THREE.SphereGeometry(0.25, 16, 16),
+                new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending })
+            );
+            meteorGroup.add(glow);
+
+            // 3. Long Volumetric Tail
+            const tailGeo = new THREE.CylinderGeometry(0, 0.2, 2.5, 12, 1, true);
+            const tailMat = new THREE.MeshBasicMaterial({
+                color: color,
+                transparent: true,
+                opacity: 0.5,
+                blending: THREE.AdditiveBlending,
+                side: THREE.DoubleSide
+            });
+            const tail = new THREE.Mesh(tailGeo, tailMat);
+            tail.rotation.x = Math.PI / 2;
+            tail.position.z = 1.25;
+            meteorGroup.add(tail);
+
+            // Inner Tail Glow
+            const innerTail = new THREE.Mesh(
+                new THREE.CylinderGeometry(0, 0.1, 2.0, 12, 1, true),
+                new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending })
+            );
+            innerTail.rotation.x = Math.PI / 2;
+            innerTail.position.z = 1.0;
+            meteorGroup.add(innerTail);
+
+            // Correct Coordinate Mapping
+            const radius = 2;
+            const lat = payload.lat * (Math.PI / 180);
+            const lng = payload.lon * (Math.PI / 180);
+            const target = new THREE.Vector3(
+                radius * Math.cos(lat) * Math.sin(lng),
+                radius * Math.sin(lat),
+                radius * Math.cos(lat) * Math.cos(lng)
+            );
+
+            // Random High-Space spawn
+            const spawnDist = 12;
+            meteorGroup.position.set(
+                (Math.random() - 0.5) * spawnDist,
+                (Math.random() - 0.5) * spawnDist,
+                spawnDist
+            );
+            meteorGroup.lookAt(target);
+            scene.add(meteorGroup);
+
+            // Cinematic Arc Travel with Embers
+            new TWEEN.Tween(meteorGroup.position)
+                .to({ x: target.x, y: target.y, z: target.z }, 1000)
+                .easing(TWEEN.Easing.Quadratic.In)
+                .onStart(() => {
+                    const camDist = earthContainer.classList.contains('hud-view') ? 5 : 7;
+                    const camPos = target.clone().normalize().multiplyScalar(camDist);
+                    new TWEEN.Tween(camera.position)
+                        .to({ x: camPos.x, y: camPos.y, z: camPos.z }, 1200)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .onUpdate(() => camera.lookAt(0, 0, 0))
+                        .start();
+                })
+                .onUpdate(() => {
+                    spawnEmber(meteorGroup.position.clone().add(new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.2, (Math.random() - 0.5) * 0.2, (Math.random() - 0.5) * 0.2)),
+                        color);
+                })
+                .onComplete(() => {
+                    scene.remove(meteorGroup);
+                    spawnImpactShockwave(target, color, payload);
+                }).start();
+        }
+
+        function spawnEmber(pos, color) {
+            const ember = new THREE.Mesh(
+                new THREE.SphereGeometry(Math.random() * 0.05, 8, 8),
+                new THREE.MeshBasicMaterial({ color: color, blending: THREE.AdditiveBlending })
+            );
+            ember.position.copy(pos);
+            scene.add(ember);
+            new TWEEN.Tween(ember.scale).to({ x: 0, y: 0, z: 0 }, 600).start();
+            new TWEEN.Tween(ember.position).to({
+                x: pos.x + (Math.random() - 0.5) * 0.4,
+                y: pos.y + (Math.random() - 0.5) * 0.4,
+                z: pos.z + (Math.random() - 0.5) * 0.4
+            }, 600).onComplete(() => scene.remove(ember)).start();
+        }
+
+        function spawnImpactShockwave(pos, color, payload) {
+            // SONAR RIPPLE EFFECT
+            const circleGeo = new THREE.RingGeometry(0.1, 0.12, 32);
+            const circleMat = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true, opacity: 1 });
+            const ripple = new THREE.Mesh(circleGeo, circleMat);
+
+            // Align to surface
+            ripple.position.copy(pos);
+            ripple.lookAt(pos.clone().multiplyScalar(1.1));
+            scene.add(ripple);
+
+            new TWEEN.Tween(ripple.scale)
+                .to({ x: 8, y: 8, z: 8 }, 1500)
+                .easing(TWEEN.Easing.Quadratic.Out)
+                .start();
+
+            new TWEEN.Tween(ripple.material)
+                .to({ opacity: 0 }, 1500)
+                .onComplete(() => scene.remove(ripple))
+                .start();
+
+            // Link to Terminal: Highlight line
+            const stream = document.getElementById('event-stream');
+            if (stream.lastChild) {
+                stream.lastChild.classList.add('bg-red-500/20', 'border-l-2', 'border-red-500');
+            }
+            const risk = payload.risk_level;
+            // 2. High-Stakes Notification (Pulse Header instead of Full Screen)
+            if (risk === 'CRITICAL') {
+                triggerFraudAlertSession();
+                rotateEarthTo(payload.lat, payload.lon, "CRITICAL DETECTED");
+            }
+            if (risk === 'CRITICAL') {
+                const markerGeo = new THREE.CylinderGeometry(0.01, 0.05, 0.5, 8);
+                const markerMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                const marker = new THREE.Mesh(markerGeo, markerMat);
+
+                marker.position.copy(pos).add(pos.clone().normalize().multiplyScalar(0.25));
+                marker.lookAt(pos);
+                marker.rotateX(Math.PI / 2);
+                scene.add(marker);
+
+                // Pulsing animation for the marker
+                const targetScale = { s: 1 };
+                new TWEEN.Tween(targetScale).to({ s: 1.5 }, 500).repeat(6).yoyo(true).onUpdate(() => {
+                    marker.scale.set(targetScale.s, targetScale.s, targetScale.s);
+                }).start();
+
+                setTimeout(() => scene.remove(marker), 6000);
+            }
+
+            // 4. Shockwave Rings
+            const ringCount = risk === 'CRITICAL' ? 4 : 1;
+            for (let i = 0; i < ringCount; i++) {
+                const ringGeo = new THREE.RingGeometry(0.01, 0.15, 64);
+                const ringMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.9, side: THREE.DoubleSide });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.position.copy(pos).add(pos.clone().normalize().multiplyScalar(0.01));
+                ring.lookAt(0, 0, 0);
+                scene.add(ring);
+
+                new TWEEN.Tween(ring.scale)
+                    .delay(i * 120)
+                    .to({ x: 15, y: 15, z: 15 }, 1200)
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .start();
+                new TWEEN.Tween(ringMat)
+                    .delay(i * 120)
+                    .to({ opacity: 0 }, 1200)
+                    .onComplete(() => scene.remove(ring)).start();
+            }
+        }
+
+        initEarth();
+
+        // --- SECURITY SETTINGS LOGIC ---
+        function updateSensitivity(val) {
+            document.getElementById('threshold-val').innerText = `${val}%`;
+            localStorage.setItem('radar_sensitivity', val);
+
+            // Physical manifestation on Earth (Atmosphere)
+            if (globe) {
+                const shield = globe.getObjectByName("shield_field");
+                const atmos = globe.getObjectByName("atmosphere");
+                if (shield && atmos) {
+                    const intensity = (val - 50) / 50; // 0 to 1
+                    shield.scale.setScalar(1 + (intensity * 0.1));
+                    shield.material.opacity = 0.05 + (intensity * 0.15);
+                    atmos.material.opacity = 0.15 + (intensity * 0.2);
+                }
+            }
+        }
+
+        // Bridge Health Simulation
+        setInterval(() => {
+            const light = document.getElementById('bridge-status-light');
+            if (light) {
+                const healthy = Math.random() > 0.1; // 10% chance of "Bridge Issue"
+                if (!healthy) {
+                    light.className = "w-2 h-2 rounded-full bg-red-500 animate-ping";
+                    addSignalToFeed("BRIDGE_ERROR: Secure bridge latency high. Re-linking node...", "WARN");
+                } else {
+                    light.className = "w-2 h-2 rounded-full bg-emerald-500";
+                }
+            }
+        }, 15000);
+
+    </script>
+</body>
+
+</html>

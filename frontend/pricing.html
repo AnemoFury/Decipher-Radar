@@ -560,7 +560,7 @@
             <!-- Pricing Details -->
             <div class="pricing-detail-row">
                 <div>
-                    <p class="font-semibold text-slate-900 text-sm mb-1">Deciper Radar's machine learning</p>
+                    <p class="font-semibold text-slate-900 text-sm mb-1">Decipher Radar's machine learning</p>
                     <p class="text-xs text-slate-500 leading-relaxed">Fraud protection powered by billions of data
                         points across the Decipher Radar network.</p>
                 </div>
@@ -936,54 +936,93 @@
 <!-- FOOTER: Comprehensive Stripe-style -->
 <!-- ============================ -->
 <!-- Footer -->
-<footer class="bg-black py-20 border-t border-white/10 text-white relative z-10">
+<footer
+    class="bg-slate-50 dark:bg-black py-20 border-t border-slate-200 dark:border-white/10 text-slate-900 dark:text-white relative z-10 transition-colors duration-500">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         <!-- Brand -->
         <div class="space-y-6">
             <div class="flex items-center gap-2 font-bold text-2xl tracking-tighter uppercase">
                 <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="10" fill="white" />
-                    <circle cx="55" cy="25" r="10" fill="white" />
-                    <circle cx="85" cy="25" r="10" fill="white" />
-                    <circle cx="25" cy="55" r="10" fill="white" />
-                    <circle cx="55" cy="55" r="10" fill="white" />
-                    <circle cx="85" cy="55" r="10" fill="white" />
+                    <circle cx="25" cy="25" r="10" class="fill-slate-900 dark:fill-white" />
+                    <circle cx="55" cy="25" r="10" class="fill-slate-900 dark:fill-white" />
+                    <circle cx="85" cy="25" r="10" class="fill-slate-900 dark:fill-white" />
+                    <circle cx="25" cy="55" r="10" class="fill-slate-900 dark:fill-white" />
+                    <circle cx="55" cy="55" r="10" class="fill-slate-900 dark:fill-white" />
+                    <circle cx="85" cy="55" r="10" class="fill-slate-900 dark:fill-white" />
                 </svg>
                 Decipher Radar
             </div>
-            <p class="text-slate-400 text-sm leading-relaxed">
+            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                 Stop fraud losses fast, scale securely with Decipher Radar's world-class platform.
             </p>
             <div class="flex gap-4">
                 <a href="#"
-                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i
+                    class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-white/20 transition text-slate-900 dark:text-white"><i
                         data-lucide="twitter" class="w-5 h-5"></i></a>
                 <a href="#"
-                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i
+                    class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-white/20 transition text-slate-900 dark:text-white"><i
                         data-lucide="linkedin" class="w-5 h-5"></i></a>
                 <a href="#"
-                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i
+                    class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-white/20 transition text-slate-900 dark:text-white"><i
                         data-lucide="github" class="w-5 h-5"></i></a>
             </div>
         </div>
 
         <!-- Quick Links -->
         <div>
-            <h4 class="font-bold uppercase tracking-widest text-xs text-slate-500 mb-6">Explore</h4>
-            <ul class="space-y-4 text-sm font-medium text-slate-300">
-                <li><a href="landing.html" class="hover:text-white transition">Home</a></li>
-                <li><a href="pricing.html" class="hover:text-white transition">Pricing</a></li>
-                <li><a href="console.html" class="hover:text-white transition">Console</a></li>
+            <h4 class="font-bold uppercase tracking-widest text-xs text-slate-400 dark:text-slate-500 mb-6">Explore</h4>
+            <ul class="space-y-4 text-sm font-medium text-slate-500 dark:text-slate-300">
+                <li><a href="landing.html" class="hover:text-slate-900 dark:hover:text-white transition">Home</a></li>
+                <li><a href="pricing.html"
+                        class="hover:text-slate-900 dark:hover:text-white transition text-blue-600 dark:text-blue-400">Pricing</a>
+                </li>
+                <li><a href="console.html" class="hover:text-slate-900 dark:hover:text-white transition">Console</a>
+                </li>
             </ul>
         </div>
-        <!-- ... other sections missing for brevity in ReplacementContent but I should keep them consistent ... -->
+
+        <!-- Why Decipher -->
+        <div>
+            <h4 class="font-bold uppercase tracking-widest text-xs text-slate-400 dark:text-slate-500 mb-6">Why Decipher
+            </h4>
+            <ul class="space-y-4 text-sm font-medium text-slate-500 dark:text-slate-300">
+                <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Security</a></li>
+                <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Reliability</a></li>
+                <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Enterprise</a></li>
+            </ul>
+        </div>
+
+        <!-- Legal -->
+        <div>
+            <h4 class="font-bold uppercase tracking-widest text-xs text-slate-400 dark:text-slate-500 mb-6">Legal</h4>
+            <ul class="space-y-4 text-sm font-medium text-slate-500 dark:text-slate-300">
+                <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Privacy</a></li>
+                <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Terms</a></li>
+                <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Cookies</a></li>
+            </ul>
+        </div>
     </div>
+
+    <!-- Massive Brand Text -->
+    <div class="max-w-7xl mx-auto px-6 mt-20 mb-10 overflow-hidden">
+        <h2
+            class="text-[15vw] font-black tracking-tighter leading-none text-slate-900/5 dark:text-white/5 select-none pointer-events-none uppercase">
+            DECIPHER
+        </h2>
+    </div>
+
     <div
-        class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 font-mono">
+        class="max-w-7xl mx-auto px-6 mt-8 pt-8 border-t border-slate-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 dark:text-slate-500 font-mono">
         <div>&copy; 2026 Decipher Radar Security, Inc.</div>
         <div class="flex gap-6 mt-4 md:mt-0">
-            <a href="#" class="hover:text-white transition">Privacy</a>
-            <a href="#" class="hover:text-white transition">Terms</a>
+            <a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Privacy</a>
+            <a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Terms</a>
+            <button onclick="toggleTheme()"
+                class="hover:text-slate-900 dark:hover:text-white transition flex items-center gap-2">
+                <i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i>
+                Toggle Theme
+            </button>
         </div>
     </div>
 </footer>

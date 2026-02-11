@@ -52,12 +52,13 @@
         }
 
         #sidebar.collapsed {
-            width: 52px;
+            width: 64px;
         }
 
         #sidebar.collapsed span,
-        #sidebar.collapsed h5,
-        #sidebar.collapsed p {
+        #sidebar.collapsed h1,
+        #sidebar.collapsed p,
+        #sidebar.collapsed .sidebar-text {
             display: none !important;
         }
 
@@ -66,9 +67,10 @@
             padding-right: 0.5rem;
         }
 
-        #sidebar.collapsed .sidebar-link {
-            padding: 8px;
+        #sidebar.collapsed .logo-container {
             justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
         }
 
         #sidebar.collapsed .sidebar-profile-node {
@@ -76,146 +78,172 @@
             justify-content: center;
         }
 
-        #sidebar.collapsed .logo-container {
+        #sidebar.collapsed .sidebar-profile-node img {
+            margin: 0;
+        }
+
+        #sidebar.collapsed .sidebar-link {
             justify-content: center;
             padding-left: 0;
             padding-right: 0;
+        }
+
+        #main-content {
+            margin-left: 64px;
+        }
+
+        @media (max-width: 768px) {
+            #main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 
 <body
-    class="h-screen w-full flex relative selection:bg-blue-100 selection:text-blue-900 bg-white dark:bg-[#0b0e14] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 overflow-hidden">
+    class="h-screen w-full flex relative selection:bg-blue-100 selection:text-blue-900 bg-white dark:bg-[#050505] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 overflow-hidden">
 
     <!-- Sidebar -->
-    <aside
-        class="fixed left-0 top-0 h-screen w-64 border-r border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#1c1c1c] flex flex-col z-20 transition-all duration-300 collapsed"
-        id="sidebar">
-
-        <!-- Logo Header -->
-        <div class="h-[49px] logo-container flex items-center px-5 border-b border-slate-200 dark:border-white/[0.06]">
-            <a href="console.html" class="flex items-center gap-2.5">
-                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="12" fill="#f97316" />
-                    <circle cx="50" cy="25" r="12" fill="#f97316" />
-                    <circle cx="75" cy="25" r="12" fill="#f97316" />
-                    <circle cx="25" cy="50" r="12" fill="#f97316" />
-                    <circle cx="50" cy="50" r="12" fill="#f97316" />
-                    <circle cx="75" cy="50" r="12" fill="#f97316" />
-                    <circle cx="25" cy="75" r="12" fill="#f97316" />
-                    <circle cx="50" cy="75" r="12" fill="#f97316" />
-                    <circle cx="75" cy="75" r="12" fill="#f97316" />
-                </svg>
-                <span
-                    class="text-sm font-bold tracking-tight text-slate-900 dark:text-white/90 whitespace-nowrap">Decipher
-                    Radar</span>
-                <span
-                    class="text-[9px] font-mono font-bold text-slate-400 dark:text-white/30 bg-slate-100 dark:bg-white/[0.06] px-1.5 py-0.5 rounded uppercase tracking-wider">Free</span>
-            </a>
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-full flex flex-col bg-[#0b0e14] border-r border-white/[0.06] transition-all duration-300 z-40 collapsed lg:ml-0 -translate-x-full md:translate-x-0">
+        <!-- Logo -->
+        <div class="h-16 flex items-center px-6 border-b border-white/[0.06] flex-shrink-0 gap-3 logo-container">
+            <svg width="24" height="24" viewBox="0 0 100 100" fill="none" class="text-orange-500 shrink-0">
+                <circle cx="25" cy="25" r="10" fill="currentColor" />
+                <circle cx="55" cy="25" r="10" fill="currentColor" />
+                <circle cx="85" cy="25" r="10" fill="currentColor" />
+                <circle cx="25" cy="55" r="10" fill="currentColor" />
+                <circle cx="55" cy="55" r="10" fill="currentColor" />
+                <circle cx="85" cy="55" r="10" fill="currentColor" />
+                <circle cx="25" cy="85" r="10" fill="currentColor" />
+                <circle cx="55" cy="85" r="10" fill="currentColor" />
+                <circle cx="85" cy="85" r="10" fill="currentColor" />
+            </svg>
+            <span class="font-bold text-sm text-white tracking-tight">Decipher Radar</span>
         </div>
 
-        <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-0.5">
+        <!-- Navigation -->
+        <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto custom-scrollbar">
+
             <a href="console.html"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="layout-dashboard" class="w-[16px] h-[16px]"></i>
-                <span>Dashboard</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="layout-grid" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                <span class="sidebar-text">Dashboard</span>
             </a>
+
             <a href="events.html"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="activity" class="w-[16px] h-[16px]"></i>
-                <span>Live Events</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="activity" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Security Logs</span>
             </a>
+
             <a href="radar.html"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="map" class="w-[16px] h-[16px]"></i>
-                <span>Threat Map</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="map" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Threat Map</span>
             </a>
-            <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
-            <a href="console.html"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="database" class="w-[16px] h-[16px]"></i>
-                <span>Database</span>
-            </a>
+
+            <div class="h-px bg-white/[0.06] my-3 mx-3"></div>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="shield" class="w-[16px] h-[16px]"></i>
-                <span>Authentication</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="database" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Database</span>
             </a>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="hard-drive" class="w-[16px] h-[16px]"></i>
-                <span>Storage</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="shield" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Authentication</span>
             </a>
+
+            <a href="#"
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="hard-drive" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Storage</span>
+            </a>
+
             <a href="rules.html"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="terminal" class="w-[16px] h-[16px]"></i>
-                <span>Rules Engine</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="terminal" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Rules Engine</span>
             </a>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="radio" class="w-[16px] h-[16px]"></i>
-                <span>Realtime</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="wifi" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Realtime</span>
             </a>
-            <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
+
+            <div class="h-px bg-white/[0.06] my-3 mx-3"></div>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="sparkles" class="w-[16px] h-[16px]"></i>
-                <span>Advisors</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="sparkles" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Advisors</span>
             </a>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="bar-chart-3" class="w-[16px] h-[16px]"></i>
-                <span>Observability</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="bar-chart-2" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Observability</span>
             </a>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="scroll-text" class="w-[16px] h-[16px]"></i>
-                <span>Logs</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="file-text" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Logs</span>
             </a>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="file-text" class="w-[16px] h-[16px]"></i>
-                <span>API Docs</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="file" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">API Docs</span>
             </a>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="blocks" class="w-[16px] h-[16px]"></i>
-                <span>Integrations</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                <i data-lucide="blocks" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Integrations</span>
             </a>
-            <div class="h-px bg-slate-200 dark:bg-white/[0.06] my-3 mx-1"></div>
+
+            <div class="h-px bg-white/[0.06] my-3 mx-3"></div>
+
             <a href="#"
-                class="sidebar-link flex items-center gap-3 px-3 py-[7px] rounded-md text-slate-500 dark:text-slate-400 text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <i data-lucide="settings" class="w-[16px] h-[16px]"></i>
-                <span>Project Settings</span>
+                class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                onclick="toggleProfileDrawer()">
+                <i data-lucide="settings" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Project Settings</span>
             </a>
         </nav>
 
-        <div class="border-t border-slate-200 dark:border-white/[0.06] p-3">
-            <div class="sidebar-profile-node flex items-center gap-3 px-2 py-2 rounded-md hover:bg-slate-100 dark:hover:bg-white/[0.05] cursor-pointer transition-colors group/admin"
-                id="sidebar-profile-card">
-                <div id="sidebar-user-avatar-initials"
-                    class="w-7 h-7 rounded-md bg-brand-blue flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-blue-600/20"
-                    onclick="toggleProfileDrawer()">
-                    SA</div>
-                <div class="flex-1 min-w-0" onclick="toggleProfileDrawer()">
-                    <div id="sidebar-user-name"
-                        class="text-[12px] font-medium text-slate-900 dark:text-white/90 truncate leading-none">Super
+        <!-- Dedicated Settings block -->
+        <div class="border-t border-white/[0.06] p-4 bg-slate-50 dark:bg-black/10">
+            <div class="sidebar-profile-node flex items-center gap-3 px-2 py-3 rounded-xl hover:bg-white dark:hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-slate-200 dark:hover:border-white/5 group/settings"
+                onclick="toggleProfileDrawer()" id="sidebar-profile-card">
+                <div class="relative shrink-0">
+                    <div id="sidebar-user-avatar-initials"
+                        class="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center text-[10px] font-bold text-white shadow-lg group-hover/settings:scale-105 transition-transform">
+                        SA</div>
+                    <div
+                        class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#0b0e14] shadow-sm">
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0 sidebar-text">
+                    <div id="sidebar-user-name" class="text-sm font-medium text-white truncate leading-tight">Super
                         Admin</div>
                     <div id="sidebar-user-role"
-                        class="text-[10px] text-slate-400 dark:text-white/30 truncate mt-0.5 leading-none">
-                        Administrator</div>
+                        class="text-[10px] text-slate-400 truncate leading-tight mt-0.5 uppercase tracking-widest">
+                        Node_01</div>
                 </div>
-                <!-- Mini Gear Button -->
-                <button onclick="toggleProfileDrawer()"
-                    class="p-1.5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors opacity-0 group-hover/admin:opacity-100">
-                    <i data-lucide="settings" class="w-3.5 h-3.5"></i>
-                </button>
             </div>
-            <button onclick="handleLogout()"
-                class="w-full mt-2 flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-slate-400 hover:text-red-500 text-[11px] font-bold transition-all">
-                <i data-lucide="log-out" class="w-4 h-4"></i> <span>Sign Out</span>
+            <button onclick="localStorage.removeItem('decipher_user'); window.location.href='landing.html'"
+                class="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition-colors w-full px-1 sidebar-profile-node">
+                <i data-lucide="log-out" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text">Suspend Session</span>
             </button>
         </div>
+    </aside>
     </aside>
 
     <!-- Main Content Area -->
@@ -328,20 +356,41 @@
             window.location.replace('landing.html');
         }
 
-        // --- SIDEBAR HOVER LOGIC ---
+        // Sidebar Auto-Hide Logic
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('main-content');
 
         if (sidebar) {
             sidebar.addEventListener('mouseenter', () => {
                 sidebar.classList.remove('collapsed');
-                if (mainContent) mainContent.style.marginLeft = '16rem';
+                mainContent.classList.add('md:ml-64');
+                mainContent.classList.remove('md:ml-16');
             });
 
             sidebar.addEventListener('mouseleave', () => {
                 sidebar.classList.add('collapsed');
-                if (mainContent) mainContent.style.marginLeft = '52px';
+                mainContent.classList.remove('md:ml-64');
+                mainContent.classList.add('md:ml-16');
             });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('-translate-x-full');
+            } else {
+                if (isCollapsed) {
+                    sidebar.classList.remove('collapsed');
+                    mainContent.classList.add('md:ml-64');
+                    mainContent.classList.remove('md:ml-16');
+                } else {
+                    sidebar.classList.add('collapsed');
+                    mainContent.classList.remove('md:ml-64');
+                    mainContent.classList.add('md:ml-16');
+                }
+            }
         }
     </script>
 </body>

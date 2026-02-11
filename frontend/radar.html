@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decipher Radar | Fraud Operations Center</title>
+    <title>Decipher Radar | Security Operations Center</title>
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
 
@@ -295,7 +295,7 @@
                 <div>
                     <h1 class="text-2xl font-black tracking-tighter uppercase italic">Decipher Radar</h1>
                     <p class="text-[10px] font-mono text-slate-400 uppercase tracking-widest mt-1">
-                        Fraud Operations Center — Node: 103.242.197.254
+                        Security Operations Center — Node: 103.242.197.254
                     </p>
                 </div>
             </div>
@@ -409,8 +409,9 @@
                             class="text-[9px] font-black uppercase tracking-widest text-slate-400">Mode: High</span>
                     </button>
                     <button onclick="toggleView()"
-                        class="p-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-95">
-                        <i id="view-icon" data-lucide="database" class="w-5 h-5"></i>
+                        class="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 group active:scale-95 shadow-xl shadow-black/40">
+                        <i id="view-icon" data-lucide="database"
+                            class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform"></i>
                     </button>
                 </div>
             </div>
@@ -701,7 +702,7 @@
 
         // Start simulation after globe loads
         setTimeout(() => {
-            addSignal('SYSTEM: Fraud Operations Center online.', 'INFO');
+            addSignal('SYSTEM: Security Operations Center online.', 'INFO');
             addSignal('SYSTEM: Connecting to global telemetry nodes...', 'INFO');
             setTimeout(() => addSignal('SYSTEM: 4,281 nodes active. Monitoring started.', 'INFO'), 1500);
             setTimeout(() => simulateThreat(), 3000);

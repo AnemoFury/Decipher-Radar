@@ -1,4 +1,4 @@
-# Deciper: A Scalable E-commerce Backend System
+# Deciper Rader: Fruad detection intelegece
 
 This project covers OOPS, databases, Java, and basic system design—essential for roles at **Walmart, Amazon, or Snowflake**.
 

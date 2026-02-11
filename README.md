@@ -1,4 +1,4 @@
-# Deciper Rader: Fruad detection intelegece
+# Deciper Rader: Fruad detection intelegence
 
 This project covers OOPS, databases, Java, and basic system design—essential for roles at **Walmart, Amazon, or Snowflake**.
 

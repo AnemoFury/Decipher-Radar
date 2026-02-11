@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rules Engine | Decipher Radar</title>
     <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='white'/%3E%3Ccircle cx='55' cy='30' r='10' fill='white'/%3E%3Ccircle cx='80' cy='30' r='10' fill='white'/%3E%3Ccircle cx='30' cy='55' r='10' fill='white'/%3E%3Ccircle cx='55' cy='55' r='10' fill='white'/%3E%3Ccircle cx='80' cy='55' r='10' fill='white'/%3E%3Ccircle cx='30' cy='80' r='10' fill='white'/%3E%3Ccircle cx='55' cy='80' r='10' fill='white'/%3E%3Ccircle cx='80' cy='80' r='10' fill='white'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -113,7 +113,7 @@
         class="fixed left-0 top-0 h-full flex flex-col bg-[#0b0e14] border-r border-white/[0.06] transition-all duration-300 z-40 collapsed lg:ml-0 -translate-x-full md:translate-x-0">
         <!-- Logo -->
         <div class="h-16 flex items-center px-6 border-b border-white/[0.06] flex-shrink-0 gap-3 logo-container">
-            <svg width="24" height="24" viewBox="0 0 100 100" fill="none" class="text-orange-500 shrink-0">
+            <svg width="24" height="24" viewBox="0 0 100 100" fill="none" class="text-white shrink-0">
                 <circle cx="25" cy="25" r="10" fill="currentColor" />
                 <circle cx="55" cy="25" r="10" fill="currentColor" />
                 <circle cx="85" cy="25" r="10" fill="currentColor" />
@@ -251,10 +251,10 @@
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col min-w-0 transition-all duration-300 md:ml-16" id="main-content">
+    <main class="flex-1 flex flex-col min-w-0 transition-all duration-300 md:ml-16 bg-[#09090b]" id="main-content">
         <!-- Top Nav -->
         <header
-            class="h-16 border-b border-slate-200 dark:border-white/5 px-8 flex items-center justify-between z-10 bg-white dark:bg-[#0b0e14]">
+            class="h-16 border-b border-slate-200 dark:border-white/[0.06] px-8 flex items-center justify-between z-10 bg-white dark:bg-[#0b0e14]">
             <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
                 <span class="opacity-50">/ platform</span>
                 <span class="opacity-100 text-slate-900 dark:text-white">/ rules-engine</span>
@@ -341,7 +341,41 @@
                             </div>
                             <div
                                 class="w-4 h-4 rounded-full border-2 border-slate-700 flex items-center justify-center">
-                                <!-- Disabled state -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New: Device Fingerprinting -->
+                    <div
+                        class="p-5 rounded-2xl bg-[#0b111a] border border-blue-500/20 hover:border-blue-500/40 transition-all group relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-sm text-white">Device ID Tracking</h4>
+                                    <span
+                                        class="text-[8px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded font-black uppercase tracking-widest">New</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Tracking hardware UUIDs and
+                                    canvas fingerprints to detect high-frequency device rotation.</p>
+                            </div>
+                            <div class="w-4 h-4 rounded-full border-2 border-blue-500 flex items-center justify-center">
+                                <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New: 3DS Challenge -->
+                    <div
+                        class="p-5 rounded-2xl bg-[#0b111a] border border-white/5 hover:border-amber-500/30 transition-all group relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-bold text-sm text-white">3D Secure (3DS) Multi-Stage</h4>
+                                <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Triggers 'Challenge' state
+                                    for mid-risk signals. Requires extra SMS/FIDO authentication.</p>
+                            </div>
+                            <div
+                                class="w-4 h-4 rounded-full border-2 border-amber-500 flex items-center justify-center">
+                                <div class="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-lg shadow-amber-500/50"></div>
                             </div>
                         </div>
                     </div>
@@ -352,32 +386,46 @@
                     <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Rule Definition
                         (JSON)</h3>
                     <div
-                        class="flex-1 rounded-2xl code-block p-6 font-mono text-[11px] text-blue-300 leading-relaxed shadow-2xl relative overflow-hidden group">
-                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button class="p-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors">
-                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            </button>
-                        </div>
+                        class="flex-1 rounded-2xl bg-[#0b0b0d] p-6 font-mono text-[11px] text-blue-300 leading-relaxed shadow-2xl relative overflow-hidden group border border-white/[0.06]">
                         <pre><code>{
-  "rule_id": "H-104",
-  "name": "Velocity_Check_60s",
-  "priority": 1,
+  "rule_id": "ST-201",
+  "name": "Custom Stripe-Swift Logic",
   "conditions": [
-    {
-      "field": "card_id",
-      "operator": "occurrence_greater_than",
-      "value": 5,
-      "window": "60s"
-    },
-    {
-      "field": "amount",
-      "operator": "greater_than",
-      "value": 0
-    }
+    { "key": "transaction.amount", "operator": "GT", "value": 1000 },
+    { "key": "device.id_rotation_count", "operator": "GT", "value": 5 },
+    { "key": "network.global_mismatch", "operator": "EQUALS", "value": true }
   ],
-  "action": "BLOCK",
-  "notification": ["Slack_Engineering", "Email_Admin"]
+  "action": "FORCE_3DS_CHALLENGE",
+  "priority": 10
 }</code></pre>
+                    </div>
+
+                    <!-- Rule Sandbox -->
+                    <div
+                        class="mt-4 p-6 rounded-2xl bg-[#0b0b0d] border border-dashed border-white/10 shadow-inner group">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Rule Sandbox
+                                (Simulation)</h3>
+                            <span
+                                class="text-[9px] text-emerald-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">Ready
+                                to Simul</span>
+                        </div>
+                        <div class="space-y-4">
+                            <p class="text-[11px] text-slate-400 leading-relaxed">Validate this logic against the last
+                                30 days of global network traffic (4.2M test signals).</p>
+                            <div class="flex items-center gap-3">
+                                <button
+                                    class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-xl text-[10px] font-black uppercase tracking-widest text-white transition-all active:scale-95 shadow-lg shadow-blue-500/20">
+                                    Simulate Traffic
+                                </button>
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] font-black text-emerald-500 uppercase">Est. FPR:
+                                        0.02%</span>
+                                    <span class="text-[8px] font-mono text-slate-500 uppercase tracking-tighter">Impact:
+                                        Low</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

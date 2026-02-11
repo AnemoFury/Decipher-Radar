@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decipher-rust-engine
+  labels:
+    component: fraud-detection
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: decipher-engine
+  template:
+    metadata:
+      labels:
+        app: decipher-engine
+    spec:
+      containers:
+      - name: engine
+        image: anemofury/decipher-rust-engine:latest
+        ports:
+        - containerPort: 50051 # gRPC
+        resources:
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+        env:
+        - name: KAFKA_BROKERS
+          value: "kafka.internal:9092"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: connection-url
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: engine-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: decipher-rust-engine
+  minReplicas: 3
+  maxReplicas: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70

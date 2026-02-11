@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management | Decipher Radar</title>
     <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='white'/%3E%3Ccircle cx='55' cy='30' r='10' fill='white'/%3E%3Ccircle cx='80' cy='30' r='10' fill='white'/%3E%3Ccircle cx='30' cy='55' r='10' fill='white'/%3E%3Ccircle cx='55' cy='55' r='10' fill='white'/%3E%3Ccircle cx='80' cy='55' r='10' fill='white'/%3E%3Ccircle cx='30' cy='80' r='10' fill='white'/%3E%3Ccircle cx='55' cy='80' r='10' fill='white'/%3E%3Ccircle cx='80' cy='80' r='10' fill='white'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -108,7 +108,7 @@
         class="fixed left-0 top-0 h-full flex flex-col bg-[#0b0e14] border-r border-white/[0.06] transition-all duration-300 z-40 collapsed lg:ml-0 -translate-x-full md:translate-x-0">
         <!-- Logo -->
         <div class="h-16 flex items-center px-6 border-b border-white/[0.06] flex-shrink-0 gap-3 logo-container">
-            <svg width="24" height="24" viewBox="0 0 100 100" fill="none" class="text-orange-500 shrink-0">
+            <svg width="24" height="24" viewBox="0 0 100 100" fill="none" class="text-white shrink-0">
                 <circle cx="25" cy="25" r="10" fill="currentColor" />
                 <circle cx="55" cy="25" r="10" fill="currentColor" />
                 <circle cx="85" cy="25" r="10" fill="currentColor" />
@@ -247,10 +247,10 @@
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col min-w-0 transition-all duration-300 ml-[52px]" id="main-content">
+    <main class="flex-1 flex flex-col min-w-0 transition-all duration-300 md:ml-16 bg-[#09090b]" id="main-content">
         <!-- Top Nav -->
         <header
-            class="h-16 border-b border-slate-200 dark:border-white/5 px-8 flex items-center justify-between z-10 bg-white dark:bg-[#1c1c1c]">
+            class="h-16 border-b border-slate-200 dark:border-white/[0.06] px-8 flex items-center justify-between z-10 bg-white dark:bg-[#0b0e14]">
             <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
                 <span class="opacity-50">/ platform</span>
                 <span class="opacity-100 text-slate-900 dark:text-white">/ user-management</span>
@@ -278,9 +278,9 @@
             </div>
 
             <div
-                class="bg-white dark:bg-[#1c1c1c] border border-slate-200 dark:border-white/5 rounded-2xl shadow-xl overflow-hidden">
+                class="bg-white dark:bg-[#121214] border border-slate-200 dark:border-white/[0.06] rounded-2xl shadow-xl overflow-hidden">
                 <table class="w-full text-left border-collapse">
-                    <thead class="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/5">
+                    <thead class="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/[0.06]">
                         <tr>
                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">User
                             </th>

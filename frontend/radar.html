@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decipher Radar | Security Operations Center</title>
     <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='30' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='55' r='10' fill='%23f97316'/%3E%3Ccircle cx='30' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='55' cy='80' r='10' fill='%23f97316'/%3E%3Ccircle cx='80' cy='80' r='10' fill='%23f97316'/%3E%3C/svg%3E">
+        href="data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='20' fill='black'/%3E%3Ccircle cx='30' cy='30' r='10' fill='white'/%3E%3Ccircle cx='55' cy='30' r='10' fill='white'/%3E%3Ccircle cx='80' cy='30' r='10' fill='white'/%3E%3Ccircle cx='30' cy='55' r='10' fill='white'/%3E%3Ccircle cx='55' cy='55' r='10' fill='white'/%3E%3Ccircle cx='80' cy='55' r='10' fill='white'/%3E%3Ccircle cx='30' cy='80' r='10' fill='white'/%3E%3Ccircle cx='55' cy='80' r='10' fill='white'/%3E%3Ccircle cx='80' cy='80' r='10' fill='white'/%3E%3C/svg%3E">
 
     <!-- Auth Guard: Ensure only users with a plan can access the Radar -->
     <script>
@@ -401,12 +401,19 @@
                     <span class="text-xl font-black font-mono">$482.1M</span>
                 </div>
                 <div class="flex gap-2">
+                    <button onclick="toggleHotspots()" id="hotspot-btn"
+                        class="p-3 bg-white/5 hover:bg-emerald-500/20 rounded-xl transition-all border border-white/10 group active:scale-95 flex items-center gap-2">
+                        <i data-lucide="flame"
+                            class="w-5 h-5 text-emerald-400 group-hover:animate-bounce transition-transform"></i>
+                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">Hotspots:
+                            Off</span>
+                    </button>
                     <button onclick="cycleRadarMode()" id="radar-mode-btn"
                         class="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 group active:scale-95 flex items-center gap-2">
-                        <i data-lucide="filter"
+                        <i data-lucide="cpu"
                             class="w-5 h-5 text-blue-400 group-hover:rotate-12 transition-transform"></i>
                         <span id="radar-mode-label"
-                            class="text-[9px] font-black uppercase tracking-widest text-slate-400">Mode: High</span>
+                            class="text-[9px] font-black uppercase tracking-widest text-slate-400">Engine: Ultra</span>
                     </button>
                     <button onclick="toggleView()"
                         class="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all border border-white/10 group active:scale-95 shadow-xl shadow-black/40">
@@ -586,12 +593,32 @@
         const feed = document.getElementById('mini-feed');
         function addSignal(msg, level = 'INFO') {
             const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const devId = 'DEV_' + Math.random().toString(36).substring(2, 8).toUpperCase();
             const div = document.createElement('div');
-            const color = level === 'WARN' ? 'text-amber-400' : (level === 'ERROR' ? 'text-red-500 font-bold' : 'text-blue-400');
-            div.innerHTML = `<span class="text-slate-600">${time}</span> > <span class="${color}">${level}</span> ${msg}`;
-            div.className = "animate-in slide-in-from-left duration-300";
+            const color = level === 'WARN' ? 'text-amber-400' : (level === 'ERROR' ? 'text-red-500 font-bold' : 'text-blue-400 font-medium');
+
+            div.innerHTML = `<span class="text-slate-600">${time}</span> | <span class="text-[7px] text-slate-500">${devId}</span> | <span class="${color}">${level}</span> ${msg}`;
+            div.className = "animate-in slide-in-from-left duration-300 border-l border-white/5 pl-2 py-0.5 hover:bg-white/5 transition-colors";
             feed.prepend(div);
-            if (feed.children.length > 20) feed.lastChild.remove();
+            if (feed.children.length > 25) feed.lastChild.remove();
+        }
+
+        let hotspotsEnabled = false;
+        function toggleHotspots() {
+            hotspotsEnabled = !hotspotsEnabled;
+            const btn = document.getElementById('hotspot-btn');
+            const label = btn.querySelector('span');
+
+            label.innerText = hotspotsEnabled ? "Hotspots: On" : "Hotspots: Off";
+            btn.classList.toggle('bg-emerald-500/10', hotspotsEnabled);
+            btn.classList.toggle('border-emerald-500/50', hotspotsEnabled);
+
+            addSignal(hotspotsEnabled ? 'NETWORK: Global cluster visualization INITIALIZED.' : 'NETWORK: Hotspot overlay DISCONNECTED.', 'INFO');
+
+            // Simulation UI feedback
+            if (hotspotsEnabled) {
+                document.getElementById('threat-vector').innerText = "HIGH VOL CLUSTER";
+            }
         }
 
         // --- RADAR MODES ---

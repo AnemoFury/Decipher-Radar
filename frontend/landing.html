@@ -107,8 +107,8 @@
             color: #fff;
             font-size: 0.8rem;
             font-weight: 800;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -258,7 +258,57 @@
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
         }
 
-        /* Footer & Utility Styles */
+        #reveal-footer-wrapper {
+            position: relative;
+            z-index: 20;
+            background: var(--bg-primary);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .reveal-footer {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .badge-mono {
+            filter: grayscale(1) contrast(0.8) opacity(0.5);
+            transition: all 0.3s ease;
+        }
+
+        .badge-mono:hover {
+            filter: grayscale(0) contrast(1) opacity(1);
+        }
 
 
 
@@ -367,847 +417,948 @@
     class="bg-slate-50 dark:bg-[#050505] text-slate-900 dark:text-white selection:bg-blue-100 selection:text-blue-900 transition-colors duration-500">
     <div id="theme-flash" class="theme-flash"></div>
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 glass-nav group">
-        <div
-            class="max-w-7xl mx-auto px-6 h-20 group-[.scrolled]:h-[4.5rem] flex items-center justify-between transition-all duration-500">
-            <a href="#" class="flex items-center gap-3 group/logo">
-                <div class="relative w-8 h-8 flex items-center justify-center">
-                    <div
-                        class="absolute inset-0 bg-blue-500/20 blur-lg rounded-full opacity-0 group-hover/logo:opacity-100 transition-opacity">
-                    </div>
-                    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        class="text-slate-900 dark:text-white relative z-10 transition-transform group-hover/logo:scale-110">
-                        <circle cx="25" cy="25" r="10" fill="currentColor" />
-                        <circle cx="55" cy="25" r="10" fill="currentColor" />
-                        <circle cx="85" cy="25" r="10" fill="currentColor" />
-                        <circle cx="25" cy="55" r="10" fill="currentColor" />
-                        <circle cx="55" cy="55" r="10" fill="currentColor" />
-                        <circle cx="85" cy="55" r="10" fill="currentColor" />
-                        <circle cx="25" cy="85" r="10" fill="currentColor" />
-                        <circle cx="55" cy="85" r="10" fill="currentColor" />
-                        <circle cx="85" cy="85" r="10" fill="currentColor" />
-                    </svg>
-                </div>
-                <span
-                    class="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase transition-all duration-500 group-hover/logo:tracking-normal">Decipher
-                    Radar</span>
-            </a>
+    <!-- Wrap all upper content for the Reveal Footer effect -->
+    <div id="reveal-footer-wrapper">
 
-            <script>
-                function handleNavLink(msg, url) {
-                    const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
-                    if (user.role === 'Administrator') {
-                        if (url && url !== '#') window.location.href = url;
-                        else alert('Admin Access: Feature in rapid local development.');
-                    } else {
-                        alert(msg);
+        <!-- Navbar -->
+        <nav class="fixed top-0 w-full z-50 glass-nav group">
+            <div
+                class="max-w-7xl mx-auto px-6 h-20 group-[.scrolled]:h-[4.5rem] flex items-center justify-between transition-all duration-500">
+                <a href="#" class="flex items-center gap-3 group/logo">
+                    <div class="relative w-8 h-8 flex items-center justify-center">
+                        <div
+                            class="absolute inset-0 bg-blue-500/20 blur-lg rounded-full opacity-0 group-hover/logo:opacity-100 transition-opacity">
+                        </div>
+                        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="text-slate-900 dark:text-white relative z-10 transition-transform group-hover/logo:scale-110">
+                            <circle cx="25" cy="25" r="10" fill="currentColor" />
+                            <circle cx="55" cy="25" r="10" fill="currentColor" />
+                            <circle cx="85" cy="25" r="10" fill="currentColor" />
+                            <circle cx="25" cy="55" r="10" fill="currentColor" />
+                            <circle cx="55" cy="55" r="10" fill="currentColor" />
+                            <circle cx="85" cy="55" r="10" fill="currentColor" />
+                            <circle cx="25" cy="85" r="10" fill="currentColor" />
+                            <circle cx="55" cy="85" r="10" fill="currentColor" />
+                            <circle cx="85" cy="85" r="10" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <span
+                        class="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase transition-all duration-500 group-hover/logo:tracking-normal">Decipher
+                        Radar</span>
+                </a>
+
+                <script>
+                    function handleNavLink(msg, url) {
+                        const user = JSON.parse(localStorage.getItem('decipher_user') || '{}');
+                        if (user.role === 'Administrator') {
+                            if (url && url !== '#') window.location.href = url;
+                            else alert('Admin Access: Feature in rapid local development.');
+                        } else {
+                            alert(msg);
+                        }
                     }
-                }
-            </script>
+                </script>
 
-            <!-- Navigation Links -->
-            <div class="hidden lg:flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400">
-
-                <!-- Products Dropdown -->
-                <div class="relative group">
-                    <button
-                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1 group">
-                        Products <i data-lucide="chevron-down"
-                            class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
-                    </button>
-                    <!-- Dropdown Menu -->
-                    <div
-                        class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
-                        <div
-                            class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
-                            <a href="console.html"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="layout" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">Decipher
-                                        Console</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Real-time
-                                        fraud monitoring and behavioral analysis.</div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" onclick="handleNavLink('Module Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="globe" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 flex items-center gap-2">
-                                        Decipher Radar
-                                        <span
-                                            class="px-1.5 py-0.5 rounded text-[8px] bg-blue-500 text-white font-bold">SOON</span>
-                                    </div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Global threat
-                                        intelligence and geographic visualization.</div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" onclick="handleNavLink('Shield Protection Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="shield-check"
-                                        class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 flex items-center gap-2">
-                                        API Shield
-                                        <span
-                                            class="px-1.5 py-0.5 rounded text-[8px] bg-emerald-500 text-white font-bold">SOON</span>
-                                    </div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Secure your
-                                        endpoints with sub-second latency protection.</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Solutions Dropdown -->
-                <div class="relative group">
-                    <button
-                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1">
-                        Solutions <i data-lucide="chevron-down"
-                            class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
-                    </button>
-                    <div
-                        class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
-                        <div
-                            class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
-                            <div
-                                class="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                By Industry</div>
-                            <a href="javascript:void(0)" onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="shopping-bag" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">E-commerce
-                                    </div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Prevent
-                                        chargebacks and account takeovers.</div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="landmark" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">Fintech</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">High-velocity
-                                        transaction screening and AML compliance.</div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="cloud" class="w-5 h-5 text-purple-600 dark:text-purple-400"></i>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">SaaS</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Stop trial
-                                        abuse and credential stuffing.</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Developers Dropdown -->
-                <div class="relative group">
-                    <button
-                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1">
-                        Developers <i data-lucide="chevron-down"
-                            class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
-                    </button>
-                    <div
-                        class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
-                        <div
-                            class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
-                            <a href="javascript:void(0)" onclick="handleNavLink('Docs Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-slate-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="book-open" class="w-5 h-5 text-slate-600 dark:text-slate-400"></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono">
-                                        Documentation</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
-                                        Quick-start guides and SDKs.</div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" onclick="handleNavLink('API Reference Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="terminal" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono">
-                                        API Reference</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
-                                        Complete endpoint library for integration.</div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" onclick="handleNavLink('Status Dashboard Coming Soon', '#')"
-                                class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
-                                <div
-                                    class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="activity"
-                                        class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
-                                </div>
-                                <div>
-                                    <div
-                                        class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono text-emerald-600">
-                                        System Status</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
-                                        Real-time network uptime and latency metrics.</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="pricing.html"
-                    class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500">Pricing</a>
-            </div>
-
-            <!-- Primary Action Node -->
-            <div id="nav-action-container"
-                class="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-white/10 ml-6 transition-all duration-500 group-[.scrolled]:gap-2">
-                <a href="waitlist.html"
-                    class="hidden md:inline-flex bg-blue-600 dark:bg-blue-500 text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-500/25">
-                    Join Waitlist
-                </a>
-                <a href="auth.html"
-                    class="p-2.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white/5 rounded-lg border border-transparent hover:border-blue-500/30"
-                    title="Login">
-                    <i data-lucide="user" class="w-4 h-4"></i>
-                </a>
-            </div>
-        </div>
-    </nav>
-
-
-
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 overflow-hidden min-h-[90vh] flex items-center">
-        <div class="absolute inset-0 bg-grid-pattern bg-[length:40px_40px] opacity-10 pointer-events-none"></div>
-        <div class="absolute inset-0 bg-slate-50/50 dark:bg-zinc-950/50 pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-[45%_55%] gap-16 items-center relative z-10 w-full">
-            <!-- Left Side: Messaging -->
-            <div class="space-y-8">
+                <!-- Navigation Links -->
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 backdrop-blur-md text-[10px] font-mono text-blue-500">
-                    <span class="relative flex h-2 w-2">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                    </span>
-                    <span class="tracking-[0.2em] font-bold uppercase">Decipher Radar — Live</span>
+                    class="hidden lg:flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400">
+
+                    <!-- Products Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1 group">
+                            Products <i data-lucide="chevron-down"
+                                class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div
+                            class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                            <div
+                                class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
+                                <a href="console.html"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="layout" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">Decipher
+                                            Console</div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Real-time
+                                            fraud monitoring and behavioral analysis.</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)" onclick="handleNavLink('Module Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="globe" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 flex items-center gap-2">
+                                            Decipher Radar
+                                            <span
+                                                class="px-1.5 py-0.5 rounded text-[8px] bg-blue-500 text-white font-bold">SOON</span>
+                                        </div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Global
+                                            threat
+                                            intelligence and geographic visualization.</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onclick="handleNavLink('Shield Protection Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/item opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="shield-check"
+                                            class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 flex items-center gap-2">
+                                            API Shield
+                                            <span
+                                                class="px-1.5 py-0.5 rounded text-[8px] bg-emerald-500 text-white font-bold">SOON</span>
+                                        </div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Secure
+                                            your
+                                            endpoints with sub-second latency protection.</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Solutions Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1">
+                            Solutions <i data-lucide="chevron-down"
+                                class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        <div
+                            class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                            <div
+                                class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
+                                <div
+                                    class="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
+                                    By Industry</div>
+                                <a href="javascript:void(0)"
+                                    onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="shopping-bag"
+                                            class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">E-commerce
+                                        </div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Prevent
+                                            chargebacks and account takeovers.</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="landmark"
+                                            class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">Fintech
+                                        </div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">
+                                            High-velocity
+                                            transaction screening and AML compliance.</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onclick="handleNavLink('Industry Solutions Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="cloud" class="w-5 h-5 text-purple-600 dark:text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white text-sm mb-0.5">SaaS</div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight">Stop trial
+                                            abuse and credential stuffing.</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Developers Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500 flex items-center gap-1">
+                            Developers <i data-lucide="chevron-down"
+                                class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        <div
+                            class="absolute top-full left-0 w-80 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                            <div
+                                class="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden p-2">
+                                <a href="javascript:void(0)" onclick="handleNavLink('Docs Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-slate-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="book-open"
+                                            class="w-5 h-5 text-slate-600 dark:text-slate-400"></i>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono">
+                                            Documentation</div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
+                                            Quick-start guides and SDKs.</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)" onclick="handleNavLink('API Reference Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="terminal" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono">
+                                            API Reference</div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
+                                            Complete endpoint library for integration.</div>
+                                    </div>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onclick="handleNavLink('Status Dashboard Coming Soon', '#')"
+                                    class="flex gap-4 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors opacity-60">
+                                    <div
+                                        class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="activity"
+                                            class="w-5 h-5 text-emerald-600 dark:text-emerald-400"></i>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="font-bold text-slate-900 dark:text-white text-sm mb-0.5 italic font-mono text-emerald-600">
+                                            System Status</div>
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight font-mono">
+                                            Real-time network uptime and latency metrics.</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="pricing.html"
+                        class="px-3 py-2 hover:text-slate-900 dark:hover:text-white transition-colors duration-500">Pricing</a>
                 </div>
 
-                <h1
-                    class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] text-slate-900 dark:text-white transition-colors duration-500">
-                    Stop fraud<br>
-                    <span class="text-blue-600">before it happens.</span>
-                </h1>
-
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed font-medium">
-                    Decipher Radar analyzes thousands of signals per transaction to detect and block fraud automatically
-                    — without impacting legitimate users.
-                </p>
-
-                <div class="flex flex-col sm:flex-row gap-5 items-start">
+                <!-- Primary Action Node -->
+                <div id="nav-action-container"
+                    class="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-white/10 ml-6 transition-all duration-500 group-[.scrolled]:gap-2">
                     <a href="waitlist.html"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-blue-600/30 text-base md:text-lg inline-flex items-center justify-center">
+                        class="hidden md:inline-flex bg-blue-600 dark:bg-blue-500 text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-500/25">
                         Join Waitlist
+                    </a>
+                    <a href="auth.html"
+                        class="p-2.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white/5 rounded-lg border border-transparent hover:border-blue-500/30"
+                        title="Login">
+                        <i data-lucide="user" class="w-4 h-4"></i>
                     </a>
                 </div>
             </div>
+        </nav>
 
-            <!-- Right Side: Hero Globe -->
-            <div class="relative h-[600px] flex items-center justify-center">
-                <div id="hero-globe-v2" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
-                <div
-                    class="absolute bottom-10 right-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-4 z-20 shadow-xl shadow-blue-900/10">
-                    <div class="flex flex-col">
-                        <span
-                            class="text-[10px] font-mono text-blue-600 dark:text-blue-400 uppercase tracking-widest">Global
-                            Signals</span>
-                        <span class="text-xs font-bold text-slate-900 dark:text-white">Live Transmission Feed</span>
-                    </div>
+
+
+        <!-- Hero Section -->
+        <section class="relative pt-32 pb-20 overflow-hidden min-h-[90vh] flex items-center">
+            <div class="absolute inset-0 bg-grid-pattern bg-[length:40px_40px] opacity-10 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-slate-50/50 dark:bg-zinc-950/50 pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-[45%_55%] gap-16 items-center relative z-10 w-full">
+                <!-- Left Side: Messaging -->
+                <div class="space-y-8">
                     <div
-                        class="w-10 h-10 rounded-full border border-blue-100 dark:border-blue-900/30 flex items-center justify-center">
-                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- STAGE 1: Trained on over a trillion -->
-    <section id="platform"
-        class="py-24 bg-white dark:bg-[#050505] relative overflow-hidden border-t border-slate-100 dark:border-white/5">
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-            <!-- Text Content -->
-            <div class="order-1">
-                <div class="text-blue-500 font-bold mb-4 tracking-wide text-sm uppercase">Decipher Radar</div>
-                <h2
-                    class="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white leading-tight transition-colors duration-500">
-                    Trained on over a trillion dollars in annual payment volume
-                </h2>
-                <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8">
-                    Decipher Radar processes payments from 197 countries for every industry, company size, and business
-                    model.
-                    There’s a 92% chance a card has been seen before on the Decipher Radar network.
-                </p>
-
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0 w-8 h-8 rounded bg-purple-500/10 flex items-center justify-center">
-                            <i data-lucide="share-2" class="w-4 h-4 text-purple-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm">Strength in numbers</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">By learning from millions of
-                                global businesses, we
-                                assign risk scores to every payment automatically.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0 w-8 h-8 rounded bg-pink-500/10 flex items-center justify-center">
-                            <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm">Better outcomes with AI
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Our AI scans every payment
-                                using hundreds of
-                                signals to detect and prevent fraud.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Visual: Interactive Bar Chart -->
-            <div class="order-2 relative h-[500px] flex items-center justify-center">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl">
-                </div>
-
-                <div id="analytics" class="relative z-10 w-full max-w-md perspective-1000">
-                    <div id="main-chart-container"
-                        class="bg-zinc-900/80 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl transition-all duration-1000 transform-gpu">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Transaction Volume
-                            </h3>
-                            <button onclick="toggleChartRotation()"
-                                class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-all hover:rotate-180"
-                                title="Rotate View">
-                                <i data-lucide="rotate-3d" class="w-4 h-4 text-blue-500"></i>
-                            </button>
-                        </div>
-
-                        <div class="h-48 flex items-end justify-between gap-3">
-                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
-                                style="height: 60%"></div>
-                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
-                                style="height: 45%"></div>
-                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
-                                style="height: 80%"></div>
-                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
-                                style="height: 35%"></div>
-                            <div class="flex-1 bg-blue-400 rounded-t-lg shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                                style="height: 95%"></div>
-                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
-                                style="height: 55%"></div>
-                            <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
-                                style="height: 70%"></div>
-                        </div>
-
-                        <div class="mt-4 flex justify-between text-[10px] font-mono text-gray-500">
-                            <span>MON</span>
-                            <span>TUE</span>
-                            <span>WED</span>
-                            <span>THU</span>
-                            <span>FRI</span>
-                            <span>SAT</span>
-                            <span>SUN</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- STAGE 2: More Accurate (Solid Globe) -->
-    <section class="py-24 bg-[#050505] relative overflow-hidden border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-            <!-- Visual: Interactive Area Chart -->
-            <div class="order-2 lg:order-1 relative h-[500px] flex items-center justify-center">
-                <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent z-10"></div>
-
-                <div class="relative z-10 w-full max-w-md perspective-1000">
-                    <div
-                        class="bg-zinc-900 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl transition-all duration-1000 transform-gpu hover:shadow-blue-500/10">
-                        <div class="flex items-center justify-between mb-8">
-                            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Network Accuracy</h3>
-                            <div class="flex gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                                <span class="text-[10px] text-blue-500 font-mono">Live</span>
-                            </div>
-                        </div>
-
-                        <div class="relative h-48 w-full group">
-                            <svg class="w-full h-full" viewBox="0 0 400 200">
-                                <defs>
-                                    <linearGradient id="gradient-area" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
-                                    </linearGradient>
-                                </defs>
-                                <text x="10" y="30" font-family="monospace" font-size="12" fill="white">MATCH:
-                                    system.velocity_check(1h) &gt; threshold(50)</text>
-                                <text x="10" y="45" font-family="monospace" font-size="12" fill="white">IP_SCORE: 0.92
-                                    (High Risk)</text>
-                                <text x="10" y="60" font-family="monospace" font-size="12" fill="white">ACTION:
-                                    BLOCK_TRANSACTION</text>
-                                <path d="M0 150 Q 50 120, 100 140 T 200 80 T 300 110 T 400 40 L 400 200 L 0 200 Z"
-                                    fill="url(#gradient-area)" />
-                                <path d="M0 150 Q 50 120, 100 140 T 200 80 T 300 110 T 400 40" fill="none"
-                                    stroke="#3b82f6" stroke-width="3"
-                                    class="drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Text Content -->
-            <div class="order-1 lg:order-2">
-                <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
-                    More accurate than third-party tools
-                </h2>
-                <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                    &copy; 2026 Decipher Radar Security, Inc. All rights reserved.ry layer of the financial stack,
-                    integrating checkout flow data,
-                    rich
-                    payments data, and card network information.
-                </p>
-
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0 w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center">
-                            <i data-lucide="landmark" class="w-4 h-4 text-blue-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white mb-1 text-sm">Data from financial partners</h4>
-                            <p class="text-xs text-gray-500 max-w-sm">Partnerships with Visa, Mastercard, and banks let
-                                us use early dispute notifications.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0 w-8 h-8 rounded bg-indigo-500/10 flex items-center justify-center">
-                            <i data-lucide="credit-card" class="w-4 h-4 text-indigo-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white mb-1 text-sm">Data from payments</h4>
-                            <p class="text-xs text-gray-500 max-w-sm">Rich payment info like shipping addresses improves
-                                AI performance.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- STAGE 3: Sophisticated Signals (Hybrid Globe) -->
-    <!-- STAGE 3: Heavy ML & Deep Neural Networks -->
-    <section id="solutions"
-        class="py-24 bg-slate-50 dark:bg-[#0b0e14] relative overflow-hidden border-t border-slate-100 dark:border-white/5">
-        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-            <!-- Text Content -->
-            <div class="order-1">
-                <div class="text-blue-600 font-bold mb-4 tracking-wide text-sm uppercase">Advanced Intelligence</div>
-                <h2
-                    class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight uppercase tracking-tighter transition-colors duration-500">
-                    Heavy Machine Learning <br>
-                    <span class="text-blue-600">Deep Neural Networks.</span>
-                </h2>
-                <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8 font-medium">
-                    Our platform uses heavy machine learning architectures and deep neural networks to analyze every
-                    transaction.
-                    We detect fraud patterns that are invisible to traditional rule-based systems, processing sub-second
-                    signals with 99.9% precision.
-                </p>
-
-                <div class="space-y-6">
-                    <!-- Item 1 -->
-                    <div class="flex gap-4">
-                        <div
-                            class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600/5 border border-blue-600/10 flex items-center justify-center dark:bg-blue-400/10 dark:border-blue-400/20">
-                            <i data-lucide="brain-circuit" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm uppercase tracking-wider">
-                                Deep Neural
-                                Analysis</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Multi-layer transformers
-                                analyze behavior
-                                sequences to identify synthetic identity fraud.</p>
-                        </div>
-                    </div>
-                    <!-- Item 2 -->
-                    <div class="flex gap-4">
-                        <div
-                            class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600/5 border border-blue-600/10 flex items-center justify-center dark:bg-blue-400/10 dark:border-blue-400/20">
-                            <i data-lucide="shield-alert" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm uppercase tracking-wider">
-                                Heavy ML Scoring
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Assign sub-second risk scores
-                                using ensemble
-                                models trained on a trillion data points.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Visual: Distribution Donut Chart -->
-            <div class="order-2 relative h-[500px] flex items-center justify-center">
-                <div class="absolute inset-0 bg-blue-600/5 rounded-full blur-[100px]"></div>
-                <div class="relative z-10 w-full max-w-sm">
-                    <div
-                        class="bg-white dark:bg-[#050505] border border-slate-200 dark:border-white/10 rounded-3xl p-10 flex flex-col items-center justify-center shadow-2xl shadow-blue-900/10 relative overflow-hidden group">
-                        <svg class="w-64 h-64 transform -rotate-90">
-                            <circle cx="128" cy="128" r="90" stroke="currentColor" stroke-width="12" fill="transparent"
-                                class="text-slate-100 dark:text-zinc-700" />
-                            <circle cx="128" cy="128" r="90" stroke="#2563eb" stroke-width="14" fill="transparent"
-                                stroke-dasharray="565" stroke-dashoffset="140" class="transition-all duration-1000" />
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 backdrop-blur-md text-[10px] font-mono text-blue-500">
+                        <span class="relative flex h-2 w-2">
                             <span
-                                class="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">99.9%</span>
-                            <span
-                                class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Detection
-                                Recall</span>
-                        </div>
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                        <span class="tracking-[0.2em] font-bold uppercase">Decipher Radar — Live</span>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- NEW: Interactive Fraud & Risk Chart Section -->
-    <section class="py-24 bg-[#050505] relative overflow-hidden border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
-                        Real-time visualization <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">of
-                            global risk.</span>
-                    </h2>
-                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
-                        Decipher Radar provides unprecedented visibility into your transaction stream. Monitor disputes,
-                        warnings, and overall fraud rates with sub-second latency.
+                    <h1
+                        class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] text-slate-900 dark:text-white transition-colors duration-500">
+                        Stop fraud<br>
+                        <span class="text-blue-600">before it happens.</span>
+                    </h1>
+
+                    <p
+                        class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed font-medium">
+                        Decipher Radar analyzes thousands of signals per transaction to detect and block fraud
+                        automatically
+                        — without impacting legitimate users.
                     </p>
 
-                    <div class="flex flex-wrap gap-8">
-                        <div>
-                            <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Fraud Disputes
-                            </div>
-                            <div class="text-2xl font-bold text-white flex items-center gap-2">
-                                0.06%
-                                <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px]"><i
-                                        data-lucide="trending-down" class="w-3 h-3 inline"></i></span>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Early Warnings
-                            </div>
-                            <div class="text-2xl font-bold text-white">0.02%</div>
-                        </div>
-                        <div>
-                            <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Total Fraud Rate
-                            </div>
-                            <div class="text-2xl font-bold text-white">0.08%</div>
-                        </div>
+                    <div class="flex flex-col sm:flex-row gap-5 items-start">
+                        <a href="waitlist.html"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-blue-600/30 text-base md:text-lg inline-flex items-center justify-center">
+                            Join Waitlist
+                        </a>
                     </div>
                 </div>
 
-                <div class="relative">
-                    <!-- The Interactive Chart -->
+                <!-- Right Side: Hero Globe -->
+                <div class="relative h-[600px] flex items-center justify-center">
+                    <div id="hero-globe-v2" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing">
+                    </div>
                     <div
-                        class="chart-container bg-zinc-900 overflow-hidden border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative z-10">
-                        <div class="flex items-center justify-between mb-8">
-                            <h3 class="text-xl font-bold text-white">Fraud & risk</h3>
-                            <div class="flex gap-2">
-                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-                                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                            </div>
+                        class="absolute bottom-10 right-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-4 z-20 shadow-xl shadow-blue-900/10">
+                        <div class="flex flex-col">
+                            <span
+                                class="text-[10px] font-mono text-blue-600 dark:text-blue-400 uppercase tracking-widest">Global
+                                Signals</span>
+                            <span class="text-xs font-bold text-slate-900 dark:text-white">Live Transmission Feed</span>
                         </div>
-
-                        <!-- Bar Graph Container -->
-                        <div class="h-64 flex items-end justify-between gap-2 md:gap-4 relative">
-                            <!-- Y-axis Guidelines -->
-                            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
-                                <div class="border-t border-white/50 w-full h-0"></div>
-                                <div class="border-t border-white/50 w-full h-0"></div>
-                                <div class="border-t border-white/50 w-full h-0"></div>
-                                <div class="border-t border-white/50 w-full h-0"></div>
-                            </div>
-
-                            <!-- Bars -->
-                            <!-- Bars with explicit colors and widths -->
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 85%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 65%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 25%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 75%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 10%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 60%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 20%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 70%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 45%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 30%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 65%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 20%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 55%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 60%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 25%;"></div>
-                            </div>
-                            <div class="flex-1 flex flex-col gap-1 items-center group">
-                                <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
-                                    style="height: 50%;"></div>
-                                <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
-                            </div>
-                        </div>
-
                         <div
-                            class="mt-6 flex justify-between text-[10px] font-mono text-gray-500 uppercase tracking-widest">
-                            <span>19 Aug</span>
-                            <span>19 Dec</span>
+                            class="w-10 h-10 rounded-full border border-blue-100 dark:border-blue-900/30 flex items-center justify-center">
+                            <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <!-- Background Glow -->
+
+
+        <!-- STAGE 1: Trained on over a trillion -->
+        <section id="platform"
+            class="py-24 bg-white dark:bg-[#050505] relative overflow-hidden border-t border-slate-100 dark:border-white/5">
+            <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Text Content -->
+                <div class="order-1">
+                    <div class="text-blue-500 font-bold mb-4 tracking-wide text-sm uppercase">Decipher Radar</div>
+                    <h2
+                        class="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white leading-tight transition-colors duration-500">
+                        Trained on over a trillion dollars in annual payment volume
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8">
+                        Decipher Radar processes payments from 197 countries for every industry, company size, and
+                        business
+                        model.
+                        There’s a 92% chance a card has been seen before on the Decipher Radar network.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-8 h-8 rounded bg-purple-500/10 flex items-center justify-center">
+                                <i data-lucide="share-2" class="w-4 h-4 text-purple-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm">Strength in numbers
+                                </h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">By learning from millions
+                                    of
+                                    global businesses, we
+                                    assign risk scores to every payment automatically.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-8 h-8 rounded bg-pink-500/10 flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white mb-1 text-sm">Better outcomes with
+                                    AI
+                                </h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Our AI scans every
+                                    payment
+                                    using hundreds of
+                                    signals to detect and prevent fraud.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual: Interactive Bar Chart -->
+                <div class="order-2 relative h-[500px] flex items-center justify-center">
                     <div
-                        class="absolute -inset-4 bg-blue-500/10 blur-[80px] rounded-full z-0 opacity-0 group-hover:opacity-100 transition duration-700">
+                        class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl">
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
+                    <div id="analytics" class="relative z-10 w-full max-w-md perspective-1000">
+                        <div id="main-chart-container"
+                            class="bg-zinc-900/80 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl transition-all duration-1000 transform-gpu">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Transaction Volume
+                                </h3>
+                                <button onclick="toggleChartRotation()"
+                                    class="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-all hover:rotate-180"
+                                    title="Rotate View">
+                                    <i data-lucide="rotate-3d" class="w-4 h-4 text-blue-500"></i>
+                                </button>
+                            </div>
 
+                            <div class="h-48 flex items-end justify-between gap-3">
+                                <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
+                                    style="height: 60%"></div>
+                                <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
+                                    style="height: 45%"></div>
+                                <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
+                                    style="height: 80%"></div>
+                                <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
+                                    style="height: 35%"></div>
+                                <div class="flex-1 bg-blue-400 rounded-t-lg shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                                    style="height: 95%"></div>
+                                <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
+                                    style="height: 55%"></div>
+                                <div class="flex-1 bg-blue-500/20 rounded-t-lg transition-all duration-500 hover:bg-blue-500 hover:scale-y-110"
+                                    style="height: 70%"></div>
+                            </div>
 
-    <!-- How It Works (Developer Focused) - Kept as requested previously -->
-    <section id="developers" class="py-24 bg-black border-t border-white/5 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-12 text-center">
-                <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-900/10 text-xs font-mono text-blue-400 mb-6">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-                    SYSTEM ARCHITECTURE
-                </div>
-                <h2 class="text-3xl font-bold mb-4 text-white">Built for developers</h2>
-            </div>
-
-            <div
-                class="relative rounded-xl bg-[#0d1117] border border-zinc-800 font-mono text-sm shadow-2xl overflow-hidden max-w-4xl mx-auto">
-                <div class="flex items-center px-4 py-3 bg-zinc-900/50 border-b border-zinc-800">
-                    <div class="flex gap-2 mr-4">
-                        <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-                        <div class="w-3 h-3 rounded-full bg-blue-500/20 border border-blue-500/50"></div>
-                    </div>
-                    <div class="text-xs text-gray-500">fraud-detection-engine — bash — 80x24</div>
-                </div>
-                <div class="p-6 text-gray-300 space-y-4">
-                    <div class="flex">
-                        <span class="text-blue-500 mr-2">➜</span>
-                        <span class="text-blue-400">~</span>
-                        <span class="ml-2">tail -f /var/log/decipher/stream.log</span>
-                    </div>
-                    <div class="opacity-50 text-xs">
-                        [20:14:22] INGEST: Transaction #8X92-LA detected <br>
-                        [20:14:22] ANALYZE: Velocity check... <span class="text-blue-400">PASS</span> <br>
-                        [20:14:22] ANALYZE: IP Geolocation... <span class="text-yellow-400">WARN (New Device)</span>
-                    </div>
-                    <div class="text-xs">
-                        <div class="text-yellow-400 mb-1">⚠ SUSPICIOUS ACTIVITY DETECTED</div>
-                        <div class="pl-4 border-l-2 border-yellow-500/30 text-gray-400">
-                            User: <span class="text-white">alex.doe@example.com</span> <br>
-                            Risk Score: <span class="text-red-500 font-bold">0.92</span>
+                            <div class="mt-4 flex justify-between text-[10px] font-mono text-gray-500">
+                                <span>MON</span>
+                                <span>TUE</span>
+                                <span>WED</span>
+                                <span>THU</span>
+                                <span>FRI</span>
+                                <span>SAT</span>
+                                <span>SUN</span>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <span class="text-red-500">➜ ACTION:</span> Blocking transaction... <span
-                            class="text-blue-500">DONE</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 2: More Accurate (Solid Globe) -->
+        <section class="py-24 bg-[#050505] relative overflow-hidden border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Visual: Interactive Area Chart -->
+                <div class="order-2 lg:order-1 relative h-[500px] flex items-center justify-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent z-10"></div>
+
+                    <div class="relative z-10 w-full max-w-md perspective-1000">
+                        <div
+                            class="bg-zinc-900 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl transition-all duration-1000 transform-gpu hover:shadow-blue-500/10">
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Network Accuracy
+                                </h3>
+                                <div class="flex gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                    <span class="text-[10px] text-blue-500 font-mono">Live</span>
+                                </div>
+                            </div>
+
+                            <div class="relative h-48 w-full group">
+                                <svg class="w-full h-full" viewBox="0 0 400 200">
+                                    <defs>
+                                        <linearGradient id="gradient-area" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
+                                        </linearGradient>
+                                    </defs>
+                                    <text x="10" y="30" font-family="monospace" font-size="12" fill="white">MATCH:
+                                        system.velocity_check(1h) &gt; threshold(50)</text>
+                                    <text x="10" y="45" font-family="monospace" font-size="12" fill="white">IP_SCORE:
+                                        0.92
+                                        (High Risk)</text>
+                                    <text x="10" y="60" font-family="monospace" font-size="12" fill="white">ACTION:
+                                        BLOCK_TRANSACTION</text>
+                                    <path d="M0 150 Q 50 120, 100 140 T 200 80 T 300 110 T 400 40 L 400 200 L 0 200 Z"
+                                        fill="url(#gradient-area)" />
+                                    <path d="M0 150 Q 50 120, 100 140 T 200 80 T 300 110 T 400 40" fill="none"
+                                        stroke="#3b82f6" stroke-width="3"
+                                        class="drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="order-1 lg:order-2">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
+                        More accurate than third-party tools
+                    </h2>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                        &copy; 2026 Decipher Radar Security, Inc. All rights reserved.ry layer of the financial stack,
+                        integrating checkout flow data,
+                        rich
+                        payments data, and card network information.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center">
+                                <i data-lucide="landmark" class="w-4 h-4 text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white mb-1 text-sm">Data from financial partners</h4>
+                                <p class="text-xs text-gray-500 max-w-sm">Partnerships with Visa, Mastercard, and banks
+                                    let
+                                    us use early dispute notifications.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-8 h-8 rounded bg-indigo-500/10 flex items-center justify-center">
+                                <i data-lucide="credit-card" class="w-4 h-4 text-indigo-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white mb-1 text-sm">Data from payments</h4>
+                                <p class="text-xs text-gray-500 max-w-sm">Rich payment info like shipping addresses
+                                    improves
+                                    AI performance.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- STAGE 3: Sophisticated Signals (Hybrid Globe) -->
+        <!-- STAGE 3: Heavy ML & Deep Neural Networks -->
+        <section id="solutions"
+            class="py-24 bg-slate-50 dark:bg-[#0b0e14] relative overflow-hidden border-t border-slate-100 dark:border-white/5">
+            <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Text Content -->
+                <div class="order-1">
+                    <div class="text-blue-600 font-bold mb-4 tracking-wide text-sm uppercase">Advanced Intelligence
+                    </div>
+                    <h2
+                        class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight uppercase tracking-tighter transition-colors duration-500">
+                        Heavy Machine Learning <br>
+                        <span class="text-blue-600">Deep Neural Networks.</span>
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8 font-medium">
+                        Our platform uses heavy machine learning architectures and deep neural networks to analyze every
+                        transaction.
+                        We detect fraud patterns that are invisible to traditional rule-based systems, processing
+                        sub-second
+                        signals with 99.9% precision.
+                    </p>
+
+                    <div class="space-y-6">
+                        <!-- Item 1 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600/5 border border-blue-600/10 flex items-center justify-center dark:bg-blue-400/10 dark:border-blue-400/20">
+                                <i data-lucide="brain-circuit" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4
+                                    class="font-bold text-slate-900 dark:text-white mb-1 text-sm uppercase tracking-wider">
+                                    Deep Neural
+                                    Analysis</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Multi-layer transformers
+                                    analyze behavior
+                                    sequences to identify synthetic identity fraud.</p>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-600/5 border border-blue-600/10 flex items-center justify-center dark:bg-blue-400/10 dark:border-blue-400/20">
+                                <i data-lucide="shield-alert" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h4
+                                    class="font-bold text-slate-900 dark:text-white mb-1 text-sm uppercase tracking-wider">
+                                    Heavy ML Scoring
+                                </h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">Assign sub-second risk
+                                    scores
+                                    using ensemble
+                                    models trained on a trillion data points.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual: Distribution Donut Chart -->
+                <div class="order-2 relative h-[500px] flex items-center justify-center">
+                    <div class="absolute inset-0 bg-blue-600/5 rounded-full blur-[100px]"></div>
+                    <div class="relative z-10 w-full max-w-sm">
+                        <div
+                            class="bg-white dark:bg-[#050505] border border-slate-200 dark:border-white/10 rounded-3xl p-10 flex flex-col items-center justify-center shadow-2xl shadow-blue-900/10 relative overflow-hidden group">
+                            <svg class="w-64 h-64 transform -rotate-90">
+                                <circle cx="128" cy="128" r="90" stroke="currentColor" stroke-width="12"
+                                    fill="transparent" class="text-slate-100 dark:text-zinc-700" />
+                                <circle cx="128" cy="128" r="90" stroke="#2563eb" stroke-width="14" fill="transparent"
+                                    stroke-dasharray="565" stroke-dashoffset="140"
+                                    class="transition-all duration-1000" />
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span
+                                    class="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">99.9%</span>
+                                <span
+                                    class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Detection
+                                    Recall</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Interactive Fraud & Risk Chart Section -->
+        <section class="py-24 bg-[#050505] relative overflow-hidden border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
+                            Real-time visualization <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">of
+                                global risk.</span>
+                        </h2>
+                        <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                            Decipher Radar provides unprecedented visibility into your transaction stream. Monitor
+                            disputes,
+                            warnings, and overall fraud rates with sub-second latency.
+                        </p>
+
+                        <div class="flex flex-wrap gap-8">
+                            <div>
+                                <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Fraud
+                                    Disputes
+                                </div>
+                                <div class="text-2xl font-bold text-white flex items-center gap-2">
+                                    0.06%
+                                    <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px]"><i
+                                            data-lucide="trending-down" class="w-3 h-3 inline"></i></span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Early
+                                    Warnings
+                                </div>
+                                <div class="text-2xl font-bold text-white">0.02%</div>
+                            </div>
+                            <div>
+                                <div class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Total Fraud
+                                    Rate
+                                </div>
+                                <div class="text-2xl font-bold text-white">0.08%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <!-- The Interactive Chart -->
+                        <div
+                            class="chart-container bg-zinc-900 overflow-hidden border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative z-10">
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-xl font-bold text-white">Fraud & risk</h3>
+                                <div class="flex gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                </div>
+                            </div>
+
+                            <!-- Bar Graph Container -->
+                            <div class="h-64 flex items-end justify-between gap-2 md:gap-4 relative">
+                                <!-- Y-axis Guidelines -->
+                                <div
+                                    class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                                    <div class="border-t border-white/50 w-full h-0"></div>
+                                    <div class="border-t border-white/50 w-full h-0"></div>
+                                    <div class="border-t border-white/50 w-full h-0"></div>
+                                    <div class="border-t border-white/50 w-full h-0"></div>
+                                </div>
+
+                                <!-- Bars -->
+                                <!-- Bars with explicit colors and widths -->
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 85%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 65%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 25%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 75%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 10%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 60%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 20%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 70%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 45%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 30%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 65%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 20%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 55%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 60%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 25%;"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col gap-1 items-center group">
+                                    <div class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 hover:bg-blue-400"
+                                        style="height: 50%;"></div>
+                                    <div class="w-full bg-blue-900/30 rounded-t-sm" style="height: 15%;"></div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mt-6 flex justify-between text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                                <span>19 Aug</span>
+                                <span>19 Dec</span>
+                            </div>
+                        </div>
+
+                        <!-- Background Glow -->
+                        <div
+                            class="absolute -inset-4 bg-blue-500/10 blur-[80px] rounded-full z-0 opacity-0 group-hover:opacity-100 transition duration-700">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
-    <!-- Large Footer -->
+
+        <!-- How It Works (Developer Focused) - Kept as requested previously -->
+        <section id="developers" class="py-24 bg-black border-t border-white/5 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-12 text-center">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-900/10 text-xs font-mono text-blue-400 mb-6">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                        SYSTEM ARCHITECTURE
+                    </div>
+                    <h2 class="text-3xl font-bold mb-4 text-white">Built for developers</h2>
+                </div>
+
+                <div
+                    class="relative rounded-xl bg-[#0d1117] border border-zinc-800 font-mono text-sm shadow-2xl overflow-hidden max-w-4xl mx-auto">
+                    <div class="flex items-center px-4 py-3 bg-zinc-900/50 border-b border-zinc-800">
+                        <div class="flex gap-2 mr-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-blue-500/20 border border-blue-500/50"></div>
+                        </div>
+                        <div class="text-xs text-gray-500">fraud-detection-engine — bash — 80x24</div>
+                    </div>
+                    <div class="p-6 text-gray-300 space-y-4">
+                        <div class="flex">
+                            <span class="text-blue-500 mr-2">➜</span>
+                            <span class="text-blue-400">~</span>
+                            <span class="ml-2">tail -f /var/log/decipher/stream.log</span>
+                        </div>
+                        <div class="opacity-50 text-xs">
+                            [20:14:22] INGEST: Transaction #8X92-LA detected <br>
+                            [20:14:22] ANALYZE: Velocity check... <span class="text-blue-400">PASS</span> <br>
+                            [20:14:22] ANALYZE: IP Geolocation... <span class="text-yellow-400">WARN (New Device)</span>
+                        </div>
+                        <div class="text-xs">
+                            <div class="text-yellow-400 mb-1">⚠ SUSPICIOUS ACTIVITY DETECTED</div>
+                            <div class="pl-4 border-l-2 border-yellow-500/30 text-gray-400">
+                                User: <span class="text-white">alex.doe@example.com</span> <br>
+                                Risk Score: <span class="text-red-500 font-bold">0.92</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-red-500">➜ ACTION:</span> Blocking transaction... <span
+                                class="text-blue-500">DONE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </div><!-- End reveal-footer-wrapper -->
+
+    <!-- Large Reveal Footer -->
     <footer
-        class="bg-slate-50 dark:bg-black py-20 border-t border-slate-200 dark:border-white/10 text-slate-900 dark:text-white relative z-10 transition-colors duration-500">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            <!-- Brand -->
-            <div class="space-y-6">
-                <div class="flex items-center gap-2 font-bold text-2xl tracking-tighter uppercase">
-                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="25" cy="25" r="10" class="fill-slate-900 dark:fill-white" />
-                        <circle cx="55" cy="25" r="10" class="fill-slate-900 dark:fill-white" />
-                        <circle cx="85" cy="25" r="10" class="fill-slate-900 dark:fill-white" />
-                        <circle cx="25" cy="55" r="10" class="fill-slate-900 dark:fill-white" />
-                        <circle cx="55" cy="55" r="10" class="fill-slate-900 dark:fill-white" />
-                        <circle cx="85" cy="55" r="10" class="fill-slate-900 dark:fill-white" />
-                    </svg>
-                    Decipher Radar
+        class="reveal-footer bg-white dark:bg-[#050505] py-24 border-t border-slate-200 dark:border-white/10 text-slate-900 dark:text-white transition-colors duration-500">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+                <!-- Brand & Trust -->
+                <div class="space-y-8">
+                    <div
+                        class="flex items-center gap-3 font-bold text-2xl tracking-tighter uppercase group cursor-default">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:rotate-12 transition-transform">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <span class="dark:text-white text-slate-900">Decipher Radar</span>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xs">
+                        Enterprise behavioral intelligence. Protecting global financial clusters with sub-second latency
+                        and trillion-signal accuracy.
+                    </p>
+
+                    <!-- Safety Badges -->
+                    <div class="flex items-center gap-6 pt-2">
+                        <div class="group/badge relative">
+                            <i data-lucide="lock" class="w-5 h-5 text-slate-400 badge-mono"
+                                title="AES-256 Encryption"></i>
+                            <span
+                                class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[8px] font-mono text-slate-500 opacity-0 group-hover/badge:opacity-100 transition-opacity uppercase whitespace-nowrap">AES-256
+                                SECURED</span>
+                        </div>
+                        <div class="group/badge relative">
+                            <i data-lucide="server" class="w-5 h-5 text-slate-400 badge-mono"
+                                title="SOC2 Compliant Node"></i>
+                            <span
+                                class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[8px] font-mono text-slate-500 opacity-0 group-hover/badge:opacity-100 transition-opacity uppercase whitespace-nowrap">SOC2
+                                COMPLIANT</span>
+                        </div>
+                        <div class="group/badge relative">
+                            <i data-lucide="globe-2" class="w-5 h-5 text-slate-400 badge-mono"
+                                title="GDPR & CCPA Ready"></i>
+                            <span
+                                class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[8px] font-mono text-slate-500 opacity-0 group-hover/badge:opacity-100 transition-opacity uppercase whitespace-nowrap">GDPR
+                                READY</span>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                    Stop fraud losses fast, create exceptional user experiences, and scale securely with Decipher
-                    Radar's
-                    tried-and-trusted platform.
-                </p>
-                <div class="flex gap-4">
-                    <a href="#"
-                        class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-white/20 transition text-slate-900 dark:text-white"><i
-                            data-lucide="twitter" class="w-5 h-5"></i></a>
-                    <a href="#"
-                        class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-white/20 transition text-slate-900 dark:text-white"><i
-                            data-lucide="linkedin" class="w-5 h-5"></i></a>
-                    <a href="#"
-                        class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-white/20 transition text-slate-900 dark:text-white"><i
-                            data-lucide="github" class="w-5 h-5"></i></a>
+
+                <!-- Product Doormat -->
+                <div>
+                    <h4
+                        class="font-bold uppercase tracking-widest text-[11px] text-slate-400 dark:text-slate-500 mb-8 border-b border-slate-100 dark:border-white/5 pb-2">
+                        Product</h4>
+                    <ul class="space-y-4 text-[13px] font-medium text-slate-600 dark:text-slate-300">
+                        <li><a href="console.html"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2">Operations
+                                Center <i data-lucide="external-link" class="w-3 h-3 opacity-30"></i></a></li>
+                        <li><a href="radar.html"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Global Threat
+                                Map</a></li>
+                        <li><a href="pricing.html"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Usage-Based
+                                Pricing</a></li>
+                        <li><a href="#" class="hover:text-emerald-500 transition-colors flex items-center">
+                                <span class="status-dot"></span> System Status
+                            </a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Doormat -->
+                <div>
+                    <h4
+                        class="font-bold uppercase tracking-widest text-[11px] text-slate-400 dark:text-slate-500 mb-8 border-b border-slate-100 dark:border-white/5 pb-2">
+                        Resources</h4>
+                    <ul class="space-y-4 text-[13px] font-medium text-slate-600 dark:text-slate-300">
+                        <li><a href="/docs/api"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-mono">API
+                                Documentation</a></li>
+                        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Developer
+                                Hub</a></li>
+                        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Fraud
+                                Prevention Guide</a></li>
+                        <li><a href="#"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Integration
+                                Service</a></li>
+                        <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Security
+                                Credentials</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company & Contact -->
+                <div class="space-y-8">
+                    <div>
+                        <h4
+                            class="font-bold uppercase tracking-widest text-[11px] text-slate-400 dark:text-slate-500 mb-8 border-b border-slate-100 dark:border-white/5 pb-2">
+                            Company</h4>
+                        <ul class="space-y-4 text-[13px] font-medium text-slate-600 dark:text-slate-300">
+                            <li><a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About
+                                    Decipher Radar</a></li>
+                            <li><a href="#"
+                                    class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Global
+                                    Careers</a></li>
+                            <li><a href="#"
+                                    class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy &
+                                    Legal</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Real World Contact -->
+                    <div
+                        class="pt-4 p-4 rounded-2xl bg-slate-50 dark:bg-zinc-900/50 border border-slate-100 dark:border-white/10">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Hub: San
+                                Francisco</span>
+                        </div>
+                        <a href="https://maps.google.com" target="_blank"
+                            class="text-[11px] font-bold text-slate-900 dark:text-white hover:underline transition-all">
+                            650 California St, CA 94108 &rarr;
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Links 1 -->
-            <div>
-                <h4 class="font-bold uppercase tracking-widest text-xs text-slate-400 dark:text-slate-500 mb-6">Why
-                    Decipher</h4>
-                <ul class="space-y-4 text-sm font-medium text-slate-500 dark:text-slate-300">
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Market Leadership</a>
-                    </li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Professional
-                            Services</a></li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Patents</a></li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Community</a></li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Partners</a></li>
-                </ul>
+            <!-- Massive Brand Text (Now more subtle) -->
+            <div class="overflow-hidden py-10">
+                <h2
+                    class="text-[12vw] font-black tracking-tighter leading-none text-slate-900/[0.03] dark:text-white/[0.03] select-none pointer-events-none uppercase text-center">
+                    DECIPHER
+                </h2>
             </div>
 
-            <!-- Links 2 -->
-            <div>
-                <h4 class="font-bold uppercase tracking-widest text-xs text-slate-400 dark:text-slate-500 mb-6">Quick
-                    Links</h4>
-                <ul class="space-y-4 text-sm font-medium text-slate-500 dark:text-slate-300">
-                    <li><a href="#platform" class="hover:text-slate-900 dark:hover:text-white transition">Platform</a>
-                    </li>
-                    <li><a href="pricing.html" class="hover:text-slate-900 dark:hover:text-white transition">Pricing</a>
-                    </li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Careers</a></li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Company</a></li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Blog</a></li>
-                </ul>
-            </div>
+            <!-- Bottom Legal Bar -->
+            <div
+                class="mt-16 pt-8 border-t border-slate-100 dark:border-white/10 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 font-mono tracking-widest uppercase">
+                <div class="flex items-center gap-4">
+                    <span>&copy; 2026 Decipher Radar Security, Inc.</span>
+                    <span class="hidden md:inline text-slate-200 dark:text-white/10">/</span>
+                    <div class="flex gap-2">
+                        <a href="#"
+                            class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><i
+                                data-lucide="twitter" class="w-3.5 h-3.5"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><i
+                                data-lucide="linkedin" class="w-3.5 h-3.5"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><i
+                                data-lucide="github" class="w-3.5 h-3.5"></i></a>
+                    </div>
+                </div>
 
-            <!-- Links 3 -->
-            <div>
-                <h4 class="font-bold uppercase tracking-widest text-xs text-slate-400 dark:text-slate-500 mb-6">Support
-                </h4>
-                <ul class="space-y-4 text-sm font-medium text-slate-500 dark:text-slate-300">
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Contact Support</a>
-                    </li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">System Status</a></li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">API Documentation</a>
-                    </li>
-                    <li><a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Trust & Safety</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Massive Brand Text -->
-        <div class="max-w-7xl mx-auto px-6 mt-20 mb-10 overflow-hidden">
-            <h2
-                class="text-[15vw] font-black tracking-tighter leading-none text-slate-900/5 dark:text-white/5 select-none pointer-events-none uppercase">
-                DECIPHER
-            </h2>
-        </div>
-
-        <div
-            class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 dark:text-slate-500 font-mono">
-            <div>
-                &copy; 2026 Decipher Radar Security, Inc. All rights reserved.
-            </div>
-            <div class="flex gap-6 mt-4 md:mt-0 items-center">
-                <a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Service</a>
-                <a href="#" class="hover:text-slate-900 dark:hover:text-white transition">Security</a>
-                <div class="w-px h-3 bg-slate-200 dark:bg-white/10 mx-1"></div>
-                <button onclick="toggleTheme()"
-                    class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all text-slate-500 hover:text-orange-500"
-                    aria-label="Toggle Theme">
-                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
-                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
-                </button>
+                <div class="flex gap-8 mt-6 md:mt-0 items-center">
+                    <a href="privacy.html" class="hover:text-blue-500 transition-colors italic">Privacy_V2.0</a>
+                    <a href="terms.html" class="hover:text-blue-500 transition-colors italic">Terms_Security</a>
+                    <div class="w-px h-3 bg-slate-200 dark:bg-white/10"></div>
+                    <button onclick="toggleTheme()"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 dark:border-white/10 hover:border-orange-500/50 transition-all group">
+                        <i data-lucide="sun"
+                            class="w-3 h-3 hidden dark:block group-hover:rotate-45 transition-transform"></i>
+                        <i data-lucide="moon"
+                            class="w-3 h-3 block dark:hidden group-hover:-rotate-45 transition-transform"></i>
+                        <span class="text-[9px] font-bold">MODE_SWITCH</span>
+                    </button>
+                </div>
             </div>
         </div>
     </footer>
@@ -1245,7 +1396,6 @@
             } else if (mode === 'light') {
                 root.classList.remove('dark');
             } else {
-                // System
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 if (prefersDark) {
                     root.classList.add('dark');
@@ -1254,18 +1404,28 @@
                 }
             }
 
-            // Update Three.js visuals if initialized
-            if (globeMaterial && glowMaterial) {
+            // Update Three.js visuals and lights based on theme
+            if (typeof renderer !== 'undefined') {
                 const isDark = root.classList.contains('dark');
-                const targetGlow = isDark ? new THREE.Color(0x0ea5e9) : new THREE.Color(0x3b82f6);
 
-                // Keep the planet realistic but subtle emissive shift
-                const emissiveTarget = isDark ? new THREE.Color(0xffff88) : new THREE.Color(0xffffff);
-
-                new TWEEN.Tween(glowMaterial.color).to(targetGlow, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-                if (globeMaterial.emissive) {
-                    new TWEEN.Tween(globeMaterial.emissive).to(emissiveTarget, 800).start();
+                // Adjust Lighting for visibility
+                if (typeof ambientLight !== 'undefined') {
+                    ambientLight.intensity = isDark ? 0.15 : 0.8; // Brighter ambient for light mode
                 }
+                if (typeof sunLight !== 'undefined') {
+                    sunLight.intensity = isDark ? 1.6 : 1.2;
+                }
+
+                if (globeMaterial) {
+                    const emissiveTarget = isDark ? new THREE.Color(0xffff88) : new THREE.Color(0x3b82f6);
+                    const emissiveIntensityTarget = isDark ? 0.6 : 0.1;
+
+                    new TWEEN.Tween(globeMaterial.emissive).to(emissiveTarget, 800).start();
+                    new TWEEN.Tween(globeMaterial).to({ emissiveIntensity: emissiveIntensityTarget }, 800).start();
+                }
+
+                // Smooth background shift for the canvas renderer
+                renderer.setClearColor(isDark ? 0x050505 : 0xf8fafc, 0);
             }
         }
 
@@ -1319,7 +1479,7 @@
             const w = container.offsetWidth;
             const h = container.offsetHeight;
             const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            window.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(w, h);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
@@ -1329,12 +1489,17 @@
             scene.add(globeGroup);
 
             // 1. Lighting Setup (Dramatic 'Sun' for Depth)
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.15); // Low ambient for dark side
+            window.ambientLight = new THREE.AmbientLight(0xffffff, 0.15); // Expose to window for theme toggle
             scene.add(ambientLight);
 
-            const sunLight = new THREE.DirectionalLight(0xffffff, 1.6);
+            window.sunLight = new THREE.DirectionalLight(0xffffff, 1.6);
             sunLight.position.set(-5, 3, 5);
             scene.add(sunLight);
+
+            // Initial call to sync with theme
+            const isDark = document.documentElement.classList.contains('dark');
+            ambientLight.intensity = isDark ? 0.15 : 0.8;
+            sunLight.intensity = isDark ? 1.6 : 1.2;
 
             // 2. Physical Earth Mesh (The "Texture Sandwich")
             const globeGeo = new THREE.SphereGeometry(3, 64, 64);
@@ -1347,8 +1512,8 @@
                 shininess: 15,
                 // Night Lights Map (City lights)
                 emissiveMap: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-night-lights.png'),
-                emissive: new THREE.Color(0xffff88),
-                emissiveIntensity: 0.6
+                emissive: new THREE.Color(isDark ? 0xffff88 : 0x3b82f6),
+                emissiveIntensity: isDark ? 0.6 : 0.1
             });
 
             // Link to global for theme switcher safety
